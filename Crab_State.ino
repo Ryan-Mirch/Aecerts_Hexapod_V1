@@ -32,6 +32,7 @@ void crabState() {
   
 }
 
+
 Vector3 CrabGaitGetPoint(int leg, float t){  
   switch(leg){
     case 0:
@@ -57,7 +58,7 @@ Vector3 CrabGaitGetPoint(int leg, float t){
   }  
 }
 
-void CrabGaitUpdateControlPoints(int leg, ){
+void CrabGaitUpdateControlPoints(){
   Vector2 v = joy1CurrentVector;
 
   switch(phase) {
