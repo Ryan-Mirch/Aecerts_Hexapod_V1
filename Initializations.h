@@ -109,7 +109,7 @@ const float a3 = 183; //Tibia Length
 float legLength = a1+a2+a3;
 
 Vector3 currentPoints[6];
-Vector3 phaseStartPoints[6];
+Vector3 cycleStartPoints[6];
 
 Vector3 currentRot(180, 0, 180);
 Vector3 targetRot(180, 0, 180);

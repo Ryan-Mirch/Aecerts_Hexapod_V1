@@ -3,7 +3,6 @@ int inBetweenZ = -20;
 
 void calibrationState(){
   currentState = Calibrate;
-  phaseProgress = 0;
 
   bool legsUp = true;
 

@@ -10,18 +10,17 @@ int standLoops = 0;
 
 void standingState() {
   bool moveAllAtOnce = false;
-  setPhaseStartPoints();
+  setCycleStartPoints();
   standingEndPoint = Vector3(distanceFromCenter, 0, distanceFromGround + standingDistanceAdjustment);
 
   // We only set the starting, inbetween, and ending points one time, which is when we enter the standing state.
   if (currentState == Calibrate || currentState == Initialize) moveAllAtOnce = true;
-  if (currentState != Standing) {
+  if (currentState != Stand) {
     set3HighestLeg();
     standLoops = 0;
     standProgress = 0;
-    phaseProgress = 0;
     memcpy(standingStartPoints, currentPoints, sizeof(currentPoints[0]) * 6);
-    currentState = Standing;
+    currentState = Stand;
 
     // Calculate the inbetween and ending points
     for (int i = 0; i < 6; i++) {
@@ -38,6 +37,10 @@ void standingState() {
       SCPA[i][1] = standingInBetweenPoints[i];
       SCPA[i][2] = standingEndPoint;
     }
+
+    for(int i = 0; i < 6; i++){
+      legStates[i] = Standing;
+    } 
   }
 
   //update distance from ground constantly

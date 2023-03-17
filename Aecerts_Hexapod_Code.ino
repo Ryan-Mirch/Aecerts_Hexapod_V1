@@ -9,15 +9,21 @@
 
 enum State {
   Initialize,
-  Standing,
+  Stand,
   Car,
   Crab,
   Calibrate
 };
 
-int phase = 0;
+enum LegState {
+  Propelling,
+  Lifting,
+  Standing
+};
+
 float points = 800;
-int phaseProgress = 500;
+int cycleProgress[6];
+LegState legStates[6];
 int standProgress = 0;
 State currentState = Initialize;
 
@@ -29,8 +35,7 @@ float previousDistanceFromGround = 0;
 
 float liftHeight = 130;
 float landHeight = 70;
-float landHeightOffsetMultiplier = 0.5;      
-float strideLength = 240;
+float landHeightOffsetMultiplier = 0.5;
 float strideOvershoot = 10;
 float distanceFromCenter = 220;
 
@@ -72,7 +77,7 @@ void loop() {
     double joy1x = map(rc_data.joy1_X,0,254,-100,100);
     double joy1y = map(rc_data.joy1_Y,0,254,-100,100);
 
-    double joy2x = map(rc_data.joy2_X,0,254,100,-100);
+    double joy2x = map(rc_data.joy2_X,0,254,-100,100);
     double joy2y = map(rc_data.joy2_Y,0,254,-100,100);
     
     joy1TargetVector = Vector2(joy1x,joy1y);
@@ -98,36 +103,27 @@ void loop() {
   joy2CurrentMagnitude = lerp(joy2CurrentMagnitude, joy2TargetMagnitude, 0.12);  
 
 
-  if(rc_data.pushButton2){
-    crabState();
-  }
-
-  else if(abs(joy1CurrentMagnitude) >= 5 || abs(joy2CurrentMagnitude) >= 5){
+  if(abs(joy1CurrentMagnitude) >= 5 || abs(joy2CurrentMagnitude) >= 5){
     carState();
     timeSinceLastInput = millis();
+    return;
   }
 
   if(abs(timeSinceLastInput - millis()) > 5) {
     standingState();
     return;
   }  
-
-  if(phaseProgress >= points){
-    setPhaseStartPoints(); 
-    //delay(30);
-    phaseProgress = 0; 
-
-    phase++;
-    if(phase > 1) phase = 0;
-  }
 }
 
 
+void setCycleStartPoints(int leg){
+  cycleStartPoints[leg] = currentPoints[leg];    
+}
 
-void setPhaseStartPoints(){
+void setCycleStartPoints(){
   for(int i = 0; i < 6; i++){
-      phaseStartPoints[i] = currentPoints[i];
-    }
+    cycleStartPoints[i] = currentPoints[i]; 
+  }     
 }
 
 int angleToMicroseconds(double angle, int servoID) {
