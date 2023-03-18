@@ -25,6 +25,7 @@ struct RC_Data_Package {
 };
 
 RC_Data_Package rc_data;
+RC_Data_Package rc_data_previous;
 
 void RC_Setup();
 bool RC_GetDataPackage();
@@ -40,6 +41,7 @@ void RC_Setup(){
 
 bool RC_GetDataPackage(){
   if (radio.available()) {
+    rc_data_previous = rc_data;
     radio.read(&rc_data, sizeof(RC_Data_Package));
     rc_last_received_time = millis();
   }

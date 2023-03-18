@@ -21,11 +21,26 @@ enum LegState {
   Standing
 };
 
-float points = 800;
+enum Gait {
+  Tri,
+  Wave,
+  Ripple,
+  Bi,
+  Hop  
+};
+int totalGaits = 4;
+Gait gaits[4] = {Tri,Wave,Ripple,Bi};
+
+
+float points = 1000;
 int cycleProgress[6];
 LegState legStates[6];
 int standProgress = 0;
+
 State currentState = Initialize;
+Gait currentGait = Tri;
+Gait previousGait = Tri;
+int currentGaitID = 0;
 
 float standingDistanceAdjustment = 0;
 
@@ -35,7 +50,6 @@ float previousDistanceFromGround = 0;
 
 float liftHeight = 130;
 float landHeight = 70;
-float landHeightOffsetMultiplier = 0.5;
 float strideOvershoot = 10;
 float distanceFromCenter = 220;
 
@@ -102,8 +116,19 @@ void loop() {
   joy2CurrentVector = lerp(joy2CurrentVector, joy2TargetVector, 0.12);
   joy2CurrentMagnitude = lerp(joy2CurrentMagnitude, joy2TargetMagnitude, 0.12);  
 
+  if(rc_data.pushButton2 == 1  && rc_data_previous.pushButton2 == 0){
+    currentGaitID += 1;
+    if(currentGaitID == totalGaits){
+      currentGaitID = 0;
+    }
+    previousGait = currentGait;
+    currentGait = gaits[currentGaitID];
+    Serial.print("Gait changed to ID: ");
+    Serial.println(currentGaitID);
+  }
 
-  if(abs(joy1CurrentMagnitude) >= 5 || abs(joy2CurrentMagnitude) >= 5){
+
+  if(abs(joy1CurrentMagnitude) >= 10 || abs(joy2CurrentMagnitude) >= 10){
     carState();
     timeSinceLastInput = millis();
     return;
@@ -114,6 +139,10 @@ void loop() {
     return;
   }  
 }
+
+
+
+
 
 
 void setCycleStartPoints(int leg){

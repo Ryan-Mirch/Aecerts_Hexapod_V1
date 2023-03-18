@@ -37,6 +37,14 @@ public:
     return result;
   }
 
+  Vector2 operator*(Vector2 val) {
+    // Implement the multiply operator
+    Vector2 result;
+    result.x = x * val.x;
+    result.y = y * val.y;
+    return result;
+  }
+
   Vector2 rotate(int angle, Vector2 pivot) {
     // Translate line so pivot point is at the origin
     x -= pivot.x;
