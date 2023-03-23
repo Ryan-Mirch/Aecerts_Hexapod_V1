@@ -38,6 +38,7 @@ void carState() {
         break;
 
       case Wave:
+        //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 6);
         cycleProgress[2] = (points / 6)*2;
@@ -45,15 +46,18 @@ void carState() {
         cycleProgress[4] = (points / 6)*4;
         cycleProgress[5] = (points / 6)*5;
 
-        pushFraction = 4.6/6.0;
-        speedMultiplier = .45;
-        strideLengthMultiplier = 3;
-        liftHeightMultiplier = 1.5;
-        maxStrideLength = 180;
-        maxSpeed = 150;
+        //Percentage Time On Ground
+        pushFraction = 5.0/6.0; 
+
+        speedMultiplier = .40;
+        strideLengthMultiplier = 2;
+        liftHeightMultiplier = 1.3;
+        maxStrideLength = 150;
+        maxSpeed = 160;
         break;
 
       case Ripple:
+        //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 6)*4;
         cycleProgress[2] = (points / 6)*2;
@@ -61,7 +65,10 @@ void carState() {
         cycleProgress[4] = (points / 6);
         cycleProgress[5] = (points / 6)*3;
 
-        pushFraction = 3.5/6.0;
+        //Percentage Time On Ground
+        pushFraction = 3.2/6.0;
+
+
         speedMultiplier = 1;
         strideLengthMultiplier = 1.3;
         liftHeightMultiplier = 1;
@@ -70,6 +77,7 @@ void carState() {
         break;
 
       case Bi:
+        //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 3);
         cycleProgress[2] = (points / 3)*2;
@@ -77,12 +85,15 @@ void carState() {
         cycleProgress[4] = (points / 3);
         cycleProgress[5] = (points / 3)*2;
 
-        pushFraction = 2.0/6.0;
-        speedMultiplier = 1.2;        
+        //Percentage Time On Ground
+        pushFraction = 2.1/6.0;
+
+        
+        speedMultiplier = 4;        
         strideLengthMultiplier = 1;
-        liftHeightMultiplier = 1.3;
-        maxStrideLength = 200;
-        maxSpeed = 180;
+        liftHeightMultiplier = 1.8;
+        maxStrideLength = 230;
+        maxSpeed = 130;
         break;
     }
 
