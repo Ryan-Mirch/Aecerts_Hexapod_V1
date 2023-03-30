@@ -1,10 +1,6 @@
 float forwardAmount;
 float turnAmount;
-float tArray[6];
-float strideMultiplier[6] = {1, 1, 1, -1, -1, -1};
-float rotationMultiplier[6] = {-1, 0, 1, -1, 0 , 1};
-Vector3 ControlPoints[10];
-Vector3 RotateControlPoints[10];
+float  tArray[6];
 int ControlPointsAmount = 0;
 int RotateControlPointsAmount = 0;
 float pushFraction = 3.0/6.0;
@@ -16,9 +12,14 @@ float maxSpeed = 100;
 
 void carState() {
 
-  if (currentState != Car) {
+  if (currentState != Car || previousGait != currentGait) {
     currentState = Car;
-    setCycleStartPoints();
+    //setCycleStartPoints();
+
+    //Initialize Leg States
+    for(int i = 0; i < 6; i++){
+      legStates[i] = Reset;
+    }   
 
     switch (currentGait) {
       case Tri:
@@ -49,7 +50,7 @@ void carState() {
         //Percentage Time On Ground
         pushFraction = 5.0/6.0; 
 
-        speedMultiplier = .40;
+        speedMultiplier = 0.40;
         strideLengthMultiplier = 2;
         liftHeightMultiplier = 1.3;
         maxStrideLength = 150;
@@ -97,13 +98,7 @@ void carState() {
         break;
     }
 
-    //Initialize Leg States
-    for(int i = 0; i < 6; i++){
-      float tempT = (float)cycleProgress[i] / points;  
-
-      if(tempT < pushFraction)legStates[i] = Propelling;
-      else legStates[i] = Lifting;
-    }     
+      
   }
 
   
@@ -146,6 +141,8 @@ Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){
   float weightSum = abs(forwardAmount) + abs(turnAmount);
 
   float t = tArray[leg];
+
+  //if(leg == 0)print_value("cycleProgress[leg]",cycleProgress[leg]);
   
   
   //Propelling
@@ -163,6 +160,8 @@ Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){
     RotateControlPoints[2] = { distanceFromCenter, rotateStrideLength, distanceFromGround };
     RotateControlPointsAmount = 3;    
     Vector3 rotatePoint = GetPointOnBezierCurve(RotateControlPoints, RotateControlPointsAmount, mapFloat(t,0,pushFraction,0,1));
+
+    //if(leg == 0)print_value("pushing point",(straightPoint*abs(forwardAmount) + rotatePoint*abs(turnAmount))/ weightSum);
 
     return (straightPoint*abs(forwardAmount) + rotatePoint*abs(turnAmount))/ weightSum;
   }
@@ -186,6 +185,8 @@ Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){
     RotateControlPoints[4] = { distanceFromCenter, -rotateStrideLength, distanceFromGround};
     RotateControlPointsAmount = 5;
     Vector3 rotatePoint =  GetPointOnBezierCurve(RotateControlPoints, RotateControlPointsAmount, mapFloat(t,pushFraction,1,0,1));
+
+    //if(leg == 0)print_value("lifting point",(straightPoint*abs(forwardAmount) + rotatePoint*abs(turnAmount))/ weightSum);
 
     return (straightPoint*abs(forwardAmount) + rotatePoint*abs(turnAmount))/ weightSum;
   }  

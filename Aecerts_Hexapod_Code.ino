@@ -18,7 +18,8 @@ enum State {
 enum LegState {
   Propelling,
   Lifting,
-  Standing
+  Standing,
+  Reset
 };
 
 enum Gait {
@@ -28,6 +29,7 @@ enum Gait {
   Bi,
   Hop  
 };
+
 int totalGaits = 4;
 Gait gaits[4] = {Tri,Wave,Ripple,Bi};
 
@@ -72,6 +74,10 @@ float timeSinceLastInput = 0;
 
 float landingBuffer = 15;
 
+int attackCooldown = 1000;
+long elapsedTime = 0;
+long loopStartTime = 0;
+
 
 
 void setup() {
@@ -83,7 +89,10 @@ void setup() {
 }
 
 void loop() {
+  elapsedTime = millis() - loopStartTime;
+  loopStartTime = millis();
 
+  
   bool connected = RC_GetDataPackage();
   //RC_DisplayData();
 
@@ -102,7 +111,7 @@ void loop() {
 
     previousDistanceFromGround = distanceFromGround;
     distanceFromGround = distanceFromGroundBase + rc_data.slider1 * -1.7;
-    distanceFromCenter = map(rc_data.slider2,0,100,120,280);
+    distanceFromCenter = 170;
   }
   else{
     calibrationState();
@@ -116,17 +125,29 @@ void loop() {
   joy2CurrentVector = lerp(joy2CurrentVector, joy2TargetVector, 0.12);
   joy2CurrentMagnitude = lerp(joy2CurrentMagnitude, joy2TargetMagnitude, 0.12);  
 
+  previousGait = currentGait;
   if(rc_data.pushButton2 == 1  && rc_data_previous.pushButton2 == 0){
     currentGaitID += 1;
     if(currentGaitID == totalGaits){
       currentGaitID = 0;
-    }
-    previousGait = currentGait;
+    }    
+    
     currentGait = gaits[currentGaitID];
-    Serial.print("Gait changed to ID: ");
-    Serial.println(currentGaitID);
   }
 
+  
+  
+  if(rc_data.joy1_Button == 1 && attackCooldown == 0){
+    slamAttack();
+    attackCooldown = 1000;
+    Serial.println("slam attack");
+    loopStartTime = millis();
+    return;
+  }
+  
+  else{
+    attackCooldown = max(attackCooldown - elapsedTime, 0);
+  }
 
   if(abs(joy1CurrentMagnitude) >= 10 || abs(joy2CurrentMagnitude) >= 10){
     carState();
@@ -139,11 +160,6 @@ void loop() {
     return;
   }  
 }
-
-
-
-
-
 
 void setCycleStartPoints(int leg){
   cycleStartPoints[leg] = currentPoints[leg];    
@@ -166,8 +182,8 @@ void moveToPos(int leg, Vector3 pos){
   
   float dis = Vector3(0,0,0).distanceTo(pos);
   if(dis > legLength){
-    print_value("Point impossible to reach", pos);
-    print_value("Distance",dis);
+    print_value("Point impossible to reach", pos, false);
+    print_value("Distance",dis, true);
     return;
   }
 

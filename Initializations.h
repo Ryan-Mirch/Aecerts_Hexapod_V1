@@ -114,6 +114,14 @@ Vector3 cycleStartPoints[6];
 Vector3 currentRot(180, 0, 180);
 Vector3 targetRot(180, 0, 180);
 
+float strideMultiplier[6] = {1, 1, 1, -1, -1, -1};
+float rotationMultiplier[6] = {-1, 0, 1, -1, 0 , 1};
+
+Vector3 ControlPoints[10];
+Vector3 RotateControlPoints[10];
+
+Vector3 AttackControlPoints[10];
+
 
 void attachServos(){
   coxa1.attach(coxa1Pin,500,2500);
