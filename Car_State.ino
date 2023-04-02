@@ -14,7 +14,6 @@ void carState() {
 
   if (currentState != Car || previousGait != currentGait) {
     currentState = Car;
-    //setCycleStartPoints();
 
     //Initialize Leg States
     for(int i = 0; i < 6; i++){

@@ -12,7 +12,8 @@ enum State {
   Stand,
   Car,
   Crab,
-  Calibrate
+  Calibrate,
+  Animate
 };
 
 enum LegState {
@@ -138,9 +139,9 @@ void loop() {
   
   
   if(rc_data.joy1_Button == 1 && attackCooldown == 0){
-    slamAttack();
-    attackCooldown = 1000;
     Serial.println("slam attack");
+    slamAttack();
+    attackCooldown = 1000;    
     loopStartTime = millis();
     return;
   }
