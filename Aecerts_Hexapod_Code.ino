@@ -13,7 +13,7 @@ enum State {
   Car,
   Crab,
   Calibrate,
-  Animate
+  SlamAttack
 };
 
 enum LegState {
@@ -54,7 +54,7 @@ float previousDistanceFromGround = 0;
 float liftHeight = 130;
 float landHeight = 70;
 float strideOvershoot = 10;
-float distanceFromCenter = 220;
+float distanceFromCenter = 190;
 
 float crabTargetForwardAmount = 0;
 float crabForwardAmount = 0;
@@ -71,11 +71,11 @@ float joy2TargetMagnitude = 0;
 Vector2 joy2CurrentVector = Vector2(0,0);
 float joy2CurrentMagnitude = 0;
 
-float timeSinceLastInput = 0;
+unsigned long timeSinceLastInput = 0;
 
 float landingBuffer = 15;
 
-int attackCooldown = 1000;
+int attackCooldown = 0;
 long elapsedTime = 0;
 long loopStartTime = 0;
 
@@ -140,8 +140,10 @@ void loop() {
   
   if(rc_data.joy1_Button == 1 && attackCooldown == 0){
     Serial.println("slam attack");
+    resetMovementVectors();
     slamAttack();
-    attackCooldown = 1000;    
+    standingState();
+    attackCooldown = 50;    
     loopStartTime = millis();
     return;
   }
@@ -160,6 +162,14 @@ void loop() {
     standingState();
     return;
   }  
+}
+
+void resetMovementVectors(){
+  joy1CurrentVector = Vector2(0,0);
+  joy1CurrentMagnitude = 0;
+
+  joy2CurrentVector = Vector2(0,0);
+  joy2CurrentMagnitude = 0;
 }
 
 void setCycleStartPoints(int leg){

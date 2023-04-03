@@ -10,12 +10,15 @@ int standLoops = 0;
 
 void standingState() {
   bool moveAllAtOnce = false;
+  bool highLift = false;
   setCycleStartPoints();
   standingEndPoint = Vector3(distanceFromCenter, 0, distanceFromGround + standingDistanceAdjustment);
-
+  standLoops = 2;
   // We only set the starting, inbetween, and ending points one time, which is when we enter the standing state.
-  if (currentState == Calibrate || currentState == Initialize) moveAllAtOnce = true;
+  if (currentState == Calibrate || currentState == Initialize || currentState == SlamAttack) moveAllAtOnce = true;
+  if (currentState == SlamAttack) highLift = true;
   if (currentState != Stand) {
+    
     set3HighestLeg();
     standLoops = 0;
     standProgress = 0;
@@ -29,7 +32,8 @@ void standingState() {
       inBetweenPoint.y = (inBetweenPoint.y + standingEndPoint.y) / 2;
 
       inBetweenPoint.z = ((inBetweenPoint.z + standingEndPoint.z) / 2);
-      if(abs(inBetweenPoint.z - standingEndPoint.z) < 50)inBetweenPoint.z += 50;
+      if(abs(inBetweenPoint.z - standingEndPoint.z) < 50 )inBetweenPoint.z += 50;
+      if(highLift)inBetweenPoint.z += 150;
 
       standingInBetweenPoints[i] = inBetweenPoint;
 
@@ -51,6 +55,9 @@ void standingState() {
   //readjusting. This takes about a second
   while(standLoops < 2){
     standProgress += 25;
+    if(highLift){
+      standProgress += 40 - 50 * ((float)standProgress / points);
+    }
 
     float t = (float)standProgress / points;
     if (t > 1) {
