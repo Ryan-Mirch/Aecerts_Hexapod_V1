@@ -46,62 +46,14 @@ const int coxa6Pin = 37;
 const int femur6Pin = 38;
 const int tibia6Pin = 39;
 
-const Vector3 offsets1 = {90,92,-18};
-const Vector3 offsets2 = {93,84,-15};
-const Vector3 offsets3 = {93,85,-18}; 
-const Vector3 offsets4 = {87,86,-26};
-const Vector3 offsets5 = {94,86,-22};
-const Vector3 offsets6 = {93,93,-24};
+const Vector3 offsets1 = {90,75,-18};
+const Vector3 offsets2 = {93,75,-15};
+const Vector3 offsets3 = {93,75,-18}; 
+const Vector3 offsets4 = {87,80,-26};
+const Vector3 offsets5 = {94,89,-16};
+const Vector3 offsets6 = {93,85,-24};
 const Vector3 offsets[6] = {offsets1, offsets2, offsets3, offsets4, offsets5, offsets6};
 
-const Vector2 calibrationsTibia1 = {2427.5, 581.5};
-const Vector2 calibrationsFemur1 = {2382.5, 552.5};
-const Vector2 calibrationsCoxa1 = {2461, 569};
-
-const Vector2 calibrationsTibia2 = {2401, 609};
-const Vector2 calibrationsFemur2 = {2454.5, 572.5};
-const Vector2 calibrationsCoxa2 = {2473.5, 531.5};
-
-const Vector2 calibrationsTibia3 = {2433, 625};
-const Vector2 calibrationsFemur3 = {2410.5, 552.5};
-const Vector2 calibrationsCoxa3 = {2435, 547};
-
-const Vector2 calibrationsTibia4 = {2386, 570};
-const Vector2 calibrationsFemur4 = {2406, 634};
-const Vector2 calibrationsCoxa4 = {2407, 547};
-
-const Vector2 calibrationsTibia5 = {2462, 546};
-const Vector2 calibrationsFemur5 = {2424, 540};
-const Vector2 calibrationsCoxa5 = {2485, 589};
-
-const Vector2 calibrationsTibia6 = {2439, 535};
-const Vector2 calibrationsFemur6 = {2442, 614};
-const Vector2 calibrationsCoxa6 = {2473.5, 547.5};
-
-const Vector2 calibrations[18] = {
-  calibrationsTibia1, 
-  calibrationsFemur1,
-  calibrationsCoxa1,
-
-  calibrationsTibia2, 
-  calibrationsFemur2,
-  calibrationsCoxa2,
-
-  calibrationsTibia3, 
-  calibrationsFemur3,
-  calibrationsCoxa3,
-
-  calibrationsTibia4, 
-  calibrationsFemur4,
-  calibrationsCoxa4,
-
-  calibrationsTibia5, 
-  calibrationsFemur5,
-  calibrationsCoxa5,
-
-  calibrationsTibia6, 
-  calibrationsFemur6,
-  calibrationsCoxa6};
 
 const float a1 = 41;  //Coxa Length
 const float a2 = 116; //Femur Length

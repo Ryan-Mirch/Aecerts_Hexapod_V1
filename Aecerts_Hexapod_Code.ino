@@ -184,7 +184,6 @@ void setCycleStartPoints(){
 
 int angleToMicroseconds(double angle, int servoID) {
   double val = 500.0 + (((2500.0 - 500.0) / 180.0) * angle);
-  val = map(val, 500, 2500, calibrations[servoID].y, calibrations[servoID].x);
   return (int)val;
 }
 

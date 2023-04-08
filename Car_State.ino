@@ -10,7 +10,14 @@ float liftHeightMultiplier = 1.0;
 float maxStrideLength = 200;
 float maxSpeed = 100;
 
+int leftSlider = 50;
+float globalSpeedMultiplier = 0.55;
+float globalRotationMultiplier = 0.55;
+
 void carState() {
+  leftSlider = (int)rc_data.slider2;
+  globalSpeedMultiplier = (leftSlider + 10.0)*0.01;
+  globalRotationMultiplier = map(rc_data.slider2,0,100,40,130) * 0.01;
 
   if (currentState != Car || previousGait != currentGait) {
     currentState = Car;
@@ -42,9 +49,9 @@ void carState() {
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 6);
         cycleProgress[2] = (points / 6)*2;
-        cycleProgress[3] = (points / 6)*3;
+        cycleProgress[3] = (points / 6)*5;
         cycleProgress[4] = (points / 6)*4;
-        cycleProgress[5] = (points / 6)*5;
+        cycleProgress[5] = (points / 6)*3;
 
         //Percentage Time On Ground
         pushFraction = 5.0/6.0; 
@@ -116,8 +123,12 @@ void carState() {
   moveToPos(4, getGaitPoint(4, pushFraction, 0));
   moveToPos(5, getGaitPoint(5, pushFraction, 0));
   
-  float progressChangeAmount = max(abs(forwardAmount),abs(turnAmount))* speedMultiplier;
-  progressChangeAmount = constrain(progressChangeAmount,0,maxSpeed);
+  
+
+  float progressChangeAmount = (max(abs(forwardAmount),abs(turnAmount))* speedMultiplier)*globalSpeedMultiplier ;
+
+  
+  progressChangeAmount = constrain(progressChangeAmount,0,maxSpeed*globalSpeedMultiplier);
 
   for(int i = 0; i < 6; i++){
     cycleProgress[i] += progressChangeAmount;
@@ -133,9 +144,10 @@ void carState() {
 Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){  
  
 
-  float rotateStrideLength = joy2CurrentVector.x;
+  float rotateStrideLength = joy2CurrentVector.x * globalRotationMultiplier;
   Vector2 v = joy1CurrentVector * Vector2(1,strideLengthMultiplier);
   v.y = constrain(v.y,-maxStrideLength/2, maxStrideLength/2);
+  v = v * globalSpeedMultiplier;
 
   float weightSum = abs(forwardAmount) + abs(turnAmount);
 
