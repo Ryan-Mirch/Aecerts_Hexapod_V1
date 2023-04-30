@@ -182,7 +182,7 @@ void setCycleStartPoints(){
   }     
 }
 
-int angleToMicroseconds(double angle, int servoID) {
+int angleToMicroseconds(double angle) {
   double val = 500.0 + (((2500.0 - 500.0) / 180.0) * angle);
   return (int)val;
 }
@@ -218,9 +218,9 @@ void moveToPos(int leg, Vector3 pos){
 
   targetRot = Vector3(theta1,theta2,theta3);
   
-  int coxaMicroseconds = angleToMicroseconds(targetRot.x, leg + 2);
-  int femurMicroseconds = angleToMicroseconds(targetRot.y, leg + 1);
-  int tibiaMicroseconds = angleToMicroseconds(targetRot.z, leg);
+  int coxaMicroseconds = angleToMicroseconds(targetRot.x);
+  int femurMicroseconds = angleToMicroseconds(targetRot.y);
+  int tibiaMicroseconds = angleToMicroseconds(targetRot.z);
 
   switch(leg){
     case 0:
