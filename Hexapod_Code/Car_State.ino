@@ -102,6 +102,25 @@ void carState() {
         maxStrideLength = 230;
         maxSpeed = 130;
         break;
+
+        case Hop:
+        //Offsets
+        cycleProgress[0] = 0;
+        cycleProgress[1] = 0;
+        cycleProgress[2] = 0;
+        cycleProgress[3] = 0;
+        cycleProgress[4] = 0;
+        cycleProgress[5] = 0;
+
+        //Percentage Time On Ground        
+        pushFraction = 3/6.0;
+
+        speedMultiplier = 1;
+        strideLengthMultiplier = 2;
+        liftHeightMultiplier = 1.6;
+        maxStrideLength = 240;
+        maxSpeed = 200;
+        break;
     }
 
       
