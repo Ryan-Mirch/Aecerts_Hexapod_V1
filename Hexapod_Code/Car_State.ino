@@ -116,8 +116,8 @@ void carState() {
         pushFraction = 3/6.0;
 
         speedMultiplier = 1;
-        strideLengthMultiplier = 2;
-        liftHeightMultiplier = 1.6;
+        strideLengthMultiplier = 1.6;
+        liftHeightMultiplier = 2.5;
         maxStrideLength = 240;
         maxSpeed = 200;
         break;
