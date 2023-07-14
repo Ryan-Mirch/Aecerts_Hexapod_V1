@@ -50,7 +50,7 @@ const Vector3 offsets1 = {90,75,-18};
 const Vector3 offsets2 = {93,75,-15};
 const Vector3 offsets3 = {93,75,-18}; 
 const Vector3 offsets4 = {87,80,-26};
-const Vector3 offsets5 = {94,89,-16};
+const Vector3 offsets5 = {85,89,-16};
 const Vector3 offsets6 = {93,85,-24};
 const Vector3 offsets[6] = {offsets1, offsets2, offsets3, offsets4, offsets5, offsets6};
 

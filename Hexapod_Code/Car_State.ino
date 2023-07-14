@@ -9,6 +9,7 @@ float strideLengthMultiplier = 1.5;
 float liftHeightMultiplier = 1.0;
 float maxStrideLength = 200;
 float maxSpeed = 100;
+float legPlacementAngle = 56;
 
 int leftSlider = 50;
 float globalSpeedMultiplier = 0.55;
@@ -181,7 +182,7 @@ Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){
     legStates[leg] = Propelling;
 
     ControlPoints[0] = cycleStartPoints[leg];
-    ControlPoints[1] = Vector3(v.x * strideMultiplier[leg] + distanceFromCenter, -v.y * strideMultiplier[leg], distanceFromGround).rotate(55 * rotationMultiplier[leg], Vector2(distanceFromCenter,0));
+    ControlPoints[1] = Vector3(v.x * strideMultiplier[leg] + distanceFromCenter, -v.y * strideMultiplier[leg], distanceFromGround).rotate(legPlacementAngle * rotationMultiplier[leg], Vector2(distanceFromCenter,0));
     ControlPointsAmount = 2;    
     Vector3 straightPoint = GetPointOnBezierCurve(ControlPoints, ControlPointsAmount, mapFloat(t,0,pushFraction,0,1));
 
@@ -203,8 +204,8 @@ Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){
 
     ControlPoints[0] = cycleStartPoints[leg];
     ControlPoints[1] = cycleStartPoints[leg] + Vector3(0,0,liftHeight * liftHeightMultiplier);
-    ControlPoints[2] = Vector3(-v.x * strideMultiplier[leg] + distanceFromCenter, (v.y + strideOvershoot) * strideMultiplier[leg], distanceFromGround + landHeight).rotate(55 * rotationMultiplier[leg], Vector2(distanceFromCenter,0));
-    ControlPoints[3] = Vector3(-v.x * strideMultiplier[leg] + distanceFromCenter, v.y * strideMultiplier[leg], distanceFromGround).rotate(55 * rotationMultiplier[leg], Vector2(distanceFromCenter,0));
+    ControlPoints[2] = Vector3(-v.x * strideMultiplier[leg] + distanceFromCenter, (v.y + strideOvershoot) * strideMultiplier[leg], distanceFromGround + landHeight).rotate(legPlacementAngle * rotationMultiplier[leg], Vector2(distanceFromCenter,0));
+    ControlPoints[3] = Vector3(-v.x * strideMultiplier[leg] + distanceFromCenter, v.y * strideMultiplier[leg], distanceFromGround).rotate(legPlacementAngle * rotationMultiplier[leg], Vector2(distanceFromCenter,0));
     ControlPointsAmount = 4;
     Vector3 straightPoint = GetPointOnBezierCurve(ControlPoints, ControlPointsAmount, mapFloat(t,pushFraction,1,0,1));
 

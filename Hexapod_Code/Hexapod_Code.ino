@@ -90,6 +90,10 @@ void setup() {
 }
 
 void loop() {
+
+  //int sensorValue = analogRead(A0);
+  //Serial.println(sensorValue);
+
   elapsedTime = millis() - loopStartTime;
   loopStartTime = millis();
 
