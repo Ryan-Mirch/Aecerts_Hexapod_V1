@@ -104,7 +104,7 @@ void carState() {
         maxSpeed = 130;
         break;
 
-        case Hop:
+      case Hop:
         //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = 0;
@@ -122,9 +122,7 @@ void carState() {
         maxStrideLength = 240;
         maxSpeed = 200;
         break;
-    }
-
-      
+    }      
   }
 
   
