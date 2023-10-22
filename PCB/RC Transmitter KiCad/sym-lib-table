@@ -5,4 +5,5 @@
   (lib (name "Modules")(type "KiCad")(uri "${KIPRJMOD}/AddedSymbols/Modules.kicad_sym")(options "")(descr ""))
   (lib (name "NRF24L01_sym")(type "KiCad")(uri "${KIPRJMOD}/AddedSymbols/NRF24L01_sym.kicad_sym")(options "")(descr ""))
   (lib (name "THB001P")(type "KiCad")(uri "${KIPRJMOD}/AddedSymbols/THB001P.kicad_sym")(options "")(descr ""))
+  (lib (name "SN74HC165N")(type "KiCad")(uri "${KIPRJMOD}/AddedSymbols/SN74HC165N.kicad_sym")(options "")(descr ""))
 )

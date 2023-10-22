@@ -44,7 +44,7 @@ bool RC_GetDataPackage(){
     rc_data_previous = rc_data;
     radio.read(&rc_data, sizeof(RC_Data_Package));
     rc_last_received_time = millis();
-  }
+  } 
 
   rc_current_time = millis();
   if(rc_current_time - rc_last_received_time > 250){
