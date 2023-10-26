@@ -159,7 +159,7 @@ void carState() {
 
 
 
-Vector3 getGaitPoint(int leg, float pushFraction, int centerOffset){  
+Vector3 getGaitPoint(int leg, float pushFraction){  
  
 
   float rotateStrideLength = joy2CurrentVector.x * globalRotationMultiplier;
