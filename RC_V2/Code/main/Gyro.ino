@@ -4,7 +4,7 @@
  * License: MIT
  */
 
-
+/*
 #include <MPU6050_light.h>
 
 MPU6050 mpu(Wire);
@@ -18,7 +18,7 @@ void setupGyro(){
   while(status!=0){ } // stop everything if could not connect to MPU6050
   
   Serial.println(F("Calculating offsets, do not move MPU6050"));
-  delay(1000);
+  delay(50);
   // mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
   mpu.calcOffsets(); // gyro and accelero
   Serial.println("Done!\n");
@@ -38,3 +38,4 @@ void calibrateGyro(){
   mpu.calcOffsets();
 }
 
+*/

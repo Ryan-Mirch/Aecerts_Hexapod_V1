@@ -1,7 +1,6 @@
 
 
 #include <SPI.h>
-//#include <nRF24L01.h>
 #include <RF24.h>
 
 //RF24 radio(9, 10); // CE, CSN
@@ -109,7 +108,6 @@ int smoothPotVal(int potVal){
   {
     potValComp = map(potVal, 975, 1023, 767, 1023); // top 25% of pot remapped to 75% to 100%% of 1023
   }
-
   return potValComp;
 }
 

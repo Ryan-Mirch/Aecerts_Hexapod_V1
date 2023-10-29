@@ -1476,7 +1476,6 @@
   (no_connect (at 129.54 74.93) (uuid 9db11367-7f5f-454e-9308-1d827bcd14d6))
   (no_connect (at 175.26 120.65) (uuid a0cff706-8c8f-43dc-b98b-022b4e8c162d))
   (no_connect (at 175.26 118.11) (uuid bff7ae87-854f-4867-9a5f-cf0d9d94edfd))
-  (no_connect (at 231.14 46.99) (uuid c2e24a51-44e0-46fe-8aac-29bc1069a910))
   (no_connect (at 179.07 36.83) (uuid d5c843ca-074d-49b0-b6b8-0789f627d1a1))
   (no_connect (at 231.14 62.23) (uuid e64a52b8-ccd8-4eca-9465-65a58d4cdd3d))
 
@@ -2156,6 +2155,10 @@
   (label "5v" (at 30.48 91.44 180) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify right bottom))
     (uuid 019b907b-f5d9-4d72-ac26-908883d15a47)
+  )
+  (label "TFT Reset" (at 231.14 46.99 180) (fields_autoplaced)
+    (effects (font (size 1.27 1.27)) (justify right bottom))
+    (uuid 05305242-4533-49f9-8d37-00273edf4ee8)
   )
   (label "Toggle D" (at 38.1 184.15 0) (fields_autoplaced)
     (effects (font (size 1.27 1.27)) (justify left bottom))

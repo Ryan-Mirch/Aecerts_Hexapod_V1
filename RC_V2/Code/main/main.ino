@@ -1,4 +1,7 @@
 #include "Wire.h"
+#include "IO_Extender.h"
+#include "NRF.h"
+
 
 const bool DEBUG_PRINT = true;
 
@@ -10,39 +13,79 @@ enum RotaryEncoderState {
   SpunLeft    //4
 };
 
+enum IOLabels {
+  A, //0
+  B, //1
+  C, //2
+  D  //3
+};
+
 struct GyroAngleData {
     int X;
     int Y;
 };
 
-int prevGyroX = 0;
-int prevGyroY = 0;
+int prevPotA = 0;
+int prevPotB = 0;
+
 
 void setup() {
   Serial.begin(9600);
-
   Wire.begin();
 
-  setupRotaryEncoder();
-  setupGyro();
+  
+  //setupRotaryEncoder();
+  //setupGyro();
+  //setupButtons();
+  setupScreen();
+  setupNRF();
+  
 
+  //setupIOExtender();
 }
 
 void loop() {
+  /*
+  readIOExtenderPinValues();
   RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
+    
+  uint8_t buttonA = getButtonState(A);
+  uint8_t buttonB = getButtonState(B);
+  uint8_t buttonC = getButtonState(C);
+  uint8_t buttonD = getButtonState(D);
 
-
-  if(rotaryEncoderState != Nothing){
-    Serial.println(rotaryEncoderState);
+  rc_data.joy1_Y = 127;
+  if(getButtonState(A) == HIGH){
+    rc_data.joy1_Y = 200;
+    Serial.println("Button A Pressed");
   }
 
-  GyroAngleData gad = readGyro(); 
-  if(gad.X != prevGyroX || gad.Y != prevGyroY){
-    Serial.print("X : ");
-    Serial.print(gad.X);
-    Serial.print("\tY : ");
-    Serial.println(gad.Y);
+  if(getButtonState(B) == HIGH){
+    Serial.println("Button B Pressed");
   }
-  prevGyroX = gad.X;
-  prevGyroY = gad.Y;  
+
+  if(getButtonState(C) == HIGH){
+    Serial.println("Button C Pressed");
+  }
+
+  if(getButtonState(D) == HIGH){
+    Serial.println("Button D Pressed");
+  }
+
+  int potBValue = getPotValue(B);
+  int potAValue = getPotValue(A);
+
+
+  if(potAValue != prevPotA || potBValue != prevPotB){
+    Serial.print("Pot A : ");
+    Serial.print(potAValue);
+    Serial.print("\tPot B : ");
+    Serial.println(potBValue);
+  }
+  prevPotA = potAValue;
+  prevPotB = potBValue; 
+  */
+  sendNRFData();
+  //delay(500);
+  updateScreen();
 }
