@@ -4,7 +4,7 @@
  * License: MIT
  */
 
-/*
+
 #include <MPU6050_light.h>
 
 MPU6050 mpu(Wire);
@@ -38,4 +38,3 @@ void calibrateGyro(){
   mpu.calcOffsets();
 }
 
-*/

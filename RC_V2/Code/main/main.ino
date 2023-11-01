@@ -1,6 +1,8 @@
 #include "Wire.h"
 #include "IO_Extender.h"
+#include "Screen.h"
 #include "NRF.h"
+
 
 
 const bool DEBUG_PRINT = true;
@@ -32,20 +34,16 @@ int prevPotB = 0;
 void setup() {
   Serial.begin(9600);
   Wire.begin();
-
-  
-  //setupRotaryEncoder();
-  //setupGyro();
-  //setupButtons();
-  setupScreen();
   setupNRF();
-  
-
-  //setupIOExtender();
+  setupScreen();
+  setupRotaryEncoder();
+  setupGyro();
+  setupButtons();
+  setupIOExtender();
 }
 
 void loop() {
-  /*
+  
   readIOExtenderPinValues();
   RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
     
@@ -57,19 +55,19 @@ void loop() {
   rc_data.joy1_Y = 127;
   if(getButtonState(A) == HIGH){
     rc_data.joy1_Y = 200;
-    Serial.println("Button A Pressed");
+    //Serial.println("Button A Pressed");
   }
 
   if(getButtonState(B) == HIGH){
-    Serial.println("Button B Pressed");
+    //Serial.println("Button B Pressed");
   }
 
   if(getButtonState(C) == HIGH){
-    Serial.println("Button C Pressed");
+    //Serial.println("Button C Pressed");
   }
 
   if(getButtonState(D) == HIGH){
-    Serial.println("Button D Pressed");
+    //Serial.println("Button D Pressed");
   }
 
   int potBValue = getPotValue(B);
@@ -83,9 +81,9 @@ void loop() {
     Serial.println(potBValue);
   }
   prevPotA = potAValue;
-  prevPotB = potBValue; 
-  */
+  prevPotB = potBValue;  
+  
   sendNRFData();
-  //delay(500);
   updateScreen();
+  
 }

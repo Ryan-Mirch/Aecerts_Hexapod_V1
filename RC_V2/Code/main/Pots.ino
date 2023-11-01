@@ -1,5 +1,5 @@
 //"Pots" is short for "Potentiometers"
-/*
+
 #define PotA_Pin A0
 #define PotB_Pin A7
 
@@ -18,4 +18,3 @@ int getPotValue(IOLabels label){
     return 0;
   }
 }
-*/

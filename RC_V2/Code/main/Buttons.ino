@@ -1,4 +1,4 @@
-/*
+
 #define ButtonA_Pin P01
 #define ButtonB_Pin P02
 #define ButtonC_Pin P03
@@ -23,4 +23,3 @@ uint8_t getButtonState(IOLabels label){
       return getIOExtenderPinValue(ButtonD_Pin);
   }
 }
-*/

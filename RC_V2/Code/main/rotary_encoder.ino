@@ -1,9 +1,8 @@
-/*
 #include <Encoder.h>
 
 #define switchPin P12
-#define encoderPin1 4
-#define encoderPin2 5
+#define encoderPin1 2
+#define encoderPin2 3
 
 Encoder encoder1(3, 2);  //CLK, DT
 long encoder1PrevPos = 0;
@@ -99,4 +98,3 @@ RotaryEncoderState readRotaryEncoder(){
 
   return Nothing;
 }
-*/

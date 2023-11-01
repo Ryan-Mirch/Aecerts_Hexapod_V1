@@ -134,12 +134,12 @@ void carState() {
   forwardAmount = joy1CurrentMagnitude;
   turnAmount = joy2CurrentVector.x;
 
-  moveToPos(0, getGaitPoint(0, pushFraction, 0));
-  moveToPos(1, getGaitPoint(1, pushFraction, 0));
-  moveToPos(2, getGaitPoint(2, pushFraction, 0));
-  moveToPos(3, getGaitPoint(3, pushFraction, 0));
-  moveToPos(4, getGaitPoint(4, pushFraction, 0));
-  moveToPos(5, getGaitPoint(5, pushFraction, 0));
+  moveToPos(0, getGaitPoint(0, pushFraction));
+  moveToPos(1, getGaitPoint(1, pushFraction));
+  moveToPos(2, getGaitPoint(2, pushFraction));
+  moveToPos(3, getGaitPoint(3, pushFraction));
+  moveToPos(4, getGaitPoint(4, pushFraction));
+  moveToPos(5, getGaitPoint(5, pushFraction));
   
   
 

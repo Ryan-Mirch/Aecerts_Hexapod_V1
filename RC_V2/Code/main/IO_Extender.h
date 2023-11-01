@@ -1,4 +1,3 @@
-/*
 #define NOT_SEQUENTIAL_PINOUT
 #include "PCF8575.h"
 
@@ -54,4 +53,3 @@ uint8_t getIOExtenderPinValue(int pin){
   }
   
 }
-*/

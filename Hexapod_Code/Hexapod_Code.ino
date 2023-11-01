@@ -7,6 +7,7 @@
 #include "Initializations.h"
 #include "Helpers.h"
 
+
 enum State {
   Initialize,
   Stand,
@@ -85,23 +86,19 @@ void setup() {
   // Initialize serial communication
   Serial.begin(9600);
   attachServos(); 
-  RC_Setup(); 
+  RC_Setup();
   stateInitialize();
 }
 
 void loop() {
 
-  //int sensorValue = analogRead(A0);
-  //Serial.println(sensorValue);
-
   elapsedTime = millis() - loopStartTime;
   loopStartTime = millis();
 
-  
-  bool connected = RC_GetDataPackage();
+  bool connected = GetData();
   //RC_DisplayData();
-
   if(connected){
+
     double joy1x = map(rc_data.joy1_X,0,254,-100,100);
     double joy1y = map(rc_data.joy1_Y,0,254,-100,100);
 
@@ -117,6 +114,10 @@ void loop() {
     previousDistanceFromGround = distanceFromGround;
     distanceFromGround = distanceFromGroundBase + rc_data.slider1 * -1.7;
     distanceFromCenter = 170;
+
+    
+
+    
   }
   else{
     calibrationState();

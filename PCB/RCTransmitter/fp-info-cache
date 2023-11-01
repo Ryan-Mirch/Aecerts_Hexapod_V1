@@ -1,4 +1,4 @@
-22366942485485681
+22368641878820370
 AddedFootprints
 3.5 Inch Screen SPI_Module_ILI9488
 
@@ -55,6 +55,13 @@ NRF24L01+ Antenna
 0
 8
 8
+AddedFootprints
+OLED LCD Display SSD1309
+
+
+0
+7
+7
 AddedFootprints
 PCF8575 Module
 
