@@ -1,0 +1,145 @@
+[gd_scene load_steps=5 format=3 uid="uid://lqcimtmv1djc"]
+
+[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://DePixelKlein.otf" id="1_yudbx"]
+
+[sub_resource type="GDScript" id="GDScript_kbedx"]
+script/source = "extends Control
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	Pages.ControlsPage = self
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		Pages.MainPage.open()
+		close()
+
+func open():
+	visible = true
+	print(\"controls page opened\")
+	set_process(true)
+	
+	
+func close():
+	visible = false
+	set_process(false)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfjn"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.454902, 0.454902, 0.454902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_aqft8"]
+font = ExtResource("1_yudbx")
+font_size = 75
+shadow_size = 0
+shadow_offset = Vector2(0, 0)
+
+[node name="Controls Page" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_kbedx")
+metadata/_edit_vertical_guides_ = []
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wvfjn")
+
+[node name="Battery Outline" type="Line2D" parent="."]
+position = Vector2(388, 156)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(38.685, 52.4212, 38.685, 55.4167, 33.8494, 55.4167, 33.8494, 54.2934, 33.1586, 54.2934, 33.1586, 53.5445, 33.8494, 53.5445, 33.8494, 52.4212, 38.685, 52.4212, 38.685, 55.4167)
+width = 1.0
+
+[node name="Battery Level" type="Line2D" parent="Battery Outline"]
+position = Vector2(138.852, 196.205)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(34.717, 53.2771, 35.4328, 53.2771)
+width = 1.0
+
+[node name="Controls Label" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 7.0
+offset_top = 7.0
+offset_right = 187.0
+offset_bottom = 88.0
+scale = Vector2(0.202507, 0.202507)
+text = "Back"
+label_settings = SubResource("LabelSettings_aqft8")
+
+[node name="Underline" type="Line2D" parent="Controls Label"]
+position = Vector2(429.614, 74.0714)
+scale = Vector2(1, 0.6)
+points = PackedVector2Array(-434.552, -6.10352e-05, -256.781, -6.10352e-05)
+
+[node name="Controls Label2" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 102.0
+offset_top = 8.0
+offset_right = 436.0
+offset_bottom = 89.0
+scale = Vector2(0.293303, 0.293303)
+text = "Controls"
+label_settings = SubResource("LabelSettings_aqft8")
+
+[node name="Controls Label3" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 37.0
+offset_top = 104.0
+offset_right = 1009.0
+offset_bottom = 270.0
+scale = Vector2(0.234521, 0.234521)
+text = "Press any button to learn what it does."
+label_settings = SubResource("LabelSettings_aqft8")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Controls Label4" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 2.0
+offset_top = 58.0
+offset_right = 815.0
+offset_bottom = 139.0
+scale = Vector2(0.362999, 0.362999)
+text = "Button A"
+label_settings = SubResource("LabelSettings_aqft8")
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="Connected" type="Line2D" parent="."]
+position = Vector2(498, 71)
+scale = Vector2(0.840777, 0.840777)
+points = PackedVector2Array(-278, -62, -275, -67, -275, -73, -278, -78)
+width = 3.0
+
+[node name="Line1" type="Line2D" parent="Connected"]
+position = Vector2(-6, 0)
+points = PackedVector2Array(-276, -65, -275, -67, -275, -73, -276, -75)
+width = 3.0
+
+[node name="Line2" type="Line2D" parent="Connected"]
+position = Vector2(-11, 1)
+points = PackedVector2Array(-275, -69, -275, -73)
+width = 3.0
