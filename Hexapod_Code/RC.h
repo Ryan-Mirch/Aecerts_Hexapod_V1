@@ -1,18 +1,15 @@
 #include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
-
+#define Current_Sensor_Pin 0
 
 RF24 radio(49, 48); // CE, CSN
-
-
-
-const byte addresses[][6] = {"00011", "00012"};
+uint8_t address[][6] = {"1Node", "2Node"};
+bool radioNumber = 1;
 
 unsigned long rc_last_received_time = 0;
-unsigned long rc_current_time = 0;
+unsigned long rc_timeout = 500;
 
-int test = 0;
+
 
 
 struct RC_Data_Package {
@@ -26,61 +23,60 @@ struct RC_Data_Package {
   byte slider2;
   byte pushButton1;
   byte pushButton2;
-  byte requestData;
 };
 
 struct Hexapod_Data_Package {
-  byte current_sensor_value;
+  float current_sensor_value;
 };
 
 RC_Data_Package rc_data;
 RC_Data_Package rc_data_previous;
+
 Hexapod_Data_Package hex_data;
 
 void RC_Setup();
 bool RC_GetDataPackage();
 void RC_DisplayData();
 void RC_ResetData();
+void SendData();
+void initializeHexPayload();
 
 void RC_Setup(){
-  radio.begin();
-  radio.openWritingPipe(addresses[0]); // 00011
-  radio.openReadingPipe(1, addresses[1]); // 00012
-  radio.setPALevel(RF24_PA_MIN);
-  radio.startListening();  
+  RC_ResetData();
+  if (!radio.begin()) {
+    Serial.println(F("radio hardware is not responding!!"));
+    while (1) {} // hold in infinite loop
+  } else {
+    Serial.println(F("radio hardware is ready!"));
+  }
+  radio.setPALevel(RF24_PA_LOW);
+  radio.setPayloadSize(sizeof(rc_data));
+  radio.setChannel(124);
+  radio.openReadingPipe(1, address[!radioNumber]);
+  radio.enableAckPayload();
+  radio.startListening();
+  initializeHexPayload();  
+  radio.writeAckPayload(1, &hex_data, sizeof(hex_data)); 
+}
+
+void initializeHexPayload(){
+  hex_data.current_sensor_value = 0;
 }
 
 
-
-void SendData(){
-  test += 1;
-  //int sensorPotValue = analogRead(A0);
-  //int sensorValue = map(sensorPotValue, 0, 1023, 0, 100);
-  Serial.println("Data Sent: " + String(test));
-  radio.write(&test, sizeof(test)); 
-}
 
 bool GetData(){  
-
-  radio.startListening();
-  if (radio.available()) {
-    rc_data_previous = rc_data;
-    radio.read(&rc_data, sizeof(RC_Data_Package));
+  // This device is a RX node
+  uint8_t pipe;
+  if (radio.available(&pipe)) {
+    uint8_t bytes = radio.getPayloadSize(); // get the size of the payload
+    radio.read(&rc_data, bytes);            // fetch payload from FIFO 
+    //RC_DisplayData();
+    hex_data.current_sensor_value = mapFloat(analogRead(Current_Sensor_Pin),0,1024,0,50);
+    radio.writeAckPayload(1, &hex_data, sizeof(hex_data)); // load the payload for the next time
     rc_last_received_time = millis();
-    radio.stopListening();
-  } 
-
-  if(rc_data.requestData == 1){
-    SendData();    
-    rc_data.requestData = 0;
   }
-
-  rc_current_time = millis();
-
-  if(rc_current_time - rc_last_received_time > 350){
-    RC_ResetData();
-    return false;
-  }  
+  if(millis() - rc_last_received_time >  rc_timeout) return false;
   return true;
 }
 
@@ -90,31 +86,31 @@ void RC_DisplayData(){
   Serial.print("Joy1 X: ");
   Serial.print(rc_data.joy1_X);
 
-  Serial.print("Joy1 Y: ");
+  Serial.print(" | Joy1 Y: ");
   Serial.print(rc_data.joy1_Y);
 
-  Serial.print("Joy1 Button: ");
+  Serial.print(" | Joy1 Button: ");
   Serial.print(rc_data.joy1_Button);
 
-  Serial.print("Joy2 X: ");
+  Serial.print(" | Joy2 X: ");
   Serial.print(rc_data.joy2_X);
 
-  Serial.print("Joy2 Y: ");
+  Serial.print(" | Joy2 Y: ");
   Serial.print(rc_data.joy2_Y);
 
-  Serial.print("Joy2 Button: ");
+  Serial.print(" | Joy2 Button: ");
   Serial.print(rc_data.joy2_Button);
 
-  Serial.print("Slider 1: ");
+  Serial.print(" | Pot 1: ");
   Serial.print(rc_data.slider1);
 
-  Serial.print("Slider 2: ");
+  Serial.print(" | Pot 2: ");
   Serial.print(rc_data.slider2);
 
-  Serial.print("Push Button 1: ");
+  Serial.print(" | Button 1: ");
   Serial.print(rc_data.pushButton1);
 
-  Serial.print("Push Button 2: ");
+  Serial.print(" | Button 2: ");
   Serial.println(rc_data.pushButton2);
 }
 

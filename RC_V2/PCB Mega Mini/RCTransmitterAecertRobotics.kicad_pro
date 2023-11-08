@@ -34,9 +34,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 2.2,
-          "height": 4.0,
-          "width": 4.0
+          "drill": 2.8,
+          "height": 2.0,
+          "width": 3.2
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -416,7 +416,7 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.5,
+        "clearance": 0.375,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,
@@ -472,6 +472,9 @@
     "net_colors": null,
     "netclass_assignments": {
       "/5v": "5v",
+      "/Bat+": "Vin",
+      "/Bat-": "Vin",
+      "/VOUT-": "Vin",
       "/Vin": "Vin"
     },
     "netclass_patterns": []

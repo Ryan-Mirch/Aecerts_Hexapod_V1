@@ -4,15 +4,15 @@
 #include <RF24.h>
 
 RF24 radio(6, 5); // CE, CSN
-const byte addresses[][6] = {"00011", "00012"};
+uint8_t address[][6] = {"1Node", "2Node"};
+bool radioNumber = 0;
 
 unsigned long rc_last_received_time = 0;
 unsigned long rc_current_time = 0;
 
-unsigned long rc_last_requested_time = 0;
-unsigned long rc_requested_interval = 300;
+unsigned long rc_last_sent_time = 0;
+unsigned long rc_send_interval = 300;
 
-int test = 0;
 
 struct RC_Data_Package {
   byte joy1_X;
@@ -25,22 +25,24 @@ struct RC_Data_Package {
   byte slider2;
   byte pushButton1;
   byte pushButton2;
-  byte requestData;
 
 };
 
 struct Hexapod_Data_Package {
-  byte current_sensor_value;
+  float current_sensor_value;
 };
 
 RC_Data_Package rc_data;
 Hexapod_Data_Package hex_data;
 
 void setupNRF(){
-  radio.begin();
-  radio.openWritingPipe(addresses[1]); // 00012
-  radio.openReadingPipe(1, addresses[0]); // 00011
-  radio.setPALevel(RF24_PA_MIN,0);  
+  radio.begin();  
+  radio.setPALevel(RF24_PA_LOW);  
+  radio.setPayloadSize(sizeof(rc_data));
+  radio.setChannel(124);
+  radio.enableAckPayload();
+  radio.setRetries(5,5);
+  radio.openWritingPipe(address[radioNumber]);
 
   rc_data.joy1_X = 127;
   rc_data.joy1_Y = 127;
@@ -52,29 +54,25 @@ void setupNRF(){
 
   rc_data.slider1 = 50;
   rc_data.slider2 = 50;
-
-  setWord1("Unconnected");
 }
 
 void sendNRFData(){ 
+  bool report = radio.write(&rc_data, sizeof(rc_data));      // transmit & save the report
+  
+  if (report) {
+    if (radio.isAckPayloadAvailable()) {
+      radio.read(&hex_data, sizeof(hex_data));   
+      float current = hex_data.current_sensor_value;
+      Serial.println(("Current Sensor: " + String(current)));
+      setWord1("Current: " + String(current));
+    }      
 
-  radio.stopListening();
-  rc_data.requestData = 0;
-  if(millis() - rc_last_requested_time > rc_requested_interval){
-    rc_data.requestData = 1;
-    rc_last_requested_time = millis();
+  } else {
+    Serial.print(F("Transmission failed or timed out with ")); // payload was not delivered
+    Serial.print(sizeof(rc_data));
+    Serial.println(F(" bytes"));
   }
-  
-  radio.write(&rc_data, sizeof(RC_Data_Package));
-  radio.startListening(); 
-  int incomingTest = 0;
-  radio.read(&incomingTest, sizeof(incomingTest));
-  if(incomingTest > 0){
-    test = incomingTest;
-    //setWord1(String(test) + " | " + String(millis()-rc_last_requested_time));
-    Serial.println("Data Received: " + String(test));
-  }  
-  
+  //delay(200);
 }
 
 

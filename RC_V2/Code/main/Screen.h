@@ -3,11 +3,15 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#define DC  6
+#define DC  6   //(CE)
 #define CS  7   //(SS)
 #define SCL 13 //(SCK)
 #define SDA 11 //(MOSI)
 #define RES 4
+
+#define UpdateScreenInterval 1
+
+unsigned long last_update_time = 0;
 
 String stringOne = "String 1";   
 String stringTwo = "String 2";   
@@ -24,6 +28,8 @@ void setupScreen(){
   digitalWrite(DC, 0);
   digitalWrite(CS, 0);	
   u8g2.begin();
+
+  
 }
 
 void setWord1(String s){
@@ -38,14 +44,20 @@ void setWord2(String s){
 
 
 void updateScreen(){
-  if(!screenSet){
+  
+  
+  if(!screenSet && millis() - last_update_time > UpdateScreenInterval){
     u8g2.firstPage();
     do {
-      u8g2.setFont(u8g2_font_ncenB10_tr);
-      u8g2.drawStr(0,24,stringOne.c_str());
-      u8g2.drawStr(0,48,stringTwo.c_str());
+      u8g2.setFont(u8g2_font_squeezed_r6_tr); 
+      u8g2.drawStr(8,12,stringOne.c_str());
+      u8g2.drawStr(8,20,stringTwo.c_str());
+      u8g2.drawButtonUTF8(62, 40, U8G2_BTN_HCENTER|U8G2_BTN_BW1|U8G2_BTN_XFRAME, 34,  2,  2, "Btn" );
+
+      u8g2.drawRFrame(1, 1, 126, 62, 4);
     } while ( u8g2.nextPage() );
     screenSet = true;
+    last_update_time = millis();
   }
   
 }

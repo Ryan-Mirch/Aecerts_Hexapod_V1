@@ -4,7 +4,6 @@
 #include "NRF.h"
 
 
-
 const bool DEBUG_PRINT = true;
 
 enum RotaryEncoderState {
@@ -31,6 +30,7 @@ int prevPotA = 0;
 int prevPotB = 0;
 
 
+
 void setup() {
   Serial.begin(9600);
   Wire.begin();
@@ -40,10 +40,14 @@ void setup() {
   setupGyro();
   setupButtons();
   setupIOExtender();
+  
 }
 
 void loop() {
-  
+
+  sendNRFData();
+  updateScreen();
+
   readIOExtenderPinValues();
   RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
     
@@ -70,20 +74,31 @@ void loop() {
     //Serial.println("Button D Pressed");
   }
 
+  if(getBumperState(A) == HIGH){
+    //setWord2("Bumped!");
+  }
+  else{
+    //setWord2("Not Bumped.");
+  }
+
   int potBValue = getPotValue(B);
   int potAValue = getPotValue(A);
 
+  rc_data.slider1 = potAValue;
+  rc_data.slider2 = potBValue;
 
   if(potAValue != prevPotA || potBValue != prevPotB){
-    Serial.print("Pot A : ");
-    Serial.print(potAValue);
-    Serial.print("\tPot B : ");
-    Serial.println(potBValue);
+    //Serial.print("Pot A : ");
+    //Serial.print(potAValue);
+    //Serial.print("\tPot B : ");
+    //Serial.println(potBValue);
   }
   prevPotA = potAValue;
   prevPotB = potBValue;  
   
-  sendNRFData();
-  updateScreen();
+  setWord1("%" + String(getBatteryPercentage()));
+  if(isCharging())setWord1("Charging");
+  
+  setWord2("Time Running: " + String(millis()/1000));
   
 }
