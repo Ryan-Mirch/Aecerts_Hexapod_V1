@@ -127,19 +127,3 @@ text = "Button A"
 label_settings = SubResource("LabelSettings_aqft8")
 horizontal_alignment = 1
 autowrap_mode = 2
-
-[node name="Connected" type="Line2D" parent="."]
-position = Vector2(498, 71)
-scale = Vector2(0.840777, 0.840777)
-points = PackedVector2Array(-278, -62, -275, -67, -275, -73, -278, -78)
-width = 3.0
-
-[node name="Line1" type="Line2D" parent="Connected"]
-position = Vector2(-6, 0)
-points = PackedVector2Array(-276, -65, -275, -67, -275, -73, -276, -75)
-width = 3.0
-
-[node name="Line2" type="Line2D" parent="Connected"]
-position = Vector2(-11, 1)
-points = PackedVector2Array(-275, -69, -275, -73)
-width = 3.0
