@@ -63,14 +63,14 @@ void sendNRFData(){
     if (radio.isAckPayloadAvailable()) {
       radio.read(&hex_data, sizeof(hex_data));   
       float current = hex_data.current_sensor_value;
-      Serial.println(("Current Sensor: " + String(current)));
+      //Serial.println(("Current Sensor: " + String(current)));
       setWord1("Current: " + String(current));
     }      
 
   } else {
-    Serial.print(F("Transmission failed or timed out with ")); // payload was not delivered
-    Serial.print(sizeof(rc_data));
-    Serial.println(F(" bytes"));
+    //Serial.print(F("Transmission failed or timed out with ")); // payload was not delivered
+    //Serial.print(sizeof(rc_data));
+    //Serial.println(F(" bytes"));
   }
   //delay(200);
 }

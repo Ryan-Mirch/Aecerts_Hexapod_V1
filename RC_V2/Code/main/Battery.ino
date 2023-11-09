@@ -13,7 +13,7 @@ void setupBattery(){
 int getBatteryPercentage(){
 
   float batteryVoltage = mapFloat(analogRead(1),0,1024,0,5);
-  float batteryPercentage = mapFloat(batteryVoltage,3.7,4.1,0,100);
+  float batteryPercentage = mapFloat(batteryVoltage,3.7,4,0,100);
 
    if(isCharging()){
     currentSampleCount = 0;

@@ -8,9 +8,9 @@
 script/source = "extends Control
 
 @onready var selectedGaitLabel = %\"Selected Gait Label\"
-@onready var underlineControls = $\"HBoxContainer/Controls Label/Underline\"
-@onready var underlineMenu = $\"HBoxContainer/Menu Label/Underline\"
-@onready var underlineSelectedGait = $\"HBoxContainer/Selected Gait Label/Underline\"
+@onready var underlineControls = $\"Controls Label/Underline\"
+@onready var underlineMenu = $\"Menu Label/Underline\"
+@onready var underlineSelectedGait = $\"Selected Gait Label/Underline\"
 
 var menu_position = 1
 var selected_gait_index = 0
@@ -62,9 +62,9 @@ func setVisibility():
 	match menu_position:
 		0:underlineControls.visible = true
 			
-		1:underlineMenu.visible = true
+		1:underlineSelectedGait.visible = true
 			
-		2:underlineSelectedGait.visible = true
+		2:underlineMenu.visible = true
 		
 func setGait():
 	selectedGaitLabel.text = gaits[selected_gait_index]
@@ -72,7 +72,7 @@ func setGait():
 
 func select():
 	match menu_position:
-		2:
+		1:
 			selected_gait_index += 1
 			if selected_gait_index >= gaits.size(): selected_gait_index = 0
 			setGait()
@@ -115,7 +115,7 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wvfjn")
 
 [node name="Body" type="Line2D" parent="."]
-position = Vector2(59, -43)
+position = Vector2(55, -42)
 scale = Vector2(3.11172, 3.11172)
 points = PackedVector2Array(26, 43, 35, 43, 38, 35, 35, 27, 26, 27, 23, 35, 26, 43)
 width = 1.0
@@ -194,58 +194,59 @@ position = Vector2(-9.81903, -13.5313)
 points = PackedVector2Array(36.8376, 51.935, 36.8376, 55.6705, 33.1021, 55.6705, 33.1021, 51.935, 36.8376, 51.935, 36.8376, 55.6705)
 width = 1.0
 
-[node name="HBoxContainer" type="HBoxContainer" parent="."]
-layout_mode = 1
-anchors_preset = 12
-anchor_top = 1.0
-anchor_right = 1.0
-anchor_bottom = 1.0
-offset_top = -23.0
-offset_right = 985.0
-offset_bottom = 58.0
-grow_horizontal = 2
-grow_vertical = 0
-scale = Vector2(0.235, 0.235)
-theme_override_constants/separation = 125
-alignment = 1
-
-[node name="Controls Label" type="Label" parent="HBoxContainer"]
+[node name="Controls Label" type="Label" parent="."]
 unique_name_in_owner = true
 texture_filter = 3
 layout_mode = 2
+offset_left = 20.0
+offset_top = 127.0
+offset_right = 354.0
+offset_bottom = 208.0
+scale = Vector2(0.22, 0.22)
 text = "Controls"
 label_settings = SubResource("LabelSettings_6odsl")
+horizontal_alignment = 1
 
-[node name="Underline" type="Line2D" parent="HBoxContainer/Controls Label" groups=["Underline"]]
+[node name="Underline" type="Line2D" parent="Controls Label" groups=["Underline"]]
 position = Vector2(434, 71)
 scale = Vector2(1, 0.6)
 points = PackedVector2Array(-430, 0, -112, 0)
 
-[node name="Menu Label" type="Label" parent="HBoxContainer"]
+[node name="Selected Gait Label" type="Label" parent="."]
 unique_name_in_owner = true
 texture_filter = 3
+custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-text = "Menu"
-label_settings = SubResource("LabelSettings_6odsl")
-
-[node name="Underline" type="Line2D" parent="HBoxContainer/Menu Label" groups=["Underline"]]
-position = Vector2(-53, 73.8889)
-scale = Vector2(1, 0.683738)
-points = PackedVector2Array(51, -4.22516, 251, -4.22516)
-
-[node name="Selected Gait Label" type="Label" parent="HBoxContainer"]
-unique_name_in_owner = true
-texture_filter = 3
-custom_minimum_size = Vector2(300, 0)
-layout_mode = 2
+offset_left = 119.0
+offset_top = 127.0
+offset_right = 401.0
+offset_bottom = 208.0
+scale = Vector2(0.22, 0.22)
 text = "Tri"
 label_settings = SubResource("LabelSettings_6odsl")
 horizontal_alignment = 1
 
-[node name="Underline" type="Line2D" parent="HBoxContainer/Selected Gait Label" groups=["Underline"]]
+[node name="Underline" type="Line2D" parent="Selected Gait Label" groups=["Underline"]]
 position = Vector2(-4.14893, 73.8889)
 scale = Vector2(1, 0.683738)
 points = PackedVector2Array(17.0212, -4.22516, 276.596, -4.22516)
+
+[node name="Menu Label" type="Label" parent="."]
+unique_name_in_owner = true
+texture_filter = 3
+layout_mode = 2
+offset_left = 224.0
+offset_top = 127.0
+offset_right = 438.0
+offset_bottom = 208.0
+scale = Vector2(0.22, 0.22)
+text = "Menu"
+label_settings = SubResource("LabelSettings_6odsl")
+
+[node name="Underline" type="Line2D" parent="Menu Label" groups=["Underline"]]
+position = Vector2(-4.14893, 74.0783)
+scale = Vector2(1, 0.569142)
+points = PackedVector2Array(4.14905, -8.34692, 204.149, -8.34692)
 
 [node name="Info" type="Control" parent="."]
 anchors_preset = 0
@@ -463,3 +464,11 @@ rotation = -3.14159
 scale = Vector2(2.89519, 2.67067)
 points = PackedVector2Array(34.717, 53.2771, 35.4328, 53.2771)
 width = 1.0
+
+[node name="Center" type="Line2D" parent="."]
+visible = false
+position = Vector2(138.852, 196.205)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(-55.3152, 18.0499, 47.6143, 72.7176, 47.6142, 18.0496, -55.315, 73.0923, -55.3152, 17.6755, -38.538, 17.6755, -3.85048, 17.6754, -3.85035, 73.0922, 28.6173, 73.0921, 28.6172, 17.3008, -37.6997, 17.301, -37.3542, 73.0922)
+width = 0.415

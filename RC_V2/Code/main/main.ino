@@ -4,7 +4,7 @@
 #include "NRF.h"
 
 
-const bool DEBUG_PRINT = true;
+const bool DEBUG_PRINT = false;
 
 enum RotaryEncoderState {
   Nothing,    //0
