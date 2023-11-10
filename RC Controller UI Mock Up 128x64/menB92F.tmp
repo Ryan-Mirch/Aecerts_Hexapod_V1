@@ -1,0 +1,98 @@
+[gd_scene load_steps=4 format=3 uid="uid://dprlooqiofxt8"]
+
+[ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_3c5hq"]
+
+[sub_resource type="GDScript" id="GDScript_1q6dx"]
+script/source = "extends Control
+
+@onready var backButton = $\"Back Label/Back\"
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	pass # Replace with function body.
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		backButton.select()
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfjn"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.454902, 0.454902, 0.454902, 1)
+
+[node name="Menu Page" type="Control" groups=["Page"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_1q6dx")
+metadata/_edit_vertical_guides_ = []
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wvfjn")
+
+[node name="Battery Outline" type="Line2D" parent="."]
+position = Vector2(388, 156)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(38.685, 52.4212, 38.685, 55.4167, 33.8494, 55.4167, 33.8494, 54.2934, 33.1586, 54.2934, 33.1586, 53.5445, 33.8494, 53.5445, 33.8494, 52.4212, 38.685, 52.4212, 38.685, 55.4167)
+width = 1.0
+
+[node name="Battery Level" type="Line2D" parent="Battery Outline"]
+position = Vector2(138.852, 196.205)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(34.717, 53.2771, 35.4328, 53.2771)
+width = 1.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+alignment = 1
+
+[node name="Page Link" parent="VBoxContainer" instance=ExtResource("2_3c5hq")]
+layout_mode = 2
+
+[node name="Page Link2" parent="VBoxContainer" instance=ExtResource("2_3c5hq")]
+layout_mode = 2
+
+[node name="Page Link3" parent="VBoxContainer" instance=ExtResource("2_3c5hq")]
+layout_mode = 2
+
+[node name="Back Label" type="Control" parent="."]
+custom_minimum_size = Vector2(25, 25)
+layout_mode = 2
+anchors_preset = 0
+offset_right = 25.0
+offset_bottom = 40.0
+
+[node name="Back" parent="Back Label" instance=ExtResource("2_3c5hq")]
+layout_mode = 2
+offset_left = -30.0
+offset_top = -2.0
+offset_right = 170.0
+offset_bottom = 38.0
+itemName = "test"
+pageToOpen = 0
+
+[node name="Arrow" type="Line2D" parent="Back Label"]
+position = Vector2(130, 26)
+scale = Vector2(0.249206, 0.149524)
+points = PackedVector2Array(-474.057, -98.7618, -493.809, -65.8412, -474.057, -32.9205, -493.809, -65.8412, -439.49, -65.8412)

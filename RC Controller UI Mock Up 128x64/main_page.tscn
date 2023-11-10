@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://8p5uyfegg4ul"]
+[gd_scene load_steps=8 format=3 uid="uid://8p5uyfegg4ul"]
 
 [ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://DePixelKlein.otf" id="1_gb7mo"]
+[ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_lcxry"]
 [ext_resource type="Texture2D" uid="uid://bm12qee5n6wpj" path="res://Battery Icon.png" id="2_sa028"]
 [ext_resource type="Texture2D" uid="uid://ohbbyqpqchsh" path="res://ammeter.png" id="3_xcsub"]
 
@@ -9,8 +10,8 @@ script/source = "extends Control
 
 @onready var selectedGaitLabel = %\"Selected Gait Label\"
 @onready var underlineControls = $\"Controls Label/Underline\"
-@onready var underlineMenu = $\"Menu Label/Underline\"
 @onready var underlineSelectedGait = $\"Selected Gait Label/Underline\"
+@onready var menuLink = $\"Menu Link\"
 
 var menu_position = 1
 var selected_gait_index = 0
@@ -58,13 +59,16 @@ func setVisibility():
 	for underline in get_tree().get_nodes_in_group(\"Underline\"):
 		underline.visible = false
 		
-	
+	menuLink.unhover()
 	match menu_position:
-		0:underlineControls.visible = true
+		0:
+			underlineControls.visible = true
 			
-		1:underlineSelectedGait.visible = true
+		1:
+			underlineSelectedGait.visible = true
 			
-		2:underlineMenu.visible = true
+		2:
+			menuLink.hover()
 		
 func setGait():
 	selectedGaitLabel.text = gaits[selected_gait_index]
@@ -72,6 +76,8 @@ func setGait():
 
 func select():
 	match menu_position:
+		2:
+			menuLink.select()
 		1:
 			selected_gait_index += 1
 			if selected_gait_index >= gaits.size(): selected_gait_index = 0
@@ -96,7 +102,7 @@ font_size = 75
 shadow_size = 0
 shadow_offset = Vector2(0, 0)
 
-[node name="Main Page" type="Control"]
+[node name="Main Page" type="Control" groups=["Page"]]
 layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
@@ -231,22 +237,15 @@ position = Vector2(-4.14893, 73.8889)
 scale = Vector2(1, 0.683738)
 points = PackedVector2Array(17.0212, -4.22516, 276.596, -4.22516)
 
-[node name="Menu Label" type="Label" parent="."]
-unique_name_in_owner = true
-texture_filter = 3
-layout_mode = 2
-offset_left = 224.0
-offset_top = 127.0
-offset_right = 438.0
-offset_bottom = 208.0
-scale = Vector2(0.22, 0.22)
-text = "Menu"
-label_settings = SubResource("LabelSettings_6odsl")
-
-[node name="Underline" type="Line2D" parent="Menu Label" groups=["Underline"]]
-position = Vector2(-4.14893, 74.0783)
-scale = Vector2(1, 0.569142)
-points = PackedVector2Array(4.14905, -8.34692, 204.149, -8.34692)
+[node name="Menu Link" parent="." instance=ExtResource("2_lcxry")]
+layout_mode = 1
+offset_left = 149.0
+offset_top = 126.0
+offset_right = 4.0
+offset_bottom = 7.0
+scale = Vector2(0.808917, 0.808917)
+itemName = "Menu"
+pageToOpen = 2
 
 [node name="Info" type="Control" parent="."]
 anchors_preset = 0
