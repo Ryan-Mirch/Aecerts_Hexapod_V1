@@ -1,0 +1,309 @@
+[gd_scene load_steps=8 format=3 uid="uid://dphwujtqy4dl4"]
+
+[ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="1_aiv8l"]
+[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="2_bn8ym"]
+
+[sub_resource type="GDScript" id="GDScript_7hda4"]
+script/source = "extends Control
+@onready var backButton = %\"Back\"
+@onready var linkList = $\"Link List\"
+
+var hoveredIndex = 0
+var links = []
+var linkListYBase = 0
+var linkListSeparationValue = 37
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	Pages.SettingsPage = self
+	links = linkList.get_children()
+	linkListYBase = linkList.position.y
+	close()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		backButton.select()
+		
+	if Input.is_action_just_pressed(\"ui_left\"):
+		hoveredIndex -= 1
+		if hoveredIndex < 0: hoveredIndex = 0
+		updateList()
+		
+	if Input.is_action_just_pressed(\"ui_right\"):
+		hoveredIndex += 1
+		if hoveredIndex > links.size() - 1: hoveredIndex = links.size() - 1
+		updateList()
+		
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		select()
+
+
+func updateList():
+	for l in links:
+		l.unhover()
+		l.fontSize = 85
+	links[hoveredIndex].hover()
+	links[hoveredIndex].fontSize = 150
+	if hoveredIndex > 0 and hoveredIndex < links.size() - 1:
+		linkList.position.y = linkListYBase - (hoveredIndex - 1) * linkListSeparationValue
+		
+		
+func open():
+	visible = true
+	print(\"gait selector page opened\")
+	set_process(true)
+	if hoveredIndex == 0:
+		linkList.position.y = linkListYBase 
+	if hoveredIndex == links.size() - 1:
+		linkList.position.y = linkListYBase - (hoveredIndex - 2) * linkListSeparationValue
+	updateList()
+	
+	
+func select():
+	links[hoveredIndex]
+	
+	
+func close():
+	visible = false
+	set_process(false)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfjn"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.454902, 0.454902, 0.454902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_wucnp"]
+font = ExtResource("2_bn8ym")
+font_size = 171
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s640k"]
+bg_color = Color(0, 0, 0, 1)
+border_color = Color(0.454902, 0.454902, 0.454902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_k407o"]
+font = ExtResource("2_bn8ym")
+font_size = 75
+shadow_size = 0
+shadow_offset = Vector2(0, 0)
+
+[node name="Settings" type="Control" groups=["Page"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_7hda4")
+metadata/_edit_vertical_guides_ = []
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wvfjn")
+
+[node name="Link List" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 2.0
+offset_top = -37.0
+offset_bottom = 148.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="NRF Address" parent="Link List" instance=ExtResource("1_aiv8l")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -73.0
+offset_right = 225.0
+itemName = "NRF Address"
+pageToOpen = 6
+hovered = true
+fontSize = 85
+
+[node name="Label" type="Label" parent="Link List/NRF Address"]
+layout_mode = 0
+offset_left = 295.0
+offset_top = 7.0
+offset_right = 875.0
+offset_bottom = 185.0
+scale = Vector2(0.115, 0.115)
+text = "00001"
+label_settings = SubResource("LabelSettings_wucnp")
+horizontal_alignment = 2
+
+[node name="Outline" type="Line2D" parent="Link List/NRF Address/Label"]
+visible = false
+points = PackedVector2Array(-34.7826, -26.087, -34.7826, 165.217, 565.217, 165.217, 565.217, -26.087, -34.7826, -26.087)
+width = 13.405
+
+[node name="Gait Selector2" parent="Link List" instance=ExtResource("1_aiv8l")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -80.0
+offset_top = 37.0
+offset_right = 218.0
+offset_bottom = 37.0
+itemName = "Step Height"
+pageToOpen = 6
+fontSize = 85
+
+[node name="Label" type="Label" parent="Link List/Gait Selector2"]
+layout_mode = 0
+offset_left = 302.0
+offset_top = 7.0
+offset_right = 882.0
+offset_bottom = 185.0
+scale = Vector2(0.115, 0.115)
+text = "50mm"
+label_settings = SubResource("LabelSettings_wucnp")
+horizontal_alignment = 2
+
+[node name="Outline" type="Line2D" parent="Link List/Gait Selector2/Label"]
+visible = false
+points = PackedVector2Array(-34.7826, -26.087, -34.7826, 165.217, 565.217, 165.217, 565.217, -26.087, -34.7826, -26.087)
+width = 13.405
+
+[node name="Gait Selector3" parent="Link List" instance=ExtResource("1_aiv8l")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -45.0
+offset_top = 74.0
+offset_right = 253.0
+offset_bottom = 74.0
+itemName = "Dyn Stride Length"
+pageToOpen = 6
+fontSize = 85
+
+[node name="Label" type="Label" parent="Link List/Gait Selector3"]
+layout_mode = 0
+offset_left = 264.0
+offset_top = 7.0
+offset_right = 844.0
+offset_bottom = 185.0
+scale = Vector2(0.115, 0.115)
+text = "On"
+label_settings = SubResource("LabelSettings_wucnp")
+horizontal_alignment = 2
+
+[node name="Outline" type="Line2D" parent="Link List/Gait Selector3/Label"]
+visible = false
+points = PackedVector2Array(-34.7826, -26.087, -34.7826, 165.217, 565.217, 165.217, 565.217, -26.087, -34.7826, -26.087)
+width = 13.405
+
+[node name="Gait Selector4" parent="Link List" instance=ExtResource("1_aiv8l")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -71.0
+offset_top = 111.0
+offset_right = 227.0
+offset_bottom = 111.0
+itemName = "Stride Length"
+pageToOpen = 6
+fontSize = 85
+
+[node name="Label" type="Label" parent="Link List/Gait Selector4"]
+layout_mode = 0
+offset_left = 291.0
+offset_top = 7.0
+offset_right = 871.0
+offset_bottom = 185.0
+scale = Vector2(0.115, 0.115)
+text = "50mm"
+label_settings = SubResource("LabelSettings_wucnp")
+horizontal_alignment = 2
+
+[node name="Outline" type="Line2D" parent="Link List/Gait Selector4/Label"]
+visible = false
+points = PackedVector2Array(-34.7826, -26.087, -34.7826, 165.217, 565.217, 165.217, 565.217, -26.087, -34.7826, -26.087)
+width = 13.405
+
+[node name="Gait Selector5" parent="Link List" instance=ExtResource("1_aiv8l")]
+layout_mode = 2
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -48.0
+offset_top = 148.0
+offset_right = 250.0
+offset_bottom = 148.0
+itemName = "Set All To Default"
+pageToOpen = 6
+fontSize = 85
+
+[node name="Background2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = -2.0
+offset_bottom = -112.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s640k")
+
+[node name="Battery Outline" type="Line2D" parent="."]
+position = Vector2(388, 156)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(38.685, 52.4212, 38.685, 55.4167, 33.8494, 55.4167, 33.8494, 54.2934, 33.1586, 54.2934, 33.1586, 53.5445, 33.8494, 53.5445, 33.8494, 52.4212, 38.685, 52.4212, 38.685, 55.4167)
+width = 1.0
+
+[node name="Battery Level" type="Line2D" parent="Battery Outline"]
+position = Vector2(138.852, 196.205)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(34.717, 53.2771, 35.4328, 53.2771)
+width = 1.0
+
+[node name="Back" parent="." instance=ExtResource("1_aiv8l")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -90.0
+offset_top = -5.0
+offset_right = 110.0
+offset_bottom = 35.0
+grow_horizontal = 1
+grow_vertical = 1
+itemName = "Menu"
+pageToOpen = 2
+fontSize = 60
+
+[node name="Arrow" type="Line2D" parent="Back"]
+position = Vector2(242, 29)
+scale = Vector2(0.291741, 0.175045)
+points = PackedVector2Array(-474.057, -98.7618, -493.809, -65.8412, -474.057, -32.9205, -493.809, -65.8412, -466.862, -65.8412, -439.49, -65.8412)
+
+[node name="Page Label" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 2.0
+offset_top = 8.0
+offset_right = 1011.0
+offset_bottom = 89.0
+scale = Vector2(0.293303, 0.293303)
+text = "- Settings -"
+label_settings = SubResource("LabelSettings_k407o")
+horizontal_alignment = 1

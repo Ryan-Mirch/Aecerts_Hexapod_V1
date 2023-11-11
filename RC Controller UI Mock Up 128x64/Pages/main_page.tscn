@@ -1,9 +1,9 @@
 [gd_scene load_steps=8 format=3 uid="uid://8p5uyfegg4ul"]
 
-[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://DePixelKlein.otf" id="1_gb7mo"]
+[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="1_gb7mo"]
 [ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_lcxry"]
-[ext_resource type="Texture2D" uid="uid://bm12qee5n6wpj" path="res://Battery Icon.png" id="2_sa028"]
-[ext_resource type="Texture2D" uid="uid://ohbbyqpqchsh" path="res://ammeter.png" id="3_xcsub"]
+[ext_resource type="Texture2D" uid="uid://bm12qee5n6wpj" path="res://Resources/Battery Icon.png" id="2_sa028"]
+[ext_resource type="Texture2D" uid="uid://ohbbyqpqchsh" path="res://Resources/ammeter.png" id="3_xcsub"]
 
 [sub_resource type="GDScript" id="GDScript_5ofka"]
 script/source = "extends Control
@@ -11,13 +11,14 @@ script/source = "extends Control
 @onready var selectedGaitLabel = %\"Selected Gait Label\"
 @onready var underlineControls = $\"Controls Label/Underline\"
 @onready var underlineSelectedGait = $\"Selected Gait Label/Underline\"
+@onready var controlsLink = $\"Controls Link\"
 @onready var menuLink = $\"Menu Link\"
 
 var menu_position = 1
 var selected_gait_index = 0
 
+var gaits = [\"Tri\", \"Ripple\", \"Wave\", \"Quad\", \"Bi\", \"Hop\"]
 
-var gaits = [\"Tri\", \"Ripple\", \"Wave\"]
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -30,12 +31,12 @@ func _ready():
 func _process(delta):
 	if Input.is_action_just_pressed(\"ui_left\"):
 		menu_position -= 1
-		if menu_position < 0: menu_position = 2
+		if menu_position < 0: menu_position = 0
 		setVisibility()
 		
 	if Input.is_action_just_pressed(\"ui_right\"):
 		menu_position += 1
-		if menu_position > 2: menu_position = 0
+		if menu_position > 2: menu_position = 2
 		setVisibility()
 		
 	if Input.is_action_just_pressed(\"ui_accept\"):
@@ -60,9 +61,11 @@ func setVisibility():
 		underline.visible = false
 		
 	menuLink.unhover()
+	controlsLink.unhover()
+	
 	match menu_position:
 		0:
-			underlineControls.visible = true
+			controlsLink.hover()
 			
 		1:
 			underlineSelectedGait.visible = true
@@ -81,11 +84,12 @@ func select():
 		1:
 			selected_gait_index += 1
 			if selected_gait_index >= gaits.size(): selected_gait_index = 0
+			Pages.GaitPage.hoveredIndex = selected_gait_index
+			
 			setGait()
 			
 		0:
-			Pages.ControlsPage.open()
-			close()
+			controlsLink.select()
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfjn"]
@@ -200,24 +204,6 @@ position = Vector2(-9.81903, -13.5313)
 points = PackedVector2Array(36.8376, 51.935, 36.8376, 55.6705, 33.1021, 55.6705, 33.1021, 51.935, 36.8376, 51.935, 36.8376, 55.6705)
 width = 1.0
 
-[node name="Controls Label" type="Label" parent="."]
-unique_name_in_owner = true
-texture_filter = 3
-layout_mode = 2
-offset_left = 20.0
-offset_top = 127.0
-offset_right = 354.0
-offset_bottom = 208.0
-scale = Vector2(0.22, 0.22)
-text = "Controls"
-label_settings = SubResource("LabelSettings_6odsl")
-horizontal_alignment = 1
-
-[node name="Underline" type="Line2D" parent="Controls Label" groups=["Underline"]]
-position = Vector2(434, 71)
-scale = Vector2(1, 0.6)
-points = PackedVector2Array(-430, 0, -112, 0)
-
 [node name="Selected Gait Label" type="Label" parent="."]
 unique_name_in_owner = true
 texture_filter = 3
@@ -239,13 +225,25 @@ points = PackedVector2Array(17.0212, -4.22516, 276.596, -4.22516)
 
 [node name="Menu Link" parent="." instance=ExtResource("2_lcxry")]
 layout_mode = 1
-offset_left = 149.0
-offset_top = 126.0
-offset_right = 4.0
-offset_bottom = 7.0
+offset_left = 142.0
+offset_top = 123.0
+offset_right = -3.0
+offset_bottom = 4.0
 scale = Vector2(0.808917, 0.808917)
 itemName = "Menu"
 pageToOpen = 2
+fontSize = 90
+
+[node name="Controls Link" parent="." instance=ExtResource("2_lcxry")]
+layout_mode = 1
+offset_left = -47.0
+offset_top = 121.0
+offset_right = -192.0
+offset_bottom = 2.0
+scale = Vector2(0.808917, 0.808917)
+itemName = "Controls"
+pageToOpen = 1
+fontSize = 90
 
 [node name="Info" type="Control" parent="."]
 anchors_preset = 0

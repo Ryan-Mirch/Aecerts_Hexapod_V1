@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bm12qee5n6wpj"
-path="res://.godot/imported/Battery Icon.png-b45c623b78fc74d26d62d5842211cb6b.ctex"
+uid="uid://ohbbyqpqchsh"
+path="res://.godot/imported/ammeter.png-af8f7d2a53a890000b514eb81b3abf3f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://Battery Icon.png"
-dest_files=["res://.godot/imported/Battery Icon.png-b45c623b78fc74d26d62d5842211cb6b.ctex"]
+source_file="res://Resources/ammeter.png"
+dest_files=["res://.godot/imported/ammeter.png-af8f7d2a53a890000b514eb81b3abf3f.ctex"]
 
 [params]
 

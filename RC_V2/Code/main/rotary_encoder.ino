@@ -1,31 +1,49 @@
-#include <Encoder.h>
+const byte encoderPinA = 2;//outputA digital pin2
+const byte encoderPinB = 3;//outoutB digital pin3
+#define switchPin P06
+volatile int count = 0;
+int protectedCount = 0;
+int previousCount = 0;
 
-#define switchPin P12
-#define encoderPin1 2
-#define encoderPin2 3
-
-Encoder encoder1(3, 2);  //CLK, DT
-long encoder1PrevPos = 0;
-
+#define readA bitRead(PIND,2)//faster than digitalRead()
+#define readB bitRead(PIND,3)//faster than digitalRead()
 
 bool switchPressed = false;
 
-long prevPosition  = 0;
-long newPosition;
-
-int spinRightCount = 0;
-int spinLeftCount = 0;
-
-int prevSpin = 1; //1: Right, 2:Left
-
 const int DEBOUNCE_TIME = 1;
-unsigned long timeSinceSpun = 0;
 unsigned long timeSinceReleased = 0;
 
 void setupRotaryEncoder(){  
   ioExtender.pinMode(switchPin, INPUT);
-  pinMode(encoderPin1, INPUT_PULLUP);
-  pinMode(encoderPin2, INPUT_PULLUP);
+  pinMode(encoderPinA, INPUT_PULLUP);
+  pinMode(encoderPinB, INPUT_PULLUP);
+
+  attachInterrupt(digitalPinToInterrupt(encoderPinA), isrA, CHANGE);
+  attachInterrupt(digitalPinToInterrupt(encoderPinB), isrB, CHANGE);
+}
+
+void isrA() {
+  if(readB != readA) {
+    count ++;
+  } else {
+    count --;
+  }
+}
+void isrB() {
+  if (readA == readB) {
+    count ++;
+  } else {
+    count --;
+  }
+}
+
+int getRotaryEncoderSpins(){
+  noInterrupts();
+  protectedCount = count/4;
+  interrupts();
+  int spins = protectedCount - previousCount;
+  previousCount = protectedCount;
+  return spins;
 }
 
 RotaryEncoderState readRotaryEncoder(){
@@ -42,58 +60,6 @@ RotaryEncoderState readRotaryEncoder(){
     switchPressed = false;  
     timeSinceReleased = millis();
     return Released;    
-  }
-
-  newPosition = encoder1.read();
-  
-
-  if(newPosition != prevPosition){
-    if (newPosition < prevPosition) {
-      spinRightCount++;   
-    }
-    else if(newPosition > prevPosition){      
-      spinLeftCount++;         
-    }
-  prevPosition = newPosition;
-
-  }
-
-  if(prevSpin == 1){
-    if(spinLeftCount >= 4){
-      if(DEBUG_PRINT)Serial.println("Spun Left");
-      prevSpin = 2;
-      timeSinceSpun = millis();
-      spinRightCount = 0;
-      spinLeftCount = 0;
-      return SpunLeft;   
-    } 
-    if(spinRightCount >= 4){
-      if(DEBUG_PRINT)Serial.println("Spun Right");
-      prevSpin = 1;
-      timeSinceSpun = millis();
-      spinRightCount = 0;
-      spinLeftCount = 0;
-      return SpunRight;
-    }
-  }
-
-  if(prevSpin == 2){
-    if(spinLeftCount >= 4){
-      if(DEBUG_PRINT)Serial.println("Spun Left");
-      prevSpin = 2;
-      timeSinceSpun = millis();
-      spinRightCount = 0;
-      spinLeftCount = 0;
-      return SpunLeft;
-    } 
-    if(spinRightCount >= 4){
-      if(DEBUG_PRINT)Serial.println("Spun Right");
-      prevSpin = 1;
-      timeSinceSpun = millis();
-      spinRightCount = 0;
-      spinLeftCount = 0;
-      return SpunRight;
-    }
   }
 
   return Nothing;

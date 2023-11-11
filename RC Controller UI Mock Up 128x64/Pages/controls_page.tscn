@@ -1,12 +1,12 @@
 [gd_scene load_steps=6 format=3 uid="uid://lqcimtmv1djc"]
 
-[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://DePixelKlein.otf" id="1_yudbx"]
-[ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_p7ofy"]
+[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="1_yudbx"]
+[ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_x357v"]
 
 [sub_resource type="GDScript" id="GDScript_kbedx"]
 script/source = "extends Control
 
-@onready var backButton = $Back
+@onready var backButton = %\"Back\"
 
 
 # Called when the node enters the scene tree for the first time.
@@ -19,6 +19,7 @@ func _ready():
 func _process(delta):
 	if Input.is_action_just_pressed(\"ui_cancel\"):
 		backButton.select()
+		close()
 
 func open():
 	visible = true
@@ -115,22 +116,22 @@ label_settings = SubResource("LabelSettings_aqft8")
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="Back" parent="." instance=ExtResource("2_p7ofy")]
-layout_mode = 0
+[node name="Back" parent="." instance=ExtResource("2_x357v")]
+unique_name_in_owner = true
 anchors_preset = 0
 anchor_right = 0.0
 anchor_bottom = 0.0
-offset_left = -9.0
-offset_top = 4.0
-offset_right = 191.0
-offset_bottom = 44.0
+offset_left = -33.0
+offset_top = 5.0
+offset_right = 167.0
+offset_bottom = 45.0
 grow_horizontal = 1
 grow_vertical = 1
-scale = Vector2(0.449633, 0.449633)
+scale = Vector2(0.572092, 0.572092)
 itemName = "Back"
 pageToOpen = 0
 
 [node name="Arrow" type="Line2D" parent="Back"]
-position = Vector2(333.605, 40.0326)
-scale = Vector2(0.601707, 0.361024)
+position = Vector2(267.44, 27.9675)
+scale = Vector2(0.396099, 0.237659)
 points = PackedVector2Array(-474.057, -98.7618, -493.809, -65.8412, -474.057, -32.9205, -493.809, -65.8412, -466.862, -65.8412, -439.49, -65.8412)

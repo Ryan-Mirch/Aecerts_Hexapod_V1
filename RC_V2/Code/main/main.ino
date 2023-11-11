@@ -9,9 +9,7 @@ const bool DEBUG_PRINT = false;
 enum RotaryEncoderState {
   Nothing,    //0
   Pressed,    //1 
-  Released,   //2
-  SpunRight,  //3
-  SpunLeft    //4
+  Released    //2
 };
 
 enum IOLabels {
@@ -28,6 +26,8 @@ struct GyroAngleData {
 
 int prevPotA = 0;
 int prevPotB = 0;
+
+int counter = 0;
 
 
 
@@ -50,6 +50,9 @@ void loop() {
 
   readIOExtenderPinValues();
   RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
+
+  counter += getRotaryEncoderSpins();
+  setWord2(String(counter));
     
   uint8_t buttonA = getButtonState(A);
   uint8_t buttonB = getButtonState(B);
@@ -62,6 +65,8 @@ void loop() {
     //Serial.println("Button A Pressed");
   }
 
+  
+
   if(getButtonState(B) == HIGH){
     //Serial.println("Button B Pressed");
   }
@@ -71,16 +76,18 @@ void loop() {
   }
 
   if(getButtonState(D) == HIGH){
-    //Serial.println("Button D Pressed");
+    
   }
-
+  rc_data.pushButton2 = getBumperState(A);
+  
+  /*
   if(getBumperState(A) == HIGH){
-    //setWord2("Bumped!");
+    setWord2("Gait Changed!");
   }
   else{
-    //setWord2("Not Bumped.");
+    setWord2("");
   }
-
+  */
   int potBValue = getPotValue(B);
   int potAValue = getPotValue(A);
 
@@ -99,6 +106,6 @@ void loop() {
   setWord1("%" + String(getBatteryPercentage()));
   if(isCharging())setWord1("Charging");
   
-  setWord2("Time Running: " + String(millis()/1000));
+  //setWord2("Time Running: " + String(millis()/1000));
   
 }

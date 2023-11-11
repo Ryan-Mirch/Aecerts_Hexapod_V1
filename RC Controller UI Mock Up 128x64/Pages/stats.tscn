@@ -1,0 +1,271 @@
+[gd_scene load_steps=8 format=3 uid="uid://cbu1yjnxigro1"]
+
+[ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="1_pcn4b"]
+[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="2_pxc5p"]
+
+[sub_resource type="GDScript" id="GDScript_ngohi"]
+script/source = "extends Control
+@onready var backButton = %\"Back\"
+@onready var linkList = $\"Link List\"
+
+var hoveredIndex = 0
+var links = []
+var linkListYBase = 0
+var linkListSeparationValue = 0
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	Pages.StatsPage = self
+	for hb in linkList.get_children():
+		links.append(hb.get_child(0))
+	
+	linkListYBase = linkList.position.y
+	linkListSeparationValue = linkList.get(\"theme_override_constants/separation\")
+	close()
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	if Input.is_action_just_pressed(\"ui_cancel\"):
+		backButton.select()
+		
+	if Input.is_action_just_pressed(\"ui_left\"):
+		hoveredIndex -= 1
+		if hoveredIndex < 0: hoveredIndex = 0
+		updateList()
+		
+	if Input.is_action_just_pressed(\"ui_right\"):
+		hoveredIndex += 1
+		if hoveredIndex > links.size() - 1: hoveredIndex = links.size() - 1
+		updateList()
+		
+	if Input.is_action_just_pressed(\"ui_accept\"):
+		select()
+
+
+func updateList():
+	for l in links:
+		l.unhover()
+		l.fontSize = 85
+	links[hoveredIndex].hover()
+	links[hoveredIndex].fontSize = 150
+	if hoveredIndex > 0 and hoveredIndex < links.size() - 1:
+		linkList.position.y = linkListYBase - (hoveredIndex - 1) * linkListSeparationValue
+		
+		
+func open():
+	visible = true
+	print(\"gait selector page opened\")
+	set_process(true)
+	if hoveredIndex == 0:
+		linkList.position.y = linkListYBase 
+	if hoveredIndex == links.size() - 1:
+		linkList.position.y = linkListYBase - (hoveredIndex - 2) * linkListSeparationValue
+	updateList()
+	
+	
+func select():
+	pass
+	
+	
+	
+func close():
+	visible = false
+	set_process(false)
+"
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfjn"]
+bg_color = Color(0, 0, 0, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.454902, 0.454902, 0.454902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_nn21p"]
+font = ExtResource("2_pxc5p")
+font_size = 76
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_s640k"]
+bg_color = Color(0, 0, 0, 1)
+border_color = Color(0.454902, 0.454902, 0.454902, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_k407o"]
+font = ExtResource("2_pxc5p")
+font_size = 75
+shadow_size = 0
+shadow_offset = Vector2(0, 0)
+
+[node name="Stats" type="Control" groups=["Page"]]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = SubResource("GDScript_ngohi")
+metadata/_edit_vertical_guides_ = []
+
+[node name="Background" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_wvfjn")
+
+[node name="Battery Outline" type="Line2D" parent="."]
+position = Vector2(388, 156)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(38.685, 52.4212, 38.685, 55.4167, 33.8494, 55.4167, 33.8494, 54.2934, 33.1586, 54.2934, 33.1586, 53.5445, 33.8494, 53.5445, 33.8494, 52.4212, 38.685, 52.4212, 38.685, 55.4167)
+width = 1.0
+
+[node name="Battery Level" type="Line2D" parent="Battery Outline"]
+position = Vector2(138.852, 196.205)
+rotation = -3.14159
+scale = Vector2(2.89519, 2.67067)
+points = PackedVector2Array(34.717, 53.2771, 35.4328, 53.2771)
+width = 1.0
+
+[node name="Link List" type="VBoxContainer" parent="."]
+layout_mode = 1
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = 1.0
+offset_top = -39.0
+offset_right = -1.0
+offset_bottom = 146.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 10
+
+[node name="HBoxContainer" type="HBoxContainer" parent="Link List"]
+layout_mode = 2
+theme_override_constants/separation = 125
+alignment = 2
+
+[node name="Gait Selector" parent="Link List/HBoxContainer" instance=ExtResource("1_pcn4b")]
+layout_mode = 2
+itemName = "Distance Traveled"
+pageToOpen = 6
+hovered = true
+fontSize = 60
+
+[node name="Control" type="Control" parent="Link List/HBoxContainer"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Link List/HBoxContainer/Control"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+offset_left = 79.5
+offset_top = 12.0
+offset_right = 589.5
+offset_bottom = 94.0
+scale = Vector2(0.18, 0.18)
+text = "1234 meters"
+label_settings = SubResource("LabelSettings_nn21p")
+horizontal_alignment = 2
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="Link List"]
+layout_mode = 2
+theme_override_constants/separation = 125
+alignment = 2
+
+[node name="Gait Selector" parent="Link List/HBoxContainer2" instance=ExtResource("1_pcn4b")]
+layout_mode = 2
+itemName = "Steps Taken"
+pageToOpen = 6
+hovered = true
+fontSize = 60
+
+[node name="Control" type="Control" parent="Link List/HBoxContainer2"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Link List/HBoxContainer2/Control"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+offset_left = 79.5
+offset_top = 12.0
+offset_right = 589.5
+offset_bottom = 94.0
+scale = Vector2(0.18, 0.18)
+text = "56798 steps"
+label_settings = SubResource("LabelSettings_nn21p")
+horizontal_alignment = 2
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="Link List"]
+layout_mode = 2
+theme_override_constants/separation = 125
+alignment = 2
+
+[node name="Gait Selector" parent="Link List/HBoxContainer3" instance=ExtResource("1_pcn4b")]
+layout_mode = 2
+itemName = "Time On"
+pageToOpen = 6
+hovered = true
+fontSize = 60
+
+[node name="Control" type="Control" parent="Link List/HBoxContainer3"]
+custom_minimum_size = Vector2(200, 20)
+layout_mode = 2
+
+[node name="Label" type="Label" parent="Link List/HBoxContainer3/Control"]
+custom_minimum_size = Vector2(200, 0)
+layout_mode = 2
+offset_left = 79.5
+offset_top = 12.0
+offset_right = 589.5
+offset_bottom = 94.0
+scale = Vector2(0.18, 0.18)
+text = "3.5 hours"
+label_settings = SubResource("LabelSettings_nn21p")
+horizontal_alignment = 2
+
+[node name="Background2" type="Panel" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 3.0
+offset_top = 2.0
+offset_right = -31.0
+offset_bottom = -112.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_s640k")
+
+[node name="Back" parent="." instance=ExtResource("1_pcn4b")]
+unique_name_in_owner = true
+anchors_preset = 0
+anchor_right = 0.0
+anchor_bottom = 0.0
+offset_left = -90.0
+offset_top = -5.0
+offset_right = 110.0
+offset_bottom = 35.0
+grow_horizontal = 1
+grow_vertical = 1
+itemName = "Menu"
+pageToOpen = 2
+fontSize = 60
+
+[node name="Arrow" type="Line2D" parent="Back"]
+position = Vector2(242, 29)
+scale = Vector2(0.291741, 0.175045)
+points = PackedVector2Array(-474.057, -98.7618, -493.809, -65.8412, -474.057, -32.9205, -493.809, -65.8412, -466.862, -65.8412, -439.49, -65.8412)
+
+[node name="Page Label" type="Label" parent="."]
+texture_filter = 3
+layout_mode = 0
+offset_left = 2.0
+offset_top = 8.0
+offset_right = 1011.0
+offset_bottom = 89.0
+scale = Vector2(0.293303, 0.293303)
+text = "- Stats -"
+label_settings = SubResource("LabelSettings_k407o")
+horizontal_alignment = 1

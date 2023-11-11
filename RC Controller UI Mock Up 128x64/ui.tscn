@@ -1,8 +1,12 @@
-[gd_scene load_steps=4 format=3 uid="uid://don0slggo28yq"]
+[gd_scene load_steps=8 format=3 uid="uid://don0slggo28yq"]
 
-[ext_resource type="PackedScene" uid="uid://8p5uyfegg4ul" path="res://main_page.tscn" id="1_sde2r"]
-[ext_resource type="PackedScene" uid="uid://lqcimtmv1djc" path="res://controls_page.tscn" id="2_awu5m"]
-[ext_resource type="PackedScene" uid="uid://dprlooqiofxt8" path="res://menu_page.tscn" id="3_lvot7"]
+[ext_resource type="PackedScene" uid="uid://8p5uyfegg4ul" path="res://Pages/main_page.tscn" id="1_sde2r"]
+[ext_resource type="PackedScene" uid="uid://lqcimtmv1djc" path="res://Pages/controls_page.tscn" id="2_awu5m"]
+[ext_resource type="PackedScene" uid="uid://dprlooqiofxt8" path="res://Pages/menu_page.tscn" id="3_lvot7"]
+[ext_resource type="PackedScene" uid="uid://cmsiniaeb1ytv" path="res://Pages/gait_selector.tscn" id="4_hkjnv"]
+[ext_resource type="PackedScene" uid="uid://dphwujtqy4dl4" path="res://Pages/settings.tscn" id="5_heuk7"]
+[ext_resource type="PackedScene" uid="uid://cbu1yjnxigro1" path="res://Pages/stats.tscn" id="6_7bfdm"]
+[ext_resource type="PackedScene" uid="uid://rxrk3cxuoo1c" path="res://Pages/offsets.tscn" id="7_2q4a3"]
 
 [node name="UI" type="Control"]
 layout_mode = 3
@@ -12,11 +16,29 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 
-[node name="Controls Page" parent="." instance=ExtResource("2_awu5m")]
-layout_mode = 1
-
 [node name="Main Page" parent="." instance=ExtResource("1_sde2r")]
 layout_mode = 1
 
 [node name="Menu Page" parent="." instance=ExtResource("3_lvot7")]
+visible = false
+layout_mode = 1
+
+[node name="Controls Page" parent="." instance=ExtResource("2_awu5m")]
+visible = false
+layout_mode = 1
+
+[node name="Gait Selector" parent="." instance=ExtResource("4_hkjnv")]
+visible = false
+layout_mode = 1
+
+[node name="Settings" parent="." instance=ExtResource("5_heuk7")]
+visible = false
+layout_mode = 1
+
+[node name="Stats" parent="." instance=ExtResource("6_7bfdm")]
+visible = false
+layout_mode = 1
+
+[node name="Offsets" parent="." instance=ExtResource("7_2q4a3")]
+visible = false
 layout_mode = 1

@@ -30,11 +30,12 @@ enum Gait {
   Wave,
   Ripple,
   Bi,
+  Quad,
   Hop  
 };
 
-int totalGaits = 5;
-Gait gaits[5] = {Tri,Wave,Ripple,Bi,Hop};
+int totalGaits = 6;
+Gait gaits[6] = {Tri,Wave,Ripple,Bi,Quad,Hop};
 
 
 float points = 1000;
