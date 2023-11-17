@@ -34,9 +34,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 1.1,
-          "height": 1.65,
-          "width": 1.65
+          "drill": 0.8,
+          "height": 1.6,
+          "width": 1.6
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -55,21 +55,7 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [
-        "solder_mask_bridge|179324000|105664000|bf54aa21-4f61-4fd0-946c-8cc5a35ef7fd|bb7f57fb-7b63-4004-b574-c0a05f5a970f",
-        "starved_thermal|101040000|133300000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|3f7ac7e2-afe9-4b62-9138-842b4209dc85|F.Cu",
-        "starved_thermal|101600000|88900000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|85cd1f34-c227-49a4-b5c4-8c140c4e7652|F.Cu",
-        "starved_thermal|140970000|91470000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|ea000d6b-9b97-4a1b-b8b3-441c79aec9f7|F.Cu",
-        "starved_thermal|184150000|94615000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|a3e80da2-87c3-45ef-b00c-2c150ff196d9|F.Cu",
-        "starved_thermal|88265000|137160000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|f9b35b74-10de-4fb6-878a-7cec8362f8a8|F.Cu",
-        "starved_thermal|92510000|71120000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|5a58aa98-1ad3-47c7-81cf-8324df411764|F.Cu",
-        "starved_thermal|94540000|103160000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|df371419-67a1-4813-886d-0c2dc0b0d6ae|B.Cu",
-        "starved_thermal|94540000|123480000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|4d8fa444-846b-4e00-88bc-6deabb51503f|B.Cu",
-        "starved_thermal|94540000|133300000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|8ba520b2-e962-4c3d-a083-c3c8b4f11e23|B.Cu",
-        "track_dangling|174752000|105664000|bd83f038-a672-4f7b-9bb9-0958ef9ded75|00000000-0000-0000-0000-000000000000",
-        "unconnected_items|174752000|105664000|bd83f038-a672-4f7b-9bb9-0958ef9ded75|bb7f57fb-7b63-4004-b574-c0a05f5a970f",
-        "unconnected_items|88265000|129540000|8d765682-8bac-4dfe-85c3-240015a8df6c|e593c524-6331-40fb-b353-a9bc7aac4d79"
-      ],
+      "drc_exclusions": [],
       "meta": {
         "version": 2
       },
@@ -431,7 +417,7 @@
     "classes": [
       {
         "bus_width": 12,
-        "clearance": 0.375,
+        "clearance": 0.325,
         "diff_pair_gap": 0.25,
         "diff_pair_via_gap": 0.25,
         "diff_pair_width": 0.2,

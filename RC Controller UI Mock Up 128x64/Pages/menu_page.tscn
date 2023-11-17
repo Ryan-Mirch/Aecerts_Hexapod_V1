@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=3 uid="uid://dprlooqiofxt8"]
+[gd_scene load_steps=10 format=3 uid="uid://dprlooqiofxt8"]
 
 [ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_3c5hq"]
 [ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="2_st0hw"]
@@ -87,6 +87,43 @@ font = ExtResource("2_st0hw")
 font_size = 75
 shadow_size = 0
 shadow_offset = Vector2(0, 0)
+
+[sub_resource type="Animation" id="Animation_h5bhp"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Background2:theme_override_styles/panel:bg_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="Animation" id="Animation_62ciw"]
+resource_name = "test"
+loop_mode = 2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Background2:theme_override_styles/panel:bg_color")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Color(0, 0, 0, 1)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_abk6u"]
+_data = {
+"RESET": SubResource("Animation_h5bhp"),
+"test": SubResource("Animation_62ciw")
+}
 
 [node name="Menu Page" type="Control" groups=["Page"]]
 layout_mode = 3
@@ -202,3 +239,8 @@ scale = Vector2(0.293303, 0.293303)
 text = "- Menu -"
 label_settings = SubResource("LabelSettings_iddei")
 horizontal_alignment = 1
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_abk6u")
+}

@@ -21,10 +21,14 @@ int getBatteryPercentage(){
     min_average = 100;
     return old_average;
   }
+  
+  if(new_average == 0){
+    new_average = batteryPercentage;
+  }
 
   currentSampleCount = min(currentSampleCount + 1, maxSampleCount);
   old_average = new_average;
-  new_average = (old_average * (currentSampleCount-1) + batteryPercentage) / currentSampleCount;
+  new_average = (old_average * (maxSampleCount-1) + batteryPercentage) / maxSampleCount;
   
   if(currentSampleCount > maxSampleCount/4){
     min_average = min(min_average,new_average);
