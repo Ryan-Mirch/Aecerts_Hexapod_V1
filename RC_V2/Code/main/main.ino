@@ -36,10 +36,10 @@ void setup() {
   Wire.begin();
   setupNRF();
   setupScreen();
-  setupRotaryEncoder();
-  setupGyro();
+  //setupRotaryEncoder();
+  //setupGyro();
   setupButtons();
-  setupIOExtender();
+  //setupIOExtender();
   
 }
 
@@ -48,37 +48,43 @@ void loop() {
   sendNRFData();
   updateScreen();
 
-  readIOExtenderPinValues();
-  RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
+  //readIOExtenderPinValues();
+  //RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
 
-  counter += getRotaryEncoderSpins();
-  setWord2(String(counter));
+  //counter += getRotaryEncoderSpins();
+  //setWord2(String(counter));
     
   uint8_t buttonA = getButtonState(A);
   uint8_t buttonB = getButtonState(B);
   uint8_t buttonC = getButtonState(C);
   uint8_t buttonD = getButtonState(D);
 
+  String word2Test = "";
+
   rc_data.joy1_Y = 127;
-  if(getButtonState(A) == HIGH){
+  if(getButtonState(A) == LOW){
     rc_data.joy1_Y = 200;
-    //Serial.println("Button A Pressed");
+    word2Test += "A";
   }
 
   
 
-  if(getButtonState(B) == HIGH){
-    //Serial.println("Button B Pressed");
+  if(getButtonState(B) == LOW){
+    word2Test += "B";
   }
 
-  if(getButtonState(C) == HIGH){
-    //Serial.println("Button C Pressed");
+  if(getButtonState(C) == LOW){
+    word2Test += "C";
   }
 
-  if(getButtonState(D) == HIGH){
-    
+  if(getButtonState(D) == LOW){
+    word2Test += "D";
   }
-  rc_data.pushButton2 = getBumperState(A);
+
+  setWord2(word2Test);
+
+
+  //rc_data.pushButton2 = getBumperState(A);
   
   /*
   if(getBumperState(A) == HIGH){
@@ -103,8 +109,8 @@ void loop() {
   prevPotA = potAValue;
   prevPotB = potBValue;  
   
-  setWord1("%" + String(getBatteryPercentage()));
-  if(isCharging())setWord1("Charging");
+  //setWord1("%" + String(getBatteryPercentage()));
+  //if(isCharging())setWord1("Charging");
   
   //setWord2("Time Running: " + String(millis()/1000));
   

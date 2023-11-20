@@ -7,7 +7,7 @@ uint8_t address[][6] = {"1Node", "2Node"};
 bool radioNumber = 1;
 
 unsigned long rc_last_received_time = 0;
-unsigned long rc_timeout = 500;
+unsigned long rc_timeout = 1000;
 
 
 

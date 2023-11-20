@@ -475,9 +475,7 @@
       "/5v": "5v",
       "/Bat+": "Vin",
       "/Bat-": "Vin",
-      "/Battery Voltage": "Default",
-      "/VOUT-": "Vin",
-      "/Vin": "Vin"
+      "/Battery Voltage": "Default"
     },
     "netclass_patterns": [
       {

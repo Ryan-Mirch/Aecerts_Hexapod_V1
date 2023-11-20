@@ -3,11 +3,11 @@
 #include <SPI.h>
 #include <Wire.h>
 
-#define DC  6   //(CE)
-#define CS  7   //(SS)
-#define SCL 13 //(SCK)
-#define SDA 11 //(MOSI)
-#define RES 4
+#define DC  49   //(CE)
+#define CS  42   //(SS)
+#define SCL 52 //(SCK)
+#define SDA 51 //(MOSI)
+#define RES 40
 
 #define UpdateScreenInterval 1
 

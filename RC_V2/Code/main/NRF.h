@@ -3,7 +3,7 @@
 #include <nRF24L01.h>
 #include <RF24.h>
 
-RF24 radio(6, 5); // CE, CSN
+RF24 radio(49, 4); // CE, CSN
 uint8_t address[][6] = {"1Node", "2Node"};
 bool radioNumber = 0;
 
@@ -11,7 +11,7 @@ unsigned long rc_last_received_time = 0;
 unsigned long rc_current_time = 0;
 
 unsigned long rc_last_sent_time = 0;
-unsigned long rc_send_interval = 300;
+unsigned long rc_send_interval = 200;
 
 
 struct RC_Data_Package {

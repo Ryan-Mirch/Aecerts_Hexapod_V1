@@ -1,48 +1,48 @@
 
-#define ButtonA_Pin P13
-#define ButtonB_Pin P12
-#define ButtonC_Pin P11
-#define ButtonD_Pin P10
+#define ButtonA_Pin 12
+#define ButtonB_Pin 10
+#define ButtonC_Pin 8
+#define ButtonD_Pin 6
 
-#define BumperA_Pin P14
-#define BumperB_Pin P17
-#define BumperC_Pin P05
-#define BumperD_Pin P04
+#define BumperA_Pin 27
+#define BumperB_Pin 29
+#define BumperC_Pin 38
+#define BumperD_Pin 37
 
 void setupButtons(){
-  ioExtender.pinMode(ButtonA_Pin, INPUT);
-  ioExtender.pinMode(ButtonB_Pin, INPUT);
-  ioExtender.pinMode(ButtonC_Pin, INPUT);
-  ioExtender.pinMode(ButtonD_Pin, INPUT);
+  pinMode(ButtonA_Pin, INPUT_PULLUP);
+  pinMode(ButtonB_Pin, INPUT_PULLUP);
+  pinMode(ButtonC_Pin, INPUT_PULLUP);
+  pinMode(ButtonD_Pin, INPUT_PULLUP);
 
-  ioExtender.pinMode(BumperA_Pin, INPUT);
-  ioExtender.pinMode(BumperB_Pin, INPUT);
-  ioExtender.pinMode(BumperC_Pin, INPUT);
-  ioExtender.pinMode(BumperD_Pin, INPUT);
+  pinMode(BumperA_Pin, INPUT_PULLUP);
+  pinMode(BumperB_Pin, INPUT_PULLUP);
+  pinMode(BumperC_Pin, INPUT_PULLUP);
+  pinMode(BumperD_Pin, INPUT_PULLUP);
 }
 
 uint8_t getButtonState(IOLabels label){
   switch(label){
     case A:
-      return getIOExtenderPinValue(ButtonA_Pin);
+      return digitalRead(ButtonA_Pin);
     case B:
-      return getIOExtenderPinValue(ButtonB_Pin);
+      return digitalRead(ButtonB_Pin);
     case C:
-      return getIOExtenderPinValue(ButtonC_Pin);
+      return digitalRead(ButtonC_Pin);
     case D:
-      return getIOExtenderPinValue(ButtonD_Pin);
+      return digitalRead(ButtonD_Pin);
   }
 }
 
 uint8_t getBumperState(IOLabels label){
   switch(label){
     case A:
-      return getIOExtenderPinValue(BumperA_Pin);
+      return digitalRead(BumperA_Pin);
     case B:
-      return getIOExtenderPinValue(BumperB_Pin);
+      return digitalRead(BumperB_Pin);
     case C:
-      return getIOExtenderPinValue(BumperC_Pin);
+      return digitalRead(BumperC_Pin);
     case D:
-      return getIOExtenderPinValue(BumperD_Pin);
+      return digitalRead(BumperD_Pin);
   }
 }
