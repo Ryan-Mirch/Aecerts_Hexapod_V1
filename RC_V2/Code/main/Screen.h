@@ -86,8 +86,8 @@ void setLongWord1(String s){
   stringLong1 = s;  
 }
 
-void updateScreen(){ 
-  if(millis()-last_update_time < UpdateScreenInterval)return;
+bool updateScreen(){ 
+  if(millis()-last_update_time < UpdateScreenInterval)return false;
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_squeezed_r6_tr);
   
@@ -104,6 +104,9 @@ void updateScreen(){
   u8g2.drawStr(1,62,stringLong1.c_str()); 
   u8g2.sendBuffer();
 
+  mpu.update();
+
   last_update_time = millis();
+  return true;
 }
 

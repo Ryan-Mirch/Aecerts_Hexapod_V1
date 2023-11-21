@@ -7,11 +7,8 @@ RF24 radio(49, 4); // CE, CSN
 uint8_t address[][6] = {"1Node", "2Node"};
 bool radioNumber = 0;
 
-unsigned long rc_last_received_time = 0;
-unsigned long rc_current_time = 0;
-
 unsigned long rc_last_sent_time = 0;
-unsigned long rc_send_interval = 200;
+unsigned long rc_send_interval = 50;
 
 
 struct RC_Data_Package {
@@ -57,6 +54,8 @@ void setupNRF(){
 }
 
 void sendNRFData(){ 
+  if(millis()-rc_last_sent_time < rc_send_interval)return;
+
   bool report = radio.write(&rc_data, sizeof(rc_data));      // transmit & save the report
   
   if (report) {
@@ -72,7 +71,8 @@ void sendNRFData(){
     //Serial.print(sizeof(rc_data));
     //Serial.println(F(" bytes"));
   }
-  //delay(200);
+  rc_last_sent_time = millis();
+  mpu.update();
 }
 
 

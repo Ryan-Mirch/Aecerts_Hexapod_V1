@@ -26,7 +26,7 @@ struct GyroAngleData {
 
 int counter = 0;
 
-int loopTimer = 0;
+unsigned long loopTimer = 0;
 
 void setup() {
   Serial.begin(9600);
@@ -44,19 +44,19 @@ void loop() {
   loopTimer = millis();
 
   GyroAngleData gad = readGyro();
-  updateScreen();
-  sendNRFData();
-
+  
+  if(!updateScreen())sendNRFData();
+  
+  
   setWord1(getButtonsString());
 
   counter += getRotaryEncoderSpins();
   setWord2("RE Count: " + String(counter));
   setWord3("RE Switch: " + getRotaryEncoderSwitchString());
       
-  mpu.update();
   int potAValue = getPotValue(A);
   int potBValue = getPotValue(B);
-  
+
   rc_data.slider1 = potAValue;
   rc_data.slider2 = potBValue;
 

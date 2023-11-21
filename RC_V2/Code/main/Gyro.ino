@@ -8,7 +8,7 @@
 #include <MPU6050_light.h>
 
 
-unsigned long timer = 0;
+unsigned long gyroTimer = 0;
 GyroAngleData gad;
 
 void setupGyro(){ 
@@ -27,13 +27,17 @@ void setupGyro(){
 
 GyroAngleData readGyro(){  
   mpu.update();
+
+  if(millis()-gyroTimer < 10)return gad;
+  
   gad.X = mpu.getAngleX();
   gad.Y = mpu.getAngleY();
   gad.Z = mpu.getAngleZ();
-  timer = millis();  
+    
   String gyroText = "GX: " + String(gad.X) + " GY: " + String(gad.Y) + " GZ: " + String(gad.Z);
-  setLongWord1(gyroText);   
-  //Serial.println(gyroText);
+  setLongWord1(gyroText); 
+
+  gyroTimer = millis();
   return gad;
 }
 
