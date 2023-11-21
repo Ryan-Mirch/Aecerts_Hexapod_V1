@@ -4,37 +4,36 @@
  * License: MIT
  */
 
-
+#include "Wire.h"
 #include <MPU6050_light.h>
 
-MPU6050 mpu(Wire);
+
 unsigned long timer = 0;
+GyroAngleData gad;
 
+void setupGyro(){ 
 
-void setupGyro(){
   byte status = mpu.begin();
   Serial.print(F("MPU6050 status: "));
   Serial.println(status);
   while(status!=0){ } // stop everything if could not connect to MPU6050
   
   Serial.println(F("Calculating offsets, do not move MPU6050"));
-  delay(50);
-  // mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
+  delay(200);
+  mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
   mpu.calcOffsets(); // gyro and accelero
   Serial.println("Done!\n");
 }
 
-GyroAngleData readGyro(){
-  GyroAngleData gad;
-
-  mpu.update();  
+GyroAngleData readGyro(){  
+  mpu.update();
   gad.X = mpu.getAngleX();
   gad.Y = mpu.getAngleY();
-
+  gad.Z = mpu.getAngleZ();
+  timer = millis();  
+  String gyroText = "GX: " + String(gad.X) + " GY: " + String(gad.Y) + " GZ: " + String(gad.Z);
+  setLongWord1(gyroText);   
+  //Serial.println(gyroText);
   return gad;
-}
-
-void calibrateGyro(){
-  mpu.calcOffsets();
 }
 

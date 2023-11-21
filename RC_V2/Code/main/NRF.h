@@ -57,6 +57,7 @@ void setupNRF(){
 }
 
 void sendNRFData(){ 
+  mpu.update();
   bool report = radio.write(&rc_data, sizeof(rc_data));      // transmit & save the report
   
   if (report) {

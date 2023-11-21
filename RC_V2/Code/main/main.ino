@@ -1,5 +1,4 @@
 #include "Wire.h"
-#include "IO_Extender.h"
 #include "Screen.h"
 #include "NRF.h"
 
@@ -20,98 +19,57 @@ enum IOLabels {
 };
 
 struct GyroAngleData {
-    int X;
-    int Y;
+    float X;
+    float Y;
+    float Z;
 };
 
-int prevPotA = 0;
-int prevPotB = 0;
-
 int counter = 0;
-
-
 
 void setup() {
   Serial.begin(9600);
   Wire.begin();
   setupNRF();
   setupScreen();
-  //setupRotaryEncoder();
-  //setupGyro();
+  setupRotaryEncoder();
+  setupGyro();
   setupButtons();
-  //setupIOExtender();
   
 }
 
 void loop() {
-
-  sendNRFData();
+  GyroAngleData gad = readGyro();
   updateScreen();
+  sendNRFData();
 
-  //readIOExtenderPinValues();
-  //RotaryEncoderState rotaryEncoderState = readRotaryEncoder();
+  setWord1(getButtonsString());
 
-  //counter += getRotaryEncoderSpins();
-  //setWord2(String(counter));
-    
-  uint8_t buttonA = getButtonState(A);
-  uint8_t buttonB = getButtonState(B);
-  uint8_t buttonC = getButtonState(C);
-  uint8_t buttonD = getButtonState(D);
-
-  String word2Test = "";
-
-  rc_data.joy1_Y = 127;
-  if(getButtonState(A) == LOW){
-    rc_data.joy1_Y = 200;
-    word2Test += "A";
-  }
-
-  
-
-  if(getButtonState(B) == LOW){
-    word2Test += "B";
-  }
-
-  if(getButtonState(C) == LOW){
-    word2Test += "C";
-  }
-
-  if(getButtonState(D) == LOW){
-    word2Test += "D";
-  }
-
-  setWord2(word2Test);
-
-
-  //rc_data.pushButton2 = getBumperState(A);
-  
-  /*
-  if(getBumperState(A) == HIGH){
-    setWord2("Gait Changed!");
-  }
-  else{
-    setWord2("");
-  }
-  */
-  int potBValue = getPotValue(B);
+  counter += getRotaryEncoderSpins();
+  setWord2("RE Count: " + String(counter));
+  setWord3("RE Switch: " + getRotaryEncoderSwitchString());
+      
   int potAValue = getPotValue(A);
+  int potBValue = getPotValue(B);
 
   rc_data.slider1 = potAValue;
   rc_data.slider2 = potBValue;
 
-  if(potAValue != prevPotA || potBValue != prevPotB){
-    //Serial.print("Pot A : ");
-    //Serial.print(potAValue);
-    //Serial.print("\tPot B : ");
-    //Serial.println(potBValue);
-  }
-  prevPotA = potAValue;
-  prevPotB = potBValue;  
+  setWord4("Pot A: " + String(potAValue));
+  setWord5("Pot B: " + String(potBValue));
+  int joyLeftXValue = map(analogRead(A6),0,1023,254,0);
+  int joyLeftYValue = map(analogRead(A7),0,1023,0,254);
+  mpu.update();
+  setWord6("JoyLeft X: " + String(joyLeftXValue) + " Y: " + String(joyLeftYValue));
+  rc_data.joy1_X = joyLeftXValue;
+  rc_data.joy1_Y = joyLeftYValue;
+  int joyRightXValue = map(analogRead(A2),0,1023,0,254);
+  int joyRightYValue = map(analogRead(A3),0,1023,0,254);
+  mpu.update();
+  setWord7("JoyLeft X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
+  rc_data.joy2_X = joyRightXValue;
+  rc_data.joy2_Y = joyRightYValue;
+
   
-  //setWord1("%" + String(getBatteryPercentage()));
-  //if(isCharging())setWord1("Charging");
   
-  //setWord2("Time Running: " + String(millis()/1000));
   
 }

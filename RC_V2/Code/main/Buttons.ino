@@ -46,3 +46,31 @@ uint8_t getBumperState(IOLabels label){
       return digitalRead(BumperD_Pin);
   }
 }
+
+String getButtonsString(){
+  uint8_t buttonA = getButtonState(A);
+  uint8_t buttonB = getButtonState(B);
+  uint8_t buttonC = getButtonState(C);
+  uint8_t buttonD = getButtonState(D);
+
+  String word2Test = "";
+
+  if(buttonA == LOW){
+    word2Test += "A";
+  }  
+
+  if(buttonB == LOW){
+    word2Test += "B";
+  }
+
+  if(buttonC == LOW){
+    word2Test += "C";
+  }
+
+  if(buttonD == LOW){
+    word2Test += "D";
+  }
+
+  return "Btns Pressed: " + word2Test;
+  
+}

@@ -1,17 +1,16 @@
 //"Pots" is short for "Potentiometers"
 
 #define PotA_Pin A0
-#define PotB_Pin A7
+#define PotB_Pin A14
 
 int getPotValue(IOLabels label){
+  mpu.update();
   if(label == 0){
-    int valA = map(analogRead(PotA_Pin),0,1023,0,100);
-    if(valA%2 != 0)valA++;
+    int valA = map(analogRead(PotA_Pin),0,1023,100,0);
     return valA;
   }
   else if(label == 1){
-    int valB = map(analogRead(PotB_Pin),0,1023,0,100);
-    if(valB%2 != 0)valB++;
+    int valB = map(analogRead(PotB_Pin),0,1023,100,0);
     return valB;
   }
   else{
