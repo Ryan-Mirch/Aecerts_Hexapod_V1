@@ -26,6 +26,8 @@ struct GyroAngleData {
 
 int counter = 0;
 
+int loopTimer = 0;
+
 void setup() {
   Serial.begin(9600);
   Wire.begin();
@@ -38,6 +40,9 @@ void setup() {
 }
 
 void loop() {
+  setWord10(String(millis()-loopTimer));
+  loopTimer = millis();
+
   GyroAngleData gad = readGyro();
   updateScreen();
   sendNRFData();
@@ -48,9 +53,10 @@ void loop() {
   setWord2("RE Count: " + String(counter));
   setWord3("RE Switch: " + getRotaryEncoderSwitchString());
       
+  mpu.update();
   int potAValue = getPotValue(A);
   int potBValue = getPotValue(B);
-
+  
   rc_data.slider1 = potAValue;
   rc_data.slider2 = potBValue;
 
@@ -58,13 +64,13 @@ void loop() {
   setWord5("Pot B: " + String(potBValue));
   int joyLeftXValue = map(analogRead(A6),0,1023,254,0);
   int joyLeftYValue = map(analogRead(A7),0,1023,0,254);
-  mpu.update();
+
   setWord6("JoyLeft X: " + String(joyLeftXValue) + " Y: " + String(joyLeftYValue));
   rc_data.joy1_X = joyLeftXValue;
   rc_data.joy1_Y = joyLeftYValue;
   int joyRightXValue = map(analogRead(A2),0,1023,0,254);
   int joyRightYValue = map(analogRead(A3),0,1023,0,254);
-  mpu.update();
+
   setWord7("JoyLeft X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
   rc_data.joy2_X = joyRightXValue;
   rc_data.joy2_Y = joyRightYValue;

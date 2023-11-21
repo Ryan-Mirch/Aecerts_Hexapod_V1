@@ -4,7 +4,6 @@
 #define PotB_Pin A14
 
 int getPotValue(IOLabels label){
-  mpu.update();
   if(label == 0){
     int valA = map(analogRead(PotA_Pin),0,1023,100,0);
     return valA;

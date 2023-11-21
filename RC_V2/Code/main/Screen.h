@@ -10,7 +10,7 @@
 #define SDA 51 //(MOSI)
 #define RES 40
 
-#define UpdateScreenInterval 1
+#define UpdateScreenInterval 100
 
 unsigned long last_update_time = 0;
 
@@ -87,7 +87,7 @@ void setLongWord1(String s){
 }
 
 void updateScreen(){ 
-  mpu.update();
+  if(millis()-last_update_time < UpdateScreenInterval)return;
   u8g2.clearBuffer();
   u8g2.setFont(u8g2_font_squeezed_r6_tr);
   
@@ -103,4 +103,7 @@ void updateScreen(){
   u8g2.drawStr(64,44,string10.c_str());  
   u8g2.drawStr(1,62,stringLong1.c_str()); 
   u8g2.sendBuffer();
+
+  last_update_time = millis();
 }
+
