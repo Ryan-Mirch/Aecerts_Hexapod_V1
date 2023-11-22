@@ -96,11 +96,6 @@ String getTogglesString(){
   uint8_t valueC = getToggleState(C);
   uint8_t valueD = getToggleState(D);
 
-  Serial.print(getToggleState(A));
-  Serial.print(getToggleState(B));
-  Serial.print(getToggleState(C));
-  Serial.println(getToggleState(D));
-
   String result = "";
 
   if(valueA == LOW)result += "A";
