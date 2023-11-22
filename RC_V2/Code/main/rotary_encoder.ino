@@ -47,6 +47,10 @@ int getRotaryEncoderSpins(){
 
 RotaryEncoderState getRotaryEncoderSwitch(){
   uint8_t switchValue = digitalRead(switchPin);
+  if(switchValue == LOW)return Pressed;
+  return Nothing;
+
+
   if(switchValue == LOW && !switchPressed){
     if(millis() - timeSinceReleased > DEBOUNCE_TIME){
       if(DEBUG_PRINT)Serial.println("Switch Pressed!");

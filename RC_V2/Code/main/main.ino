@@ -30,12 +30,13 @@ unsigned long loopTimer = 0;
 
 void setup() {
   Serial.begin(9600);
+  setupButtons();
   Wire.begin();
   setupNRF();
   setupScreen();
   setupRotaryEncoder();
   setupGyro();
-  setupButtons();
+  
   
 }
 
@@ -49,10 +50,12 @@ void loop() {
   
   
   setWord1(getButtonsString());
+  setWord2(getTogglesString());
+  setWord3(getBumpersString());
 
   counter += getRotaryEncoderSpins();
-  setWord2("RE Count: " + String(counter));
-  setWord3("RE Switch: " + getRotaryEncoderSwitchString());
+  setWord8("RE Count: " + String(counter));
+  setWord9("RE Switch: " + getRotaryEncoderSwitchString());
       
   int potAValue = getPotValue(A);
   int potBValue = getPotValue(B);

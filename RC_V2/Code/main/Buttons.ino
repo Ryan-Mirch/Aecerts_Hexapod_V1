@@ -9,6 +9,11 @@
 #define BumperC_Pin 38
 #define BumperD_Pin 37
 
+#define ToggleA_Pin 35
+#define ToggleB_Pin 34
+#define ToggleC_Pin 33
+#define ToggleD_Pin 32
+
 void setupButtons(){
   pinMode(ButtonA_Pin, INPUT_PULLUP);
   pinMode(ButtonB_Pin, INPUT_PULLUP);
@@ -19,58 +24,89 @@ void setupButtons(){
   pinMode(BumperB_Pin, INPUT_PULLUP);
   pinMode(BumperC_Pin, INPUT_PULLUP);
   pinMode(BumperD_Pin, INPUT_PULLUP);
+
+  pinMode(ToggleA_Pin, INPUT_PULLUP);
+  pinMode(ToggleB_Pin, INPUT_PULLUP);
+  pinMode(ToggleC_Pin, INPUT_PULLUP);
+  pinMode(ToggleD_Pin, INPUT_PULLUP);
 }
 
 uint8_t getButtonState(IOLabels label){
   switch(label){
-    case A:
-      return digitalRead(ButtonA_Pin);
-    case B:
-      return digitalRead(ButtonB_Pin);
-    case C:
-      return digitalRead(ButtonC_Pin);
-    case D:
-      return digitalRead(ButtonD_Pin);
+    case A: return digitalRead(ButtonA_Pin);
+    case B: return digitalRead(ButtonB_Pin);
+    case C: return digitalRead(ButtonC_Pin);
+    case D: return digitalRead(ButtonD_Pin);
   }
 }
 
 uint8_t getBumperState(IOLabels label){
   switch(label){
-    case A:
-      return digitalRead(BumperA_Pin);
-    case B:
-      return digitalRead(BumperB_Pin);
-    case C:
-      return digitalRead(BumperC_Pin);
-    case D:
-      return digitalRead(BumperD_Pin);
+    case A: return digitalRead(BumperA_Pin);
+    case B: return digitalRead(BumperB_Pin);
+    case C: return digitalRead(BumperC_Pin);
+    case D: return digitalRead(BumperD_Pin);
+  }
+}
+
+uint8_t getToggleState(IOLabels label){
+  switch(label){
+    case A: return digitalRead(ToggleA_Pin);
+    case B: return digitalRead(ToggleB_Pin);
+    case C: return digitalRead(ToggleC_Pin);
+    case D: return digitalRead(ToggleD_Pin);
   }
 }
 
 String getButtonsString(){
-  uint8_t buttonA = getButtonState(A);
-  uint8_t buttonB = getButtonState(B);
-  uint8_t buttonC = getButtonState(C);
-  uint8_t buttonD = getButtonState(D);
+  uint8_t valueA = getButtonState(A);
+  uint8_t valueB = getButtonState(B);
+  uint8_t valueC = getButtonState(C);
+  uint8_t valueD = getButtonState(D);
 
-  String word2Test = "";
+  String result = "";
 
-  if(buttonA == LOW){
-    word2Test += "A";
-  }  
+  if(valueA == LOW)result += "A";
+  if(valueB == LOW)result += "B";
+  if(valueC == LOW)result += "C";
+  if(valueD == LOW)result += "D";
 
-  if(buttonB == LOW){
-    word2Test += "B";
-  }
+  return "Btns: " + result;  
+}
 
-  if(buttonC == LOW){
-    word2Test += "C";
-  }
+String getBumpersString(){
+  uint8_t valueA = getBumperState(A);
+  uint8_t valueB = getBumperState(B);
+  uint8_t valueC = getBumperState(C);
+  uint8_t valueD = getBumperState(D);
 
-  if(buttonD == LOW){
-    word2Test += "D";
-  }
+  String result = "";
 
-  return "Btns Pressed: " + word2Test;
-  
+  if(valueA == LOW)result += "A";
+  if(valueB == LOW)result += "B";
+  if(valueC == LOW)result += "C";
+  if(valueD == LOW)result += "D";
+
+  return "Bumps: " + result;  
+}
+
+String getTogglesString(){
+  uint8_t valueA = getToggleState(A);
+  uint8_t valueB = getToggleState(B);
+  uint8_t valueC = getToggleState(C);
+  uint8_t valueD = getToggleState(D);
+
+  Serial.print(getToggleState(A));
+  Serial.print(getToggleState(B));
+  Serial.print(getToggleState(C));
+  Serial.println(getToggleState(D));
+
+  String result = "";
+
+  if(valueA == LOW)result += "A";
+  if(valueB == LOW)result += "B";
+  if(valueC == LOW)result += "C";
+  if(valueD == LOW)result += "D";
+
+  return "Togs: " + result;  
 }
