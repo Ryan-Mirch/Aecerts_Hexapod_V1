@@ -34,9 +34,9 @@
         "other_text_thickness": 0.15,
         "other_text_upright": false,
         "pads": {
-          "drill": 0.8,
-          "height": 1.6,
-          "width": 1.6
+          "drill": 1.3,
+          "height": 1.95,
+          "width": 1.95
         },
         "silk_line_width": 0.15,
         "silk_text_italic": false,
@@ -55,7 +55,18 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "starved_thermal|101400000|88900000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|b11fa426-36ad-4e30-9a99-22733f814c0a|F.Cu",
+        "starved_thermal|140970000|90200000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|ea000d6b-9b97-4a1b-b8b3-441c79aec9f7|F.Cu",
+        "starved_thermal|184150000|94615000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|aa8b4d69-1ee1-493e-89e0-3bf22e0f39fb|F.Cu",
+        "starved_thermal|88265000|137160000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|5251db80-91bc-4ac8-8681-f0eb56af15f9|F.Cu",
+        "starved_thermal|94540000|103160000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|df371419-67a1-4813-886d-0c2dc0b0d6ae|B.Cu",
+        "starved_thermal|94540000|123480000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|4d8fa444-846b-4e00-88bc-6deabb51503f|B.Cu",
+        "starved_thermal|94540000|133300000|28560f2f-b1fa-49f3-80cd-6a66ec43a7a6|8ba520b2-e962-4c3d-a083-c3c8b4f11e23|F.Cu",
+        "unconnected_items|106480000|91440000|a8cd0cae-7535-48f1-8755-ea535137b247|e1d16a19-9d78-407d-aa21-b2b0f8444388",
+        "unconnected_items|115350000|88389346|9aaf9a29-d5cc-41ff-972b-2b133ed514ac|1e9eebbe-129c-4b6e-94bd-4ca56988c360",
+        "unconnected_items|88265000|129540000|e8adcf04-4c08-4965-8ecb-5eee18dbfead|fe4f33d0-aed1-44e0-8013-491bd6e76b3f"
+      ],
       "meta": {
         "version": 2
       },
@@ -490,7 +501,7 @@
       "idf": "",
       "netlist": "./",
       "specctra_dsn": "",
-      "step": "RC Transmitter KiCad.step",
+      "step": "PCB STEP.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""
