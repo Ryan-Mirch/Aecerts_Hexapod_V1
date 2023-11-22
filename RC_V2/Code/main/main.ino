@@ -41,17 +41,17 @@ void setup() {
 }
 
 void loop() {
-  setWord10(String(millis()-loopTimer));
+  setWord11(String(millis()-loopTimer));
   loopTimer = millis();
 
   GyroAngleData gad = readGyro();
   
-  if(!updateScreen())sendNRFData();
-  
+  if(!updateScreen())sendNRFData(); 
   
   setWord1(getButtonsString());
   setWord2(getTogglesString());
   setWord3(getBumpersString());
+  setWord4(getJoyButtonsString());
 
   counter += getRotaryEncoderSpins();
   setWord8("RE Count: " + String(counter));
@@ -63,8 +63,8 @@ void loop() {
   rc_data.slider1 = potAValue;
   rc_data.slider2 = potBValue;
 
-  setWord4("Pot A: " + String(potAValue));
-  setWord5("Pot B: " + String(potBValue));
+  setWord5("Pot A: " + String(potAValue));
+  setWord10("Pot B: " + String(potBValue));
   int joyLeftXValue = map(analogRead(A6),0,1023,254,0);
   int joyLeftYValue = map(analogRead(A7),0,1023,0,254);
 
@@ -74,7 +74,7 @@ void loop() {
   int joyRightXValue = map(analogRead(A2),0,1023,0,254);
   int joyRightYValue = map(analogRead(A3),0,1023,0,254);
 
-  setWord7("JoyLeft X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
+  setWord7("JoyRight X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
   rc_data.joy2_X = joyRightXValue;
   rc_data.joy2_Y = joyRightYValue;
 

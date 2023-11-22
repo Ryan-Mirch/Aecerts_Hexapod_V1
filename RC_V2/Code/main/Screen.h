@@ -26,6 +26,7 @@ String string7 = "String 7";
 String string8 = "String 8"; 
 String string9 = "String 9";   
 String string10 = "String 10";  
+String string11 = "String 11";
 
 String stringLong1 = "String Long 1";
 
@@ -82,6 +83,10 @@ void setWord10(String s){
   string10 = s;  
 }
 
+void setWord11(String s){
+  string11 = s;  
+}
+
 void setLongWord1(String s){
   stringLong1 = s;  
 }
@@ -100,7 +105,8 @@ bool updateScreen(){
   u8g2.drawStr(64,20,string7.c_str());
   u8g2.drawStr(64,28,string8.c_str());
   u8g2.drawStr(64,36,string9.c_str());
-  u8g2.drawStr(64,44,string10.c_str());  
+  u8g2.drawStr(64,44,string10.c_str()); 
+  u8g2.drawStr(64,52,string11.c_str()); 
   u8g2.drawStr(1,62,stringLong1.c_str()); 
   u8g2.sendBuffer();
 

@@ -14,6 +14,9 @@
 #define ToggleC_Pin 33
 #define ToggleD_Pin 32
 
+#define JoyLeftButton_Pin 31
+#define JoyRightButton_Pin 36
+
 void setupButtons(){
   pinMode(ButtonA_Pin, INPUT_PULLUP);
   pinMode(ButtonB_Pin, INPUT_PULLUP);
@@ -29,6 +32,9 @@ void setupButtons(){
   pinMode(ToggleB_Pin, INPUT_PULLUP);
   pinMode(ToggleC_Pin, INPUT_PULLUP);
   pinMode(ToggleD_Pin, INPUT_PULLUP);
+
+  pinMode(JoyLeftButton_Pin, INPUT_PULLUP);
+  pinMode(JoyRightButton_Pin, INPUT_PULLUP);
 }
 
 uint8_t getButtonState(IOLabels label){
@@ -55,6 +61,13 @@ uint8_t getToggleState(IOLabels label){
     case B: return digitalRead(ToggleB_Pin);
     case C: return digitalRead(ToggleC_Pin);
     case D: return digitalRead(ToggleD_Pin);
+  }
+}
+
+uint8_t getJoyButtonState(IOLabels label){
+  switch(label){
+    case A: return digitalRead(JoyLeftButton_Pin);
+    case B: return digitalRead(JoyRightButton_Pin);
   }
 }
 
@@ -104,4 +117,16 @@ String getTogglesString(){
   if(valueD == LOW)result += "D";
 
   return "Togs: " + result;  
+}
+
+String getJoyButtonsString(){
+  uint8_t valueA = getJoyButtonState(A);
+  uint8_t valueB = getJoyButtonState(B);
+
+  String result = "";
+
+  if(valueA == LOW)result += "A";
+  if(valueB == LOW)result += "B";
+
+  return "Joys: " + result;  
 }
