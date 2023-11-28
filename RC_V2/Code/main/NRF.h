@@ -7,7 +7,6 @@ RF24 radio(49, 4); // CE, CSN
 uint8_t address[][6] = {"1Node", "2Node"};
 bool radioNumber = 0;
 
-unsigned long rc_last_sent_time = 0;
 unsigned long rc_send_interval = 50;
 
 
@@ -54,25 +53,24 @@ void setupNRF(){
 }
 
 void sendNRFData(){ 
-  if(millis()-rc_last_sent_time < rc_send_interval)return;
-
-  bool report = radio.write(&rc_data, sizeof(rc_data));      // transmit & save the report
+  every(rc_send_interval){
+    bool report = radio.write(&rc_data, sizeof(rc_data));      // transmit & save the report
   
-  if (report) {
-    if (radio.isAckPayloadAvailable()) {
-      radio.read(&hex_data, sizeof(hex_data));   
-      float current = hex_data.current_sensor_value;
-      //Serial.println(("Current Sensor: " + String(current)));
-      setWord1("Current: " + String(current));
-    }      
+    if (report) {
+      if (radio.isAckPayloadAvailable()) {
+        radio.read(&hex_data, sizeof(hex_data));   
+        float current = hex_data.current_sensor_value;
+        //Serial.println(("Current Sensor: " + String(current)));
+        setWord1("Current: " + String(current));
+      }      
 
-  } else {
-    //Serial.print(F("Transmission failed or timed out with ")); // payload was not delivered
-    //Serial.print(sizeof(rc_data));
-    //Serial.println(F(" bytes"));
-  }
-  rc_last_sent_time = millis();
-  mpu.update();
+    } else {
+      //Serial.print(F("Transmission failed or timed out with ")); // payload was not delivered
+      //Serial.print(sizeof(rc_data));
+      //Serial.println(F(" bytes"));
+    }
+    mpu.update();
+  }  
 }
 
 
