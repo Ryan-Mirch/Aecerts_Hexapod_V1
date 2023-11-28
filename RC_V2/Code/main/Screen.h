@@ -12,8 +12,6 @@
 
 #define UpdateScreenInterval 100
 
-unsigned long last_update_time = 0;
-
 MPU6050 mpu(Wire);
 
 String string1 = "String 1";   
@@ -92,27 +90,27 @@ void setLongWord1(String s){
 }
 
 bool updateScreen(){ 
-  if(millis()-last_update_time < UpdateScreenInterval)return false;
-  u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_squeezed_r6_tr);
-  
-  u8g2.drawStr(1,12,string1.c_str());
-  u8g2.drawStr(1,20,string2.c_str());
-  u8g2.drawStr(1,28,string3.c_str());
-  u8g2.drawStr(1,36,string4.c_str());
-  u8g2.drawStr(1,44,string5.c_str());
-  u8g2.drawStr(64,12,string6.c_str());
-  u8g2.drawStr(64,20,string7.c_str());
-  u8g2.drawStr(64,28,string8.c_str());
-  u8g2.drawStr(64,36,string9.c_str());
-  u8g2.drawStr(64,44,string10.c_str()); 
-  u8g2.drawStr(64,52,string11.c_str()); 
-  u8g2.drawStr(1,62,stringLong1.c_str()); 
-  u8g2.sendBuffer();
+  every(UpdateScreenInterval){
+    u8g2.clearBuffer();
+    u8g2.setFont(u8g2_font_squeezed_r6_tr);
+    
+    u8g2.drawStr(1,12,string1.c_str());
+    u8g2.drawStr(1,20,string2.c_str());
+    u8g2.drawStr(1,28,string3.c_str());
+    u8g2.drawStr(1,36,string4.c_str());
+    u8g2.drawStr(1,44,string5.c_str());
+    u8g2.drawStr(64,12,string6.c_str());
+    u8g2.drawStr(64,20,string7.c_str());
+    u8g2.drawStr(64,28,string8.c_str());
+    u8g2.drawStr(64,36,string9.c_str());
+    u8g2.drawStr(64,44,string10.c_str()); 
+    u8g2.drawStr(64,52,string11.c_str()); 
+    u8g2.drawStr(1,62,stringLong1.c_str()); 
+    u8g2.sendBuffer();
 
-  mpu.update();
-
-  last_update_time = millis();
-  return true;
+    mpu.update();
+    return true;
+  }
+  return false;
 }
 
