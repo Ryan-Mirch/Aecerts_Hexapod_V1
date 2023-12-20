@@ -46,7 +46,7 @@ func unhover():
 	underline.visible = false
 "
 
-[sub_resource type="LabelSettings" id="LabelSettings_hb5ca"]
+[sub_resource type="LabelSettings" id="LabelSettings_r18qs"]
 font = ExtResource("1_oforo")
 font_size = 110
 
@@ -88,7 +88,7 @@ unique_name_in_owner = true
 texture_filter = 3
 layout_mode = 2
 text = "Page Link"
-label_settings = SubResource("LabelSettings_hb5ca")
+label_settings = SubResource("LabelSettings_r18qs")
 vertical_alignment = 1
 
 [node name="Underline" type="ColorRect" parent="Scale/CenterContainer/Name Label"]

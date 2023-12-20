@@ -5,6 +5,13 @@
   )
 
   (paper "A4")
+  (title_block
+    (title "Arduino RC Transmitter")
+    (date "2023-12-02")
+    (rev "V1.02")
+    (company "Aecert Robotics")
+  )
+
   (layers
     (0 "F.Cu" signal)
     (31 "B.Cu" signal)
@@ -6095,6 +6102,24 @@
   )
   (gr_text "V1.02" (at 192.532 139.192) (layer "F.SilkS") (tstamp fac5b0f4-372d-452a-9083-c82a857bafe1)
     (effects (font (size 1.5 1.5) (thickness 0.15)))
+  )
+  (dimension (type aligned) (layer "B.CrtYd") (tstamp 20b8f47b-ca3c-446b-9e08-2a1bec973fc1)
+    (pts (xy 78.74 137.74) (xy 203.2 137.74))
+    (height 12.627999)
+    (gr_text "124.4600 mm" (at 140.97 148.167999) (layer "B.CrtYd") (tstamp 20b8f47b-ca3c-446b-9e08-2a1bec973fc1)
+      (effects (font (size 2 2) (thickness 0.2)))
+    )
+    (format (prefix "") (suffix "") (units 3) (units_format 1) (precision 4))
+    (style (thickness 0.05) (arrow_length 1.27) (text_position_mode 0) (extension_height 0.58642) (extension_offset 0.5) keep_text_aligned)
+  )
+  (dimension (type aligned) (layer "B.CrtYd") (tstamp 887aea77-3ea8-4ccf-bd2b-7d8488d3702a)
+    (pts (xy 198.7 55.88) (xy 198.7 142.24))
+    (height -11.104)
+    (gr_text "86.3600 mm" (at 207.604 99.06 90) (layer "B.CrtYd") (tstamp 887aea77-3ea8-4ccf-bd2b-7d8488d3702a)
+      (effects (font (size 2 2) (thickness 0.2)))
+    )
+    (format (prefix "") (suffix "") (units 3) (units_format 1) (precision 4))
+    (style (thickness 0.05) (arrow_length 1.27) (text_position_mode 0) (extension_height 0.58642) (extension_offset 0.5) keep_text_aligned)
   )
 
   (segment (start 173.716581 88.919419) (end 180.994419 88.919419) (width 0.25) (layer "F.Cu") (net 1) (tstamp 13d72865-2a1e-4c3c-85f8-98343dc5cc92))

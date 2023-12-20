@@ -501,7 +501,7 @@
       "idf": "",
       "netlist": "./",
       "specctra_dsn": "",
-      "step": "PCB STEP.step",
+      "step": "../STLS/PCB STLS/V1.02.step",
       "vrml": ""
     },
     "page_layout_descr_file": ""
