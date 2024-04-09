@@ -18,8 +18,7 @@ void setupGyro(){
   Serial.println(status);
   while(status!=0){ } // stop everything if could not connect to MPU6050
   
-  Serial.println(F("Calculating offsets, do not move MPU6050"));
-  delay(200);
+  //Serial.println(F("Calculating offsets, do not move MPU6050"));
   mpu.upsideDownMounting = true; // uncomment this line if the MPU6050 is mounted upside-down
   mpu.calcOffsets(); // gyro and accelero
   Serial.println("Done!\n");
@@ -27,8 +26,6 @@ void setupGyro(){
 
 GyroAngleData readGyro(){  
   mpu.update();
-
-  if(millis()-gyroTimer < 10)return gad;
   
   gad.X = mpu.getAngleX();
   gad.Y = mpu.getAngleY();
@@ -36,8 +33,6 @@ GyroAngleData readGyro(){
     
   String gyroText = "GX: " + String(gad.X) + " GY: " + String(gad.Y) + " GZ: " + String(gad.Z);
   setLongWord1(gyroText); 
-
-  gyroTimer = millis();
   return gad;
 }
 

@@ -37,6 +37,11 @@ void setupScreen(){
   digitalWrite(DC, 0);
   digitalWrite(CS, 0);	
   u8g2.begin();  
+
+  u8g2.clearBuffer();
+  u8g2.setFont(u8g2_font_squeezed_r6_tr);  
+  u8g2.drawStr(40,30,"Calibrating Gyro");
+  u8g2.sendBuffer();
 }
 
 

@@ -32,10 +32,11 @@ unsigned long loopTimer = 0;
 
 void setup() {
   Serial.begin(9600);
+  setupScreen();
   setupButtons();
   Wire.begin();
   setupNRF();
-  setupScreen();
+  
   setupRotaryEncoder();
   setupGyro();
   
