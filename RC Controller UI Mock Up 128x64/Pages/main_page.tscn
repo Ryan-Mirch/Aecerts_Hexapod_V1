@@ -11,7 +11,6 @@ script/source = "extends Control
 @onready var selectedGaitLabel = %\"Selected Gait Label\"
 @onready var underlineControls = $\"Controls Label/Underline\"
 @onready var underlineSelectedGait = $\"Selected Gait Label/Underline\"
-@onready var controlsLink = $\"Controls Link\"
 @onready var menuLink = $\"Menu Link\"
 
 var menu_position = 1
@@ -29,14 +28,9 @@ func _ready():
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta):
-	if Input.is_action_just_pressed(\"ui_left\"):
-		menu_position -= 1
-		if menu_position < 0: menu_position = 0
-		setVisibility()
-		
-	if Input.is_action_just_pressed(\"ui_right\"):
-		menu_position += 1
-		if menu_position > 2: menu_position = 2
+	if Input.is_action_just_pressed(\"ui_left\") or Input.is_action_just_pressed(\"ui_right\"):		
+		if menu_position == 1: menu_position = 2
+		else : menu_position = 1
 		setVisibility()
 		
 	if Input.is_action_just_pressed(\"ui_accept\"):
@@ -61,11 +55,8 @@ func setVisibility():
 		underline.visible = false
 		
 	menuLink.unhover()
-	controlsLink.unhover()
 	
 	match menu_position:
-		0:
-			controlsLink.hover()
 			
 		1:
 			underlineSelectedGait.visible = true
@@ -87,9 +78,6 @@ func select():
 			Pages.GaitPage.hoveredIndex = selected_gait_index
 			
 			setGait()
-			
-		0:
-			controlsLink.select()
 "
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_wvfjn"]
@@ -232,17 +220,6 @@ offset_bottom = 4.0
 scale = Vector2(0.808917, 0.808917)
 itemName = "Menu"
 pageToOpen = 2
-fontSize = 90
-
-[node name="Controls Link" parent="." instance=ExtResource("2_lcxry")]
-layout_mode = 1
-offset_left = -47.0
-offset_top = 121.0
-offset_right = -192.0
-offset_bottom = 2.0
-scale = Vector2(0.808917, 0.808917)
-itemName = "Controls"
-pageToOpen = 1
 fontSize = 90
 
 [node name="Info" type="Control" parent="."]
@@ -449,6 +426,7 @@ points = PackedVector2Array(63.2706, -0.000167847, 63.271, 163.68, -159.615, 0.0
 width = 2.0
 
 [node name="Battery Outline" type="Line2D" parent="."]
+visible = false
 position = Vector2(388, 156)
 rotation = -3.14159
 scale = Vector2(2.89519, 2.67067)

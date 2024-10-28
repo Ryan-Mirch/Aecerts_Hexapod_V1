@@ -80,8 +80,4 @@ void loop() {
   setWord7("JoyRight X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
   rc_data.joy2_X = joyRightXValue;
   rc_data.joy2_Y = joyRightYValue;
-
-  
-  
-  
 }

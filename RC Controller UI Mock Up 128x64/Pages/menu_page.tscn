@@ -195,6 +195,12 @@ itemName = "Stats"
 pageToOpen = 4
 fontSize = 85
 
+[node name="Controls Link" parent="Link List" instance=ExtResource("2_3c5hq")]
+layout_mode = 2
+itemName = "Controls"
+pageToOpen = 1
+fontSize = 90
+
 [node name="Back" parent="." instance=ExtResource("2_3c5hq")]
 unique_name_in_owner = true
 anchors_preset = 0

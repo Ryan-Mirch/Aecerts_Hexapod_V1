@@ -129,7 +129,7 @@ grow_horizontal = 1
 grow_vertical = 1
 scale = Vector2(0.572092, 0.572092)
 itemName = "Back"
-pageToOpen = 0
+pageToOpen = 2
 
 [node name="Arrow" type="Line2D" parent="Back"]
 position = Vector2(267.44, 27.9675)
