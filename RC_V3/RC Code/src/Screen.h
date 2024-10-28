@@ -1,18 +1,20 @@
+#pragma once
+
 #include <Arduino.h>
+#include "Helpers.h"
+
 #include <U8g2lib.h>
 #include <SPI.h>
 #include <Wire.h>
 #include <MPU6050_light.h>
 
-#define DC  49   //(CE)
-#define CS  42   //(SS)
+#define DC  49 //(CE)
+#define CS  42 //(SS)
 #define SCL 52 //(SCK)
 #define SDA 51 //(MOSI)
 #define RES 40
 
 #define UpdateScreenInterval 100
-
-MPU6050 mpu(Wire);
 
 String string1 = "String 1";   
 String string2 = "String 2";   
@@ -97,7 +99,7 @@ void setLongWord1(String s){
 bool updateScreen(){ 
   every(UpdateScreenInterval){
     u8g2.clearBuffer();
-    u8g2.setFont(u8g2_font_squeezed_r6_tr);
+    u8g2.setFont(u8g2_font_tom_thumb_4x6_mf);
     
     u8g2.drawStr(1,12,string1.c_str());
     u8g2.drawStr(1,20,string2.c_str());
@@ -112,8 +114,6 @@ bool updateScreen(){
     u8g2.drawStr(64,52,string11.c_str()); 
     u8g2.drawStr(1,62,stringLong1.c_str()); 
     u8g2.sendBuffer();
-
-    mpu.update();
     return true;
   }
   return false;

@@ -1,7 +1,11 @@
 
+#pragma once
+
+#include <Arduino.h>
+#include "Helpers.h"
 #include <SPI.h>
-#include <nRF24L01.h>
 #include <RF24.h>
+#include "Screen.h"
 
 RF24 radio(49, 4); // CE, CSN
 uint8_t address[][6] = {"1Node", "2Node"};
