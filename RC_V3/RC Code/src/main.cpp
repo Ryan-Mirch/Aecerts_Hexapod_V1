@@ -5,64 +5,57 @@
 #include "Inputs.h"
 #include "NRF.h"
 #include "Screen.h"
-
-
-
+#include "Page.h"
 
 const bool DEBUG_PRINT = false;
-int counter = 0;
+#define UpdateScreenInterval 100
 
-unsigned long loopTimer = 0;
+Page *pages[2];
+Page *currentPage = nullptr;
 
-void setup() {
+unsigned long drawTimerStart = 0;
+unsigned long drawTimerEnd = 0;
+bool drewScreen = false;
+
+void setup()
+{
   Serial.begin(9600);
-  setupScreen();  
+  setupScreen();
   setupInputs();
   Wire.begin();
   setupNRF();
+
+  pages[0] = new HomePage();
+  pages[1] = new DemoControlsPage();
 }
 
-void loop() {
-  setWord11(String(millis()-loopTimer));
-  loopTimer = millis();
+void loop()
+{
+
+  if (getSwitchValue(D) == OFF)
+    currentPage = pages[0];
+  else
+    currentPage = pages[1];
+
   
-  if(!updateScreen())sendNRFData(); 
-  
-  setWord1(getButtonsString());
-  setWord2(getSwitchesString());
-  setWord3(getBumpersString());
-  setWord4(getJoyButtonsString());
+  drewScreen = false;
+  every(UpdateScreenInterval)
+  {    
+    mpu.update();
+    
+    DemoControlsPage *demoPage = static_cast<DemoControlsPage *>(pages[1]);
+    demoPage->string11 = String(drawTimerEnd - drawTimerStart);
 
-  counter += getRotaryEncoderSpins();
-  setWord8("RE Count: " + String(counter));
-  setWord9("RE Switch: " + getRotaryEncoderSwitchString());
-      
-  int potAValue = getPotValue(A);
-  int potBValue = getPotValue(B);
+    HomePage *homePage = static_cast<HomePage *>(pages[0]);
+    homePage->loopTime = "Loop Time: " + String(drawTimerEnd - drawTimerStart);
 
-  rc_data.slider1 = potAValue;
-  rc_data.slider2 = potBValue;
+    drawTimerStart = millis();
+    currentPage->draw();
+    drawTimerEnd = millis();
 
-  setWord5("Pot A: " + String(potAValue));
-  setWord10("Pot B: " + String(potBValue));
+    drewScreen = true;
+  }
 
-
-
-  int joyLeftXValue = map(analogRead(A6),0,1023,254,0);
-  int joyLeftYValue = map(analogRead(A7),0,1023,0,254);
-
-  setWord6("JL X: " + String(joyLeftXValue) + " Y: " + String(joyLeftYValue));
-  rc_data.joy1_X = joyLeftXValue;
-  rc_data.joy1_Y = joyLeftYValue;
-
-
-
-  int joyRightXValue = map(analogRead(A2),0,1023,0,254);
-  int joyRightYValue = map(analogRead(A3),0,1023,0,254);
-
-  setWord7("JR X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
-  rc_data.joy2_X = joyRightXValue;
-  rc_data.joy2_Y = joyRightYValue;
-
-  setLongWord1(getGyroString()); 
+  if (!drewScreen)
+    sendNRFData();
 }

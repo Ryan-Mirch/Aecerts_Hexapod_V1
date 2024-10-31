@@ -1,4 +1,3 @@
-
 #pragma once
 
 #include <Arduino.h>
@@ -6,6 +5,12 @@
 #define every(interval)\
   static uint32_t __every__##interval = millis();\
   if(millis() - __every__##interval >= interval && (__every__##interval = millis()))
+
+#define OFF 0x1
+#define ON  0x0
+
+#define UNPRESSED 0x1
+#define PRESSED  0x0
 
 enum RotaryEncoderState {
   Nothing,    //0
@@ -26,8 +31,4 @@ struct GyroAngleData {
     float Z;
 };
 
-float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
-{
-  return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-}
-
+float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
