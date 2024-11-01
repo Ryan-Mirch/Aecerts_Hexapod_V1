@@ -1,0 +1,84 @@
+[gd_scene load_steps=4 format=3 uid="uid://c7vvo7xl6331y"]
+
+[ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="1_ryxuu"]
+
+[sub_resource type="GDScript" id="GDScript_jy2fj"]
+script/source = "extends Control
+
+@export var SwitchName = \"SW\"
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready():
+	$Label.text = SwitchName
+
+
+# Called every frame. 'delta' is the elapsed time since the previous frame.
+func _process(delta):
+	pass
+"
+
+[sub_resource type="LabelSettings" id="LabelSettings_6odsl"]
+font = ExtResource("1_ryxuu")
+font_size = 75
+shadow_size = 0
+shadow_offset = Vector2(0, 0)
+
+[node name="Switch 1" type="Control"]
+custom_minimum_size = Vector2(70, 23)
+layout_mode = 3
+anchors_preset = 0
+script = SubResource("GDScript_jy2fj")
+
+[node name="Label" type="Label" parent="."]
+texture_filter = 3
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 20.0
+offset_top = 7.0
+offset_right = 302.0
+offset_bottom = 85.0
+scale = Vector2(0.22, 0.22)
+text = "SW"
+label_settings = SubResource("LabelSettings_6odsl")
+
+[node name="Toggle Icon" type="Line2D" parent="."]
+position = Vector2(40, 86)
+rotation = -3.14159
+scale = Vector2(1.05065, 1.05065)
+points = PackedVector2Array(30.0001, 55.9999, 24.0001, 55.9999, 24.0002, 79.9999, 37.0002, 79.9999, 37.0001, 55.9999, 30.0001, 55.9999)
+width = 1.0
+
+[node name="Fill 1" type="Line2D" parent="Toggle Icon"]
+position = Vector2(61.0003, 136)
+rotation = -3.14159
+points = PackedVector2Array(26.0003, 57.9999, 26.0003, 66.9999, 35.0003, 66.9998, 35.0003, 57.9998)
+closed = true
+width = 1.0
+
+[node name="Fill 2" type="Line2D" parent="Toggle Icon"]
+position = Vector2(-0.999975, 10)
+points = PackedVector2Array(28.0005, 59.9998, 28.0005, 66.9998, 35.0003, 66.9998, 35.0005, 59.9997)
+closed = true
+width = 1.0
+
+[node name="Fill 3" type="Line2D" parent="Toggle Icon"]
+position = Vector2(-1.99998, 9.00001)
+rotation = 1.01407e-05
+points = PackedVector2Array(30.0008, 61.9996, 30.0008, 66.9996, 35.0003, 66.9998, 35.0008, 61.9996)
+closed = true
+width = 1.0
+
+[node name="Fill 4" type="Line2D" parent="Toggle Icon"]
+position = Vector2(-1.99998, 9.00001)
+rotation = 1.01407e-05
+points = PackedVector2Array(31.0008, 62.9996, 31.0008, 65.9996, 34.0008, 65.9996, 34.0008, 62.9996)
+closed = true
+width = 1.0
+
+[node name="Fill 5" type="Line2D" parent="Toggle Icon"]
+position = Vector2(-1.99998, 9.00001)
+rotation = 1.01407e-05
+points = PackedVector2Array(32.0008, 63.9996, 32.0008, 64.9996, 33.0008, 64.9996, 33.0008, 63.9996)
+closed = true
+width = 1.0

@@ -1,16 +1,15 @@
-[gd_scene load_steps=8 format=3 uid="uid://8p5uyfegg4ul"]
+[gd_scene load_steps=9 format=3 uid="uid://8p5uyfegg4ul"]
 
 [ext_resource type="FontFile" uid="uid://chjnqhxypo26q" path="res://Resources/DePixelKlein.otf" id="1_gb7mo"]
 [ext_resource type="PackedScene" uid="uid://rw603wmjhkpd" path="res://page_link.tscn" id="2_lcxry"]
 [ext_resource type="Texture2D" uid="uid://bm12qee5n6wpj" path="res://Resources/Battery Icon.png" id="2_sa028"]
 [ext_resource type="Texture2D" uid="uid://ohbbyqpqchsh" path="res://Resources/ammeter.png" id="3_xcsub"]
+[ext_resource type="PackedScene" uid="uid://c7vvo7xl6331y" path="res://switch.tscn" id="5_4f85p"]
 
 [sub_resource type="GDScript" id="GDScript_5ofka"]
 script/source = "extends Control
 
 @onready var selectedGaitLabel = %\"Selected Gait Label\"
-@onready var underlineControls = $\"Controls Label/Underline\"
-@onready var underlineSelectedGait = $\"Selected Gait Label/Underline\"
 @onready var menuLink = $\"Menu Link\"
 
 var menu_position = 1
@@ -51,15 +50,13 @@ func close():
 
 
 func setVisibility():
-	for underline in get_tree().get_nodes_in_group(\"Underline\"):
-		underline.visible = false
 		
 	menuLink.unhover()
 	
 	match menu_position:
 			
 		1:
-			underlineSelectedGait.visible = true
+			pass
 			
 		2:
 			menuLink.hover()
@@ -113,8 +110,8 @@ grow_vertical = 2
 theme_override_styles/panel = SubResource("StyleBoxFlat_wvfjn")
 
 [node name="Body" type="Line2D" parent="."]
-position = Vector2(55, -42)
-scale = Vector2(3.11172, 3.11172)
+position = Vector2(53, -20)
+scale = Vector2(3.07107, 3.07107)
 points = PackedVector2Array(26, 43, 35, 43, 38, 35, 35, 27, 26, 27, 23, 35, 26, 43)
 width = 1.0
 
@@ -192,35 +189,66 @@ position = Vector2(-9.81903, -13.5313)
 points = PackedVector2Array(36.8376, 51.935, 36.8376, 55.6705, 33.1021, 55.6705, 33.1021, 51.935, 36.8376, 51.935, 36.8376, 55.6705)
 width = 1.0
 
-[node name="Selected Gait Label" type="Label" parent="."]
+[node name="Control" type="Control" parent="."]
+anchors_preset = 0
+offset_left = 8.0
+offset_top = 57.0
+offset_right = 48.0
+offset_bottom = 97.0
+
+[node name="Selected Gait Label2" type="Label" parent="Control"]
+texture_filter = 3
+custom_minimum_size = Vector2(100, 0)
+layout_mode = 0
+offset_left = 5.0
+offset_top = 5.0
+offset_right = 287.0
+offset_bottom = 86.0
+scale = Vector2(0.167876, 0.167876)
+text = "Gait:"
+label_settings = SubResource("LabelSettings_6odsl")
+
+[node name="Selected Gait Label" type="Label" parent="Control"]
 unique_name_in_owner = true
 texture_filter = 3
 custom_minimum_size = Vector2(100, 0)
 layout_mode = 2
-offset_left = 119.0
-offset_top = 127.0
-offset_right = 401.0
-offset_bottom = 208.0
-scale = Vector2(0.22, 0.22)
+offset_left = 5.0
+offset_top = 20.0
+offset_right = 287.0
+offset_bottom = 101.0
+scale = Vector2(0.264323, 0.264323)
 text = "Tri"
 label_settings = SubResource("LabelSettings_6odsl")
-horizontal_alignment = 1
-
-[node name="Underline" type="Line2D" parent="Selected Gait Label" groups=["Underline"]]
-position = Vector2(-4.14893, 73.8889)
-scale = Vector2(1, 0.683738)
-points = PackedVector2Array(17.0212, -4.22516, 276.596, -4.22516)
 
 [node name="Menu Link" parent="." instance=ExtResource("2_lcxry")]
 layout_mode = 1
-offset_left = 142.0
-offset_top = 123.0
-offset_right = -3.0
-offset_bottom = 4.0
+offset_left = -54.0
+offset_top = 118.0
+offset_right = -199.0
+offset_bottom = -1.0
 scale = Vector2(0.808917, 0.808917)
 itemName = "Menu"
 pageToOpen = 2
 fontSize = 90
+
+[node name="Fill 5" type="Line2D" parent="Menu Link"]
+position = Vector2(49.4488, -50.6851)
+rotation = 1.01407e-05
+points = PackedVector2Array(28.4337, 59.3383, 25.9613, 66.7557, 28.4338, 74.173, 35.8512, 76.6453, 43.2685, 74.1728, 45.7408, 66.7555, 43.2683, 59.3382, 35.851, 56.8658)
+closed = true
+width = 1.0
+
+[node name="Selected Gait Label2" type="Label" parent="Menu Link/Fill 5"]
+texture_filter = 3
+custom_minimum_size = Vector2(100, 0)
+offset_left = 32.1424
+offset_top = 60.5745
+offset_right = 314.142
+offset_bottom = 141.574
+scale = Vector2(0.194106, 0.194106)
+text = "4"
+label_settings = SubResource("LabelSettings_6odsl")
 
 [node name="Info" type="Control" parent="."]
 anchors_preset = 0
@@ -256,16 +284,15 @@ width = 2.0
 
 [node name="Grid" type="GridContainer" parent="Info"]
 layout_mode = 1
-offset_left = 30.9577
-offset_top = 21.0
-offset_right = 1204.96
-offset_bottom = 452.0
-scale = Vector2(0.2402, 0.2402)
+offset_left = 220.974
+offset_top = 45.9028
+offset_right = 1394.98
+offset_bottom = 923.903
+scale = Vector2(0.18764, 0.18764)
 theme_override_constants/h_separation = 625
 theme_override_constants/v_separation = 50
-columns = 2
 
-[node name="Battery" type="VBoxContainer" parent="Info/Grid"]
+[node name="Battery" type="HBoxContainer" parent="Info/Grid"]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Info/Grid/Battery"]
@@ -288,7 +315,7 @@ text = "99%"
 label_settings = SubResource("LabelSettings_6odsl")
 horizontal_alignment = 1
 
-[node name="Max Speed" type="VBoxContainer" parent="Info/Grid"]
+[node name="Max Speed" type="HBoxContainer" parent="Info/Grid"]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Info/Grid/Max Speed"]
@@ -344,7 +371,7 @@ text = "75%"
 label_settings = SubResource("LabelSettings_6odsl")
 horizontal_alignment = 1
 
-[node name="Amps" type="VBoxContainer" parent="Info/Grid"]
+[node name="Amps" type="HBoxContainer" parent="Info/Grid"]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Info/Grid/Amps"]
@@ -381,7 +408,7 @@ layout_mode = 2
 text = "10.2A"
 label_settings = SubResource("LabelSettings_6odsl")
 
-[node name="Height" type="VBoxContainer" parent="Info/Grid"]
+[node name="Height" type="HBoxContainer" parent="Info/Grid"]
 layout_mode = 2
 
 [node name="Control" type="Control" parent="Info/Grid/Height"]
@@ -447,3 +474,27 @@ rotation = -3.14159
 scale = Vector2(2.89519, 2.67067)
 points = PackedVector2Array(-55.3152, 18.0499, 47.6143, 72.7176, 47.6142, 18.0496, -55.315, 73.0923, -55.3152, 17.6755, -38.538, 17.6755, -3.85048, 17.6754, -3.85035, 73.0922, 28.6173, 73.0921, 28.6172, 17.3008, -37.6997, 17.301, -37.3542, 73.0922)
 width = 0.415
+
+[node name="HBoxContainer" type="HBoxContainer" parent="."]
+layout_mode = 0
+offset_left = 2.0
+offset_top = 2.0
+offset_right = 298.0
+offset_bottom = 25.0
+alignment = 1
+
+[node name="Switch 1" parent="HBoxContainer" instance=ExtResource("5_4f85p")]
+layout_mode = 2
+SwitchName = "Gyro"
+
+[node name="Switch 2" parent="HBoxContainer" instance=ExtResource("5_4f85p")]
+layout_mode = 2
+SwitchName = "Step"
+
+[node name="Switch 3" parent="HBoxContainer" instance=ExtResource("5_4f85p")]
+layout_mode = 2
+SwitchName = "Bal"
+
+[node name="Switch 4" parent="HBoxContainer" instance=ExtResource("5_4f85p")]
+layout_mode = 2
+SwitchName = "Slow"

@@ -10,8 +10,10 @@
 const bool DEBUG_PRINT = false;
 #define UpdateScreenInterval 100
 
-Page *pages[2];
 Page *currentPage = nullptr;
+
+DemoControlsPage *demoPage;
+HomePage *homePage;
 
 unsigned long drawTimerStart = 0;
 unsigned long drawTimerEnd = 0;
@@ -25,34 +27,24 @@ void setup()
   Wire.begin();
   setupNRF();
 
-  pages[0] = new HomePage();
-  pages[1] = new DemoControlsPage();
+  demoPage = new DemoControlsPage();
+  homePage = new HomePage();
 }
 
 void loop()
 {
 
   if (getSwitchValue(D) == OFF)
-    currentPage = pages[0];
+    currentPage = homePage;
   else
-    currentPage = pages[1];
+    currentPage = demoPage;
 
   
   drewScreen = false;
   every(UpdateScreenInterval)
   {    
     mpu.update();
-    
-    DemoControlsPage *demoPage = static_cast<DemoControlsPage *>(pages[1]);
-    demoPage->string11 = String(drawTimerEnd - drawTimerStart);
-
-    HomePage *homePage = static_cast<HomePage *>(pages[0]);
-    homePage->loopTime = "Loop Time: " + String(drawTimerEnd - drawTimerStart);
-
-    drawTimerStart = millis();
     currentPage->draw();
-    drawTimerEnd = millis();
-
     drewScreen = true;
   }
 
