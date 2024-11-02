@@ -25,12 +25,24 @@ enum IOLabels {
   D  //3
 };
 
+enum Gaits {
+  TRI,      //0
+  RIPPLE,   //1
+  WAVE,     //2
+  QUAD,     //3
+  BI,       //4
+  HOP       //5
+};
+
 struct Vector2 {
   float x;
   float y;
 
   Vector2(float xVal, float yVal) : x(xVal), y(yVal) {}
   Vector2() : x(0), y(0) {}
+  Vector2 operator+(const Vector2& other) const {
+    return Vector2(x + other.x, y + other.y);
+  }
 };
 
 struct Vector3 {
@@ -40,8 +52,16 @@ struct Vector3 {
 
   Vector3(float xVal, float yVal, float zVal) : x(xVal), y(yVal), z(zVal) {}
   Vector3() : x(0), y(0), z(0) {}
+  Vector3 operator+(const Vector3& other) const {
+    return Vector3(x + other.x, y + other.y, z + other.z);
+  }
 };
 
 float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
+float lerp(float a, float b, float f);
+float calculateHypotenuse(float x, float y);
 void drawButton(int x, int y, String icon, String label);
+
+
 void drawHexapod(Vector2 center, Vector3 leg1, Vector3 leg2, Vector3 leg3, Vector3 leg4, Vector3 leg5, Vector3 leg6);
+void drawHexapodFoot(float x, float y, bool onGround);

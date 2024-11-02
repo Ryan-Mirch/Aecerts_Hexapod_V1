@@ -7,7 +7,8 @@
 class Page
 {
 public:
-    virtual void draw() = 0;
+    virtual void init() = 0;
+    virtual void draw() = 0;    
     virtual ~Page() = default;
 };
 
@@ -17,6 +18,7 @@ class HomePage : public Page
 public:
     String loopTime;
     void draw() override;
+    void init() override;
 };
 
 // Derived class: DemoControlsPage
@@ -25,6 +27,7 @@ class DemoControlsPage : public Page
 public:
     String string11;
     void draw() override;
+    void init() override;
 };
 
 #endif // PAGES_H

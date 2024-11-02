@@ -131,6 +131,28 @@ String getJoyButtonsString() {
     return "Joys: " + result;
 }
 
+Vector2 getJoyValue(IOLabels label){
+  switch(label){
+    case A: return Vector2(map(analogRead(A6), 0, 1023, 254, 0), map(analogRead(A7), 0, 1023, 0, 254));
+    case B: return Vector2(map(analogRead(A2), 0, 1023, 0, 254), map(analogRead(A3), 0, 1023, 0, 254));
+    default: return Vector2(0,0);
+  }
+}
+
+String getJoyValueString(IOLabels label){
+  if(label == A){
+    Vector2 leftJoyValue = getJoyValue(A);
+    return ("JL X: " + String(leftJoyValue.x) + " Y: " + String(leftJoyValue.y));
+  }
+
+  if(label == B){
+    Vector2 rightJoyValue = getJoyValue(B);
+    return ("JL X: " + String(rightJoyValue.x) + " Y: " + String(rightJoyValue.y));
+  }
+
+  return "";
+}
+
 Vector3 readGyro() {   
 
     gad.x = mpu.getAngleX();

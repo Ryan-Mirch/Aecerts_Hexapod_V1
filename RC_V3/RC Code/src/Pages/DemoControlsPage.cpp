@@ -19,7 +19,12 @@ String string11 = "String 11";
 String stringLong1 = "String Long 1";
 
 
-int counter = 0;
+int counter;
+
+void DemoControlsPage::init()
+{ 
+  counter = 0;
+}
 
 void DemoControlsPage::draw()
 { 
@@ -41,19 +46,15 @@ void DemoControlsPage::draw()
   string5 = ("Pot A: " + String(potAValue));
   string10 = ("Pot B: " + String(potBValue));
 
-  int joyLeftXValue = map(analogRead(A6), 0, 1023, 254, 0);
-  int joyLeftYValue = map(analogRead(A7), 0, 1023, 0, 254);
+  string6 = getJoyValueString(A);
+  Vector2 leftJoyValue = getJoyValue(A);
+  rc_data.joy1_X = leftJoyValue.x;
+  rc_data.joy1_Y = leftJoyValue.y;
 
-  string6 = ("JL X: " + String(joyLeftXValue) + " Y: " + String(joyLeftYValue));
-  rc_data.joy1_X = joyLeftXValue;
-  rc_data.joy1_Y = joyLeftYValue;
-
-  int joyRightXValue = map(analogRead(A2), 0, 1023, 0, 254);
-  int joyRightYValue = map(analogRead(A3), 0, 1023, 0, 254);
-
-  string7 = ("JR X: " + String(joyRightXValue) + " Y: " + String(joyRightYValue));
-  rc_data.joy2_X = joyRightXValue;
-  rc_data.joy2_Y = joyRightYValue;
+  string7 = getJoyValueString(B);
+  Vector2 rightJoyValue = getJoyValue(B);
+  rc_data.joy2_X = rightJoyValue.x;
+  rc_data.joy2_Y = rightJoyValue.y;
 
   stringLong1 = (getGyroString());
 

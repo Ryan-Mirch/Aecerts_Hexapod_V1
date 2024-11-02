@@ -43,6 +43,8 @@ int getSwitchValue(IOLabels label);
 String getSwitchesString();
 int getJoyButtonValue(IOLabels label);
 String getJoyButtonsString();
+Vector2 getJoyValue(IOLabels label);
+String getJoyValueString(IOLabels label);
 Vector3 readGyro();
 String getGyroString();
 void isrA();
@@ -52,3 +54,4 @@ int getRotaryEncoderTotalSpins();
 RotaryEncoderState getRotaryEncoderSwitchValue();
 String getRotaryEncoderSwitchString();
 void setupInputs();
+
