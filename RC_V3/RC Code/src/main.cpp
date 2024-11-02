@@ -29,17 +29,12 @@ void setup()
 
   demoPage = new DemoControlsPage();
   homePage = new HomePage();
+
+  currentPage = homePage;
 }
 
 void loop()
 {
-
-  if (getSwitchValue(D) == OFF)
-    currentPage = homePage;
-  else
-    currentPage = demoPage;
-
-  
   drewScreen = false;
   every(UpdateScreenInterval)
   {    

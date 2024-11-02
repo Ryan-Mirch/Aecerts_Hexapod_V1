@@ -172,6 +172,10 @@ int getRotaryEncoderSpins() {
     return spins;
 }
 
+int getRotaryEncoderTotalSpins() {
+    return count/4;
+}
+
 RotaryEncoderState getRotaryEncoderSwitchValue() {
     uint8_t switchValue = digitalRead(RotaryEncoderButton_Pin);
     if (switchValue == PRESSED) return Pressed;

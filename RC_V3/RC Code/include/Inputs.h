@@ -48,6 +48,7 @@ String getGyroString();
 void isrA();
 void isrB();
 int getRotaryEncoderSpins();
+int getRotaryEncoderTotalSpins();
 RotaryEncoderState getRotaryEncoderSwitchValue();
 String getRotaryEncoderSwitchString();
 void setupInputs();
