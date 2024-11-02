@@ -49,7 +49,7 @@ void HomePage::draw()
 
     
     /*Info Display*/
-    offset = getRotaryEncoderTotalSpins();
+    offset = 14;
     textX = 110;
     textY = 20;
     int iconX = 98; 
@@ -66,6 +66,15 @@ void HomePage::draw()
     u8g2.drawGlyph(iconX, textY+offset*2, 0xe083);
     u8g2.drawGlyph(iconX, textY+offset*3, 0xe10f);
 
+
+    /*Hexapod Visualizer*/
+    
+    // For the legs:
+    // x,y = leg coordinates
+    // z = is leg touching ground (0 is touching, 1 is raised)
+    drawHexapod(Vector2(64,32), Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0), Vector3(0,0,0));
+
+    
     u8g2.sendBuffer();
     totalDrawTime = millis() - startTime;
 }

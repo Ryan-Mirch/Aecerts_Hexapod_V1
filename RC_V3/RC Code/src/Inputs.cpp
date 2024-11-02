@@ -7,7 +7,7 @@ unsigned long potTimer = 0;
 unsigned long potInterval = 50; 
 
 unsigned long gyroTimer = 0;
-GyroAngleData gad;
+Vector3 gad;
 MPU6050 mpu(Wire);
 
 volatile int count = 0;
@@ -131,18 +131,18 @@ String getJoyButtonsString() {
     return "Joys: " + result;
 }
 
-GyroAngleData readGyro() {   
+Vector3 readGyro() {   
 
-    gad.X = mpu.getAngleX();
-    gad.Y = mpu.getAngleY();
-    gad.Z = mpu.getAngleZ();
+    gad.x = mpu.getAngleX();
+    gad.y = mpu.getAngleY();
+    gad.z = mpu.getAngleZ();
 
     return gad;
 }
 
 String getGyroString() {
-    GyroAngleData gad = readGyro();
-    return "GX: " + String(gad.X) + " GY: " + String(gad.Y) + " GZ: " + String(gad.Z);
+    gad = readGyro();
+    return "GX: " + String(gad.x) + " GY: " + String(gad.y) + " GZ: " + String(gad.z);
 }
 
 void isrA() {

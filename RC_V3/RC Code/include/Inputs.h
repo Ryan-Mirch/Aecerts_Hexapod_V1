@@ -30,7 +30,7 @@
 #define RotaryEncoderButton_Pin 39
 
 // External variable declarations
-extern GyroAngleData gad;
+extern Vector3 gad;
 extern MPU6050 mpu;
 
 // Function declarations
@@ -43,7 +43,7 @@ int getSwitchValue(IOLabels label);
 String getSwitchesString();
 int getJoyButtonValue(IOLabels label);
 String getJoyButtonsString();
-GyroAngleData readGyro();
+Vector3 readGyro();
 String getGyroString();
 void isrA();
 void isrB();
