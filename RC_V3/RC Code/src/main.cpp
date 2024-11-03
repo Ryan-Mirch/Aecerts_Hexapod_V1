@@ -2,7 +2,7 @@
 
 #include "Wire.h"
 #include "Helpers.h"
-#include "Values.h"
+#include "Globals.h"
 #include "Inputs.h"
 #include "NRF.h"
 #include "Screen.h"
@@ -10,13 +10,6 @@
 
 const bool DEBUG_PRINT = false;
 #define UpdateScreenInterval 100
-
-Page *currentPage = nullptr;
-Page *previousPage = nullptr;
-
-DemoControlsPage *demoPage;
-HomePage *homePage;
-
 unsigned long drawTimerStart = 0;
 unsigned long drawTimerEnd = 0;
 bool drewScreen = false;
@@ -28,12 +21,7 @@ void setup()
   setupInputs();
   Wire.begin();
   setupNRF();
-  loadValues();
-
-  demoPage = new DemoControlsPage();
-  homePage = new HomePage();
-
-  currentPage = homePage;
+  loadValues(); 
 }
 
 void loop()
@@ -49,7 +37,11 @@ void loop()
       previousPage = currentPage;
     }
 
-    currentPage->draw();
+    
+    u8g2.clearBuffer();
+    currentPage->loop();    
+    u8g2.sendBuffer();
+    
     drewScreen = true;
   }
 

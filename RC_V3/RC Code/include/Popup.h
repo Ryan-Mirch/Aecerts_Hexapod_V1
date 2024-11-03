@@ -2,6 +2,6 @@
 
 #include <Arduino.h>
 
-int open();
-void drawChoice();
-void drawHeader();
+int openPopup(String header, String choices[], int numChoices, int hovered);
+void drawChoice(String s, bool hovered);
+void drawHeader(String s);

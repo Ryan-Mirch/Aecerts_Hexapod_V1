@@ -51,7 +51,7 @@ void isrA();
 void isrB();
 int getRotaryEncoderSpins();
 int getRotaryEncoderTotalSpins();
-RotaryEncoderState getRotaryEncoderSwitchValue();
+int getRotaryEncoderSwitchValue();
 String getRotaryEncoderSwitchString();
 void setupInputs();
 

@@ -26,7 +26,7 @@ void DemoControlsPage::init()
   counter = 0;
 }
 
-void DemoControlsPage::draw()
+void DemoControlsPage::loop()
 { 
   string1 = (getButtonsString());
   string2 = (getSwitchesString());
@@ -58,8 +58,7 @@ void DemoControlsPage::draw()
 
   stringLong1 = (getGyroString());
 
-  u8g2.clearBuffer();
-  u8g2.setFont(u8g2_font_tom_thumb_4x6_mf);
+  u8g2.setFont(FONT_SMALL_TEXT);
 
   u8g2.drawStr(1, 12, string1.c_str());
   u8g2.drawStr(1, 20, string2.c_str());
@@ -73,5 +72,4 @@ void DemoControlsPage::draw()
   u8g2.drawStr(64, 44, string10.c_str());
   u8g2.drawStr(64, 52, string11.c_str());
   u8g2.drawStr(1, 62, stringLong1.c_str());
-  u8g2.sendBuffer();
 }

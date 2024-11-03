@@ -198,38 +198,38 @@ int getRotaryEncoderTotalSpins() {
     return count/4;
 }
 
-RotaryEncoderState getRotaryEncoderSwitchValue() {
+int getRotaryEncoderSwitchValue() {
     uint8_t switchValue = digitalRead(RotaryEncoderButton_Pin);
-    if (switchValue == PRESSED) return Pressed;
-    return Nothing;
+    if (switchValue == PRESSED) return PRESSED;
+    return UNPRESSED;
 
     if (switchValue == PRESSED && !switchPressed) {
         if (millis() - timeSinceReleased > DEBOUNCE_TIME) {
             if (false) Serial.println("Switch Pressed!");
             switchPressed = true;
-            return Pressed;
+            return PRESSED;
         }
     }
     if (switchValue == UNPRESSED && switchPressed) {
         if (false) Serial.println("Switch Released.");
         switchPressed = false;
         timeSinceReleased = millis();
-        return Released;
+        return PRESSED;
     }
 
-    return Nothing;
+    return UNPRESSED;
 }
 
 String getRotaryEncoderSwitchString() {
-    RotaryEncoderState rotaryEncoderState = getRotaryEncoderSwitchValue();
+    int rotaryEncoderState = getRotaryEncoderSwitchValue();
 
     String rotaryPressed = "";
-    if (rotaryEncoderState == Pressed) {
+    if (rotaryEncoderState == PRESSED) {
         rotaryPressed = "Pressed";
     }
 
-    if (rotaryEncoderState == Released) {
-        rotaryPressed = "Released";
+    if (rotaryEncoderState == UNPRESSED) {
+        rotaryPressed = "Unpressed";
     }
 
     return rotaryPressed;

@@ -2,6 +2,8 @@
 #include "Page.h"
 #include "Screen.h"
 #include "Inputs.h"
+#include "Popup.h"
+#include "Globals.h"
 
 long int startTime;
 long int totalDrawTime;
@@ -36,10 +38,9 @@ void HomePage::init()
         legs[i] = Vector3(legsCenter[i].x, legsCenter[i].y, 1);
 }
 
-void HomePage::draw()
+void HomePage::loop()
 {
     startTime = millis();
-    u8g2.clearBuffer();
 
     int offset = 35;
     int textY = 6;
@@ -49,7 +50,7 @@ void HomePage::draw()
     int lineL = 19;
 
     /*Switch Labels*/
-    u8g2.setFont(u8g2_font_5x7_mf);
+    u8g2.setFont(FONT_TEXT);
     u8g2.drawStr(textX, textY, "Gyro");
     if (getSwitchValue(A) == ON)
         u8g2.drawHLine(textX, lineY, lineL);
@@ -68,11 +69,12 @@ void HomePage::draw()
 
     /*Main Menu Button*/
     drawButton(4, 59, "D", "Menu");
+    if(getButtonValue(D) == PRESSED)currentPage = mainMenuPage;
 
     /*Gait Display*/
     drawButton(4, 25, "B", "Gait");
-    u8g2.setFont(u8g2_font_NokiaSmallBold_te);
-    u8g2.drawStr(1, 39, "Tri");
+    u8g2.setFont(FONT_BOLD_HEADER);
+    u8g2.drawStr(1, 39, GaitStrings[selectedGait].c_str());
 
     /*Info Display*/
     offset = 13;
@@ -80,7 +82,7 @@ void HomePage::draw()
     textY = 23;
     int iconX = 98;
 
-    u8g2.setFont(u8g2_font_NokiaSmallPlain_tf);
+    u8g2.setFont(FONT_HEADER);
     u8g2.drawStr(textX, textY, "100%");
     u8g2.drawStr(textX, textY + offset, "99A");
     u8g2.drawStr(textX, textY + offset * 2, (String(getPotValue(A)) + "%").c_str());
@@ -109,7 +111,6 @@ void HomePage::draw()
     // x,y = leg coordinates
     // z = is leg touching ground (0 is raised, 1 is on ground)
 
-    u8g2.setFont(u8g2_font_4x6_mf);
     for (int i = 0; i < 6; i++)
     {
         if (legAnimProgress[i] <= points / 2)
@@ -146,7 +147,12 @@ void HomePage::draw()
     u8g2.drawStr(10, 53, String(testY).c_str());
     u8g2.drawStr(20, 53, String(testZ).c_str());
     */
-
-    u8g2.sendBuffer();
     totalDrawTime = millis() - startTime;
+
+
+    /*Gait Selection Popup*/
+    if(getButtonValue(B) == PRESSED){
+        selectedGait = Gaits(openPopup("Select a Gait", GaitStrings, 6, selectedGait));
+    }
+    
 }

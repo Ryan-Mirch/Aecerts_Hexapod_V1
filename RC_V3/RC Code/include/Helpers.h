@@ -12,11 +12,10 @@
 #define UNPRESSED 0x1
 #define PRESSED  0x0
 
-enum RotaryEncoderState {
-  Nothing,    //0
-  Pressed,    //1 
-  Released    //2
-};
+#define FONT_HEADER u8g2_font_NokiaSmallPlain_tf
+#define FONT_BOLD_HEADER u8g2_font_NokiaSmallBold_te
+#define FONT_TEXT u8g2_font_5x7_mf
+#define FONT_SMALL_TEXT u8g2_font_4x6_mf
 
 enum IOLabels {
   A, //0
@@ -33,6 +32,8 @@ enum Gaits {
   BI,       //4
   HOP       //5
 };
+
+extern String GaitStrings[6];
 
 struct Vector2 {
   float x;
