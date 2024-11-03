@@ -3,8 +3,9 @@
 #include "Screen.h"
 #include "Inputs.h"
 
-int openPopup(String header, String choices[], int numChoices, int hovered) {
-    getRotaryEncoderSpins(); //calling it here ignores the initial spin value
+int openPopup(String header, String choices[], int numChoices, int hovered)
+{
+    getRotaryEncoderSpins(); // calling it here ignores the initial spin value
 
     int selection = -1;
 
@@ -12,13 +13,14 @@ int openPopup(String header, String choices[], int numChoices, int hovered) {
     u8g2.setFont(FONT_HEADER);
     int headerWidth = u8g2.getStrWidth(header.c_str());
 
-    while (selection == -1) {
+    while (selection == -1)
+    {
         u8g2.clearBuffer();
 
         /*Draw Frame*/
         u8g2.drawRFrame(1, 1, 126, 62, 4);
 
-        /*Draw Header*/        
+        /*Draw Header*/
         u8g2.setFont(FONT_HEADER);
         u8g2.drawStr(64 - (headerWidth / 2), 12, header.c_str());
 
@@ -26,29 +28,38 @@ int openPopup(String header, String choices[], int numChoices, int hovered) {
         int rowStartX = 18, currentY = 28, itemSpacing = 14; // starting positions and spacing
         int currentX = rowStartX;
         u8g2.setFont(FONT_TEXT);
-        for (int i = 0; i < numChoices; i++) {
+        for (int i = 0; i < numChoices; i++)
+        {
 
             int choiceWidth = u8g2.getStrWidth(choices[i].c_str()) + itemSpacing;
 
             // If the next choice would go off the screen, move to the next line
-            if (currentX + choiceWidth > 128) {
+            if (currentX + choiceWidth > 128)
+            {
                 currentX = rowStartX;
                 currentY += itemSpacing;
             }
-            
+
             u8g2.drawStr(currentX, currentY, choices[i].c_str());
-            if(hovered == i) u8g2.drawRFrame(currentX-4, currentY-9, choiceWidth-7, itemSpacing-2, 5);
-            
+            if (hovered == i)
+                u8g2.drawRFrame(currentX - 4, currentY - 9, choiceWidth - 7, itemSpacing - 2, 5);
+
             currentX += choiceWidth;
         }
 
         u8g2.sendBuffer();
 
-        hovered += getRotaryEncoderSpins();
-        if(hovered >= numChoices) hovered = numChoices - 1;
-        else if(hovered < 0) hovered = 0;
+        int increment = 0;
+        int spins = getRotaryEncoderSpins();
+        if (spins > 0) increment = 1;
+        if (spins < 0) increment = -1;
 
-        if (getRotaryEncoderSwitchValue() == PRESSED) {
+        hovered += increment;
+        if (hovered >= numChoices) hovered = numChoices - 1;
+        else if (hovered < 0) hovered = 0;
+
+        if (getRotaryEncoderSwitchValue() == PRESSED)
+        {
             selection = hovered;
         }
     }

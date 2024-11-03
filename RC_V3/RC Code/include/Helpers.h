@@ -61,6 +61,8 @@ struct Vector3 {
 float mapFloat(float x, float in_min, float in_max, float out_min, float out_max);
 float lerp(float a, float b, float f);
 float calculateHypotenuse(float x, float y);
+
+void drawPageHeader(String backButtonLabel, String pageNameLabel);
 void drawButton(int x, int y, String icon, String label);
 
 

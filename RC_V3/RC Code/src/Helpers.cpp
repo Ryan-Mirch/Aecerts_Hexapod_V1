@@ -9,8 +9,7 @@ String GaitStrings[6] = {
     "Wave",
     "Quad",
     "Bi",
-    "Hop"
-};
+    "Hop"};
 
 float mapFloat(float x, float in_min, float in_max, float out_min, float out_max)
 {
@@ -26,6 +25,17 @@ float calculateHypotenuse(float x, float y)
 {
   float result = sqrt(pow(x, 2) + pow(y, 2));
   return result;
+}
+
+void drawPageHeader(String backButtonLabel, String pageNameLabel)
+{
+  /*Back Button*/
+  drawButton(5, 4, "A", "< " + backButtonLabel);  
+
+  u8g2.setFont(FONT_HEADER);
+  u8g2.drawStr(85, 8, pageNameLabel.c_str());
+
+  u8g2.drawHLine(-1, 10, 130);
 }
 
 void drawButton(int x, int y, String icon, String label)
@@ -45,11 +55,8 @@ static unsigned char hex_20base_bits[] = {
     0x0b, 0x1a, 0x0b, 0x1a, 0x0b, 0x1a, 0x12, 0x09, 0xa2, 0x08, 0x44, 0x04,
     0x0c, 0x06, 0x1c, 0x07, 0xe0, 0x00};
 
-
-
 void drawHexapod(Vector2 center, Vector3 leg1, Vector3 leg2, Vector3 leg3, Vector3 leg4, Vector3 leg5, Vector3 leg6)
 {
-  
 
   u8g2.setBitmapMode(1);
   u8g2.drawXBM(center.x - 6, center.y - 7, hex_20base_width, hex_20base_height, hex_20base_bits);
@@ -86,17 +93,17 @@ void drawHexapod(Vector2 center, Vector3 leg1, Vector3 leg2, Vector3 leg3, Vecto
 void drawHexapodFoot(float x, float y, bool onGround)
 {
   if (onGround)
-    {
-      u8g2.drawBox(x - 1, y - 1, 3, 3);
-      return;
-    }
+  {
+    u8g2.drawBox(x - 1, y - 1, 3, 3);
+    return;
+  }
 
-    u8g2.setColorIndex(0);
-    u8g2.drawPixel(x, y);
+  u8g2.setColorIndex(0);
+  u8g2.drawPixel(x, y);
 
-    u8g2.setColorIndex(1);
-    u8g2.drawPixel(x - 1, y);
-    u8g2.drawPixel(x + 1, y);
-    u8g2.drawPixel(x, y - 1);
-    u8g2.drawPixel(x, y + 1);
+  u8g2.setColorIndex(1);
+  u8g2.drawPixel(x - 1, y);
+  u8g2.drawPixel(x + 1, y);
+  u8g2.drawPixel(x, y - 1);
+  u8g2.drawPixel(x, y + 1);
 }
