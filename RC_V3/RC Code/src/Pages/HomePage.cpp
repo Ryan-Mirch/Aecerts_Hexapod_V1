@@ -78,11 +78,11 @@ void HomePage::loop()
 
     /*Info Display*/
     offset = 13;
-    textX = 110;
+    textX = 109;
     textY = 23;
-    int iconX = 98;
+    int iconX = 97;
 
-    u8g2.setFont(FONT_HEADER);
+    u8g2.setFont(FONT_TEXT);
     u8g2.drawStr(textX, textY, "100%");
     u8g2.drawStr(textX, textY + offset, "99A");
     u8g2.drawStr(textX, textY + offset * 2, (String(getPotValue(A)) + "%").c_str());

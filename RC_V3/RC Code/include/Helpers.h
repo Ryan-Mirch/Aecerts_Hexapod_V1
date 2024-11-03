@@ -14,7 +14,7 @@
 
 #define FONT_HEADER u8g2_font_NokiaSmallPlain_tf
 #define FONT_BOLD_HEADER u8g2_font_NokiaSmallBold_te
-#define FONT_TEXT u8g2_font_5x7_mf
+#define FONT_TEXT u8g2_font_spleen5x8_mf
 #define FONT_SMALL_TEXT u8g2_font_4x6_mf
 
 enum IOLabels {

@@ -5,7 +5,7 @@
 
 int openPopup(String header, String choices[], int numChoices, int hovered) {
     getRotaryEncoderSpins(); //calling it here ignores the initial spin value
-    
+
     int selection = -1;
 
     header = " " + header + " ";
@@ -37,7 +37,7 @@ int openPopup(String header, String choices[], int numChoices, int hovered) {
             }
             
             u8g2.drawStr(currentX, currentY, choices[i].c_str());
-            if(hovered == i) u8g2.drawRFrame(currentX-4, currentY-9, choiceWidth-8, itemSpacing-1, 5);
+            if(hovered == i) u8g2.drawRFrame(currentX-4, currentY-9, choiceWidth-7, itemSpacing-2, 5);
             
             currentX += choiceWidth;
         }
