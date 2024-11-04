@@ -29,7 +29,7 @@ private:
     int strideLength = 8;
 
     Vector3 legs[6];
-    Vector2 legsCenter[6];    
+    Vector2 legsCenter[6];
 };
 
 // Demo Controls Page
@@ -68,6 +68,9 @@ class SettingsPage : public Page
 public:
     void loop() override;
     void init() override;
+
+private:
+    int hovered = 0;
 };
 
 // Stats Page

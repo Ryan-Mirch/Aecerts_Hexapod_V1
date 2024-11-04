@@ -21,7 +21,7 @@ void GaitsPage::loop()
     drawPageHeader("< Home < Menu < ", "Gaits");
     u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(115, 63, String(getRotaryEncoderTotalSpins()).c_str());
-    u8g2.setFont(FONT_TEXT);
+    
 
     /*List*/
     int increment = 0;
@@ -51,6 +51,7 @@ void GaitsPage::loop()
 
     if(hovered >= 2) listYStart = listYStart - rowSpacing*(hovered-2);
 
+    u8g2.setFont(FONT_TEXT);
     for (int i = 0; i < gaitCount; i++)
     {
         if(hovered >= i+3)continue;

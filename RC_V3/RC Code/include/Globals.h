@@ -50,4 +50,11 @@ extern StatsPage *statsPage;
 extern GaitsPage *gaitsPage;
 extern OffsetsPage *offsetsPage;
 
+#define EEPROM_NRF_ADDRESS_ADDR         0 //requires 4 bytes
+#define EEPROM_DYNAMIC_STRIDE_ADDR      4 //requires 1 byte
+
+extern uint32_t nrfAddress;    // Example NRF chip address
+extern bool dynamicStrideLength;      // Boolean for Dynamic Stride Length
+
 void loadValues();
+void saveValues();

@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include "Helpers.h"
+#include "Globals.h"
 #include "Screen.h"
 #include "Inputs.h"
 

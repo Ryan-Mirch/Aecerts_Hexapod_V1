@@ -20,5 +20,17 @@ Page *currentPage = homePage;
 
 void loadValues()
 {
-    //load eeprom stuff here
+    // Load NRF Address
+    EEPROM.get(EEPROM_NRF_ADDRESS_ADDR, nrfAddress);
+
+    // Load Dynamic Stride Length
+    dynamicStrideLength = EEPROM.read(EEPROM_DYNAMIC_STRIDE_ADDR);
+}
+
+void saveValues(){
+    // Save NRF Address (32-bit integer, 4 bytes)
+    EEPROM.put(EEPROM_NRF_ADDRESS_ADDR, nrfAddress);
+    
+    // Save Dynamic Stride Length (boolean, 1 byte)
+    EEPROM.update(EEPROM_DYNAMIC_STRIDE_ADDR, dynamicStrideLength);
 }

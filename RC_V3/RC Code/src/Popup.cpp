@@ -2,6 +2,7 @@
 #include "Popup.h"
 #include "Screen.h"
 #include "Inputs.h"
+#include "Globals.h"
 
 int openPopup(String header, String choices[], int numChoices, int hovered)
 {
@@ -13,8 +14,11 @@ int openPopup(String header, String choices[], int numChoices, int hovered)
     u8g2.setFont(FONT_HEADER);
     int headerWidth = u8g2.getStrWidth(header.c_str());
 
+    bool rotaryEncoderButtonReady = false;
+
     while (selection == -1)
     {
+        if (getRotaryEncoderSwitchValue() == UNPRESSED) rotaryEncoderButtonReady = true;
         u8g2.clearBuffer();
 
         /*Draw Frame*/
@@ -58,7 +62,7 @@ int openPopup(String header, String choices[], int numChoices, int hovered)
         if (hovered >= numChoices) hovered = numChoices - 1;
         else if (hovered < 0) hovered = 0;
 
-        if (getRotaryEncoderSwitchValue() == PRESSED)
+        if (getRotaryEncoderSwitchValue() == PRESSED && rotaryEncoderButtonReady)
         {
             selection = hovered;
         }

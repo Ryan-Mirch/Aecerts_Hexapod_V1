@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "Page.h"
 #include "Helpers.h"
+#include "Globals.h"
 #include "Inputs.h"
 #include "NRF.h"
 #include "Screen.h"
