@@ -9,6 +9,11 @@ Gaits selectedGait = TRI;
 DemoControlsPage *demoPage = new DemoControlsPage();
 HomePage *homePage = new HomePage();
 MainMenuPage *mainMenuPage = new MainMenuPage();
+ControlsPage *controlsPage = new ControlsPage();
+SettingsPage *settingsPage = new SettingsPage();
+StatsPage *statsPage = new StatsPage();
+GaitsPage *gaitsPage = new GaitsPage();
+OffsetsPage *offsetsPage = new OffsetsPage();
 
 Page *previousPage = nullptr;
 Page *currentPage = homePage;

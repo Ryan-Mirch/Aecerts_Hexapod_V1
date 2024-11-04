@@ -5,21 +5,17 @@
 #include "Popup.h"
 #include "Globals.h"
 
-long int startTime;
-long int totalDrawTime;
-int legAnimProgress[6];
-float points = 100;
-int strideLength = 8;
 
-Vector3 legs[6];
-Vector2 legsCenter[6];
 
 int testX = 0;
 int testY = 0;
 int testZ = 0;
 
+
 void HomePage::init()
 {
+    rotaryEncoderButtonReady = false;
+
     legAnimProgress[0] = 0;
     legAnimProgress[1] = points / 2;
     legAnimProgress[2] = 0;
@@ -40,7 +36,7 @@ void HomePage::init()
 
 void HomePage::loop()
 {
-    startTime = millis();
+    startTime = millis();    
 
     int offset = 35;
     int textY = 6;
@@ -50,7 +46,7 @@ void HomePage::loop()
     int lineL = 19;
 
     /*Switch Labels*/
-    u8g2.setFont(FONT_TEXT);
+    u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(textX, textY, "Gyro");
     if (getSwitchValue(A) == ON)
         u8g2.drawHLine(textX, lineY, lineL);
@@ -59,22 +55,28 @@ void HomePage::loop()
     if (getSwitchValue(B) == ON)
         u8g2.drawHLine(textX + offset, lineY, lineL);
 
-    u8g2.drawStr(textX + offset * 2, textY, "Bala");
+    u8g2.drawStr(textX + offset * 2, textY, "Easy");
     if (getSwitchValue(C) == ON)
         u8g2.drawHLine(textX + offset * 2, lineY, lineL);
 
-    u8g2.drawStr(textX + offset * 3, textY, "Slow");
+    /*
+    u8g2.drawStr(textX + offset * 3, textY, "4th Toggle");
     if (getSwitchValue(D) == ON)
         u8g2.drawHLine(textX + offset * 3, lineY, lineL);
+    */
+    
 
     /*Main Menu Button*/
-    drawButton(4, 59, "D", "Menu");
-    if(getButtonValue(D) == PRESSED)currentPage = mainMenuPage;
+    drawButton(4, 59, "E", "Menu");
+    if (getRotaryEncoderSwitchValue() == UNPRESSED) rotaryEncoderButtonReady = true;
+    if (getRotaryEncoderSwitchValue() == PRESSED  && rotaryEncoderButtonReady) currentPage = mainMenuPage;
 
     /*Gait Display*/
     drawButton(4, 25, "B", "Gait");
     u8g2.setFont(FONT_BOLD_HEADER);
-    u8g2.drawStr(1, 39, GaitStrings[selectedGait].c_str());
+    u8g2.setFontMode(1);
+    u8g2.drawStr(1, 43, gaitStrings[selectedGait].c_str());
+
 
     /*Info Display*/
     offset = 13;
@@ -82,7 +84,7 @@ void HomePage::loop()
     textY = 23;
     int iconX = 97;
 
-    u8g2.setFont(FONT_TEXT);
+    u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(textX, textY, "100%");
     u8g2.drawStr(textX, textY + offset, "99A");
     u8g2.drawStr(textX, textY + offset * 2, (String(getPotValue(A)) + "%").c_str());
@@ -152,7 +154,8 @@ void HomePage::loop()
 
     /*Gait Selection Popup*/
     if(getButtonValue(B) == PRESSED){
-        selectedGait = Gaits(openPopup("Select a Gait", GaitStrings, 6, selectedGait));
+        selectedGait = Gaits(openPopup("Select a Gait", gaitStrings, gaitCount, selectedGait));
+        rotaryEncoderButtonReady = false;
     }
     
 }

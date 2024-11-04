@@ -12,10 +12,7 @@
 #define UNPRESSED 0x1
 #define PRESSED  0x0
 
-#define FONT_HEADER u8g2_font_NokiaSmallPlain_tf
-#define FONT_BOLD_HEADER u8g2_font_NokiaSmallBold_te
-#define FONT_TEXT u8g2_font_spleen5x8_mf
-#define FONT_SMALL_TEXT u8g2_font_4x6_mf
+
 
 enum IOLabels {
   A, //0
@@ -33,7 +30,9 @@ enum Gaits {
   HOP       //5
 };
 
-extern String GaitStrings[6];
+const int gaitCount = 6;
+extern String gaitStrings[gaitCount];
+
 
 struct Vector2 {
   float x;
@@ -62,7 +61,9 @@ float mapFloat(float x, float in_min, float in_max, float out_min, float out_max
 float lerp(float a, float b, float f);
 float calculateHypotenuse(float x, float y);
 
-void drawPageHeader(String backButtonLabel, String pageNameLabel);
+void drawWrappedStr(const char* text, int x, int y, int maxWidth, bool centerAlign, int lineSpacing);
+
+void drawPageHeader(String breadcrumb, String pageName);
 void drawButton(int x, int y, String icon, String label);
 
 

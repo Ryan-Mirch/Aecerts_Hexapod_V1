@@ -58,7 +58,7 @@ void DemoControlsPage::loop()
 
   stringLong1 = (getGyroString());
 
-  u8g2.setFont(FONT_SMALL_TEXT);
+  u8g2.setFont(FONT_TINY_TEXT);
 
   u8g2.drawStr(1, 12, string1.c_str());
   u8g2.drawStr(1, 20, string2.c_str());

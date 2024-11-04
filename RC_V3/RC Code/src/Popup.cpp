@@ -22,10 +22,10 @@ int openPopup(String header, String choices[], int numChoices, int hovered)
 
         /*Draw Header*/
         u8g2.setFont(FONT_HEADER);
-        u8g2.drawStr(64 - (headerWidth / 2), 12, header.c_str());
+        u8g2.drawStr(64 - (headerWidth / 2), 14, header.c_str());
 
         /*Draw Choices*/
-        int rowStartX = 18, currentY = 28, itemSpacing = 14; // starting positions and spacing
+        int rowStartX = 18, currentY = 30, itemSpacing = 14; // starting positions and spacing
         int currentX = rowStartX;
         u8g2.setFont(FONT_TEXT);
         for (int i = 0; i < numChoices; i++)
@@ -42,7 +42,7 @@ int openPopup(String header, String choices[], int numChoices, int hovered)
 
             u8g2.drawStr(currentX, currentY, choices[i].c_str());
             if (hovered == i)
-                u8g2.drawRFrame(currentX - 4, currentY - 9, choiceWidth - 7, itemSpacing - 2, 5);
+                u8g2.drawRFrame(currentX - 4, currentY - 10, choiceWidth - 6, itemSpacing - 1, 5);
 
             currentX += choiceWidth;
         }

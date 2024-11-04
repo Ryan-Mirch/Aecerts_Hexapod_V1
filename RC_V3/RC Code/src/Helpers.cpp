@@ -3,7 +3,7 @@
 #include "Screen.h"
 #include "Inputs.h"
 
-String GaitStrings[6] = {
+String gaitStrings[gaitCount] = {
     "Tri",
     "Ripple",
     "Wave",
@@ -27,20 +27,24 @@ float calculateHypotenuse(float x, float y)
   return result;
 }
 
-void drawPageHeader(String backButtonLabel, String pageNameLabel)
+void drawPageHeader(String breadcrumb, String pageName)
 {
   /*Back Button*/
-  drawButton(5, 4, "A", "< " + backButtonLabel);  
+  drawButton(5, 5, "A", "");
+
+  u8g2.setFont(FONT_TINY_TEXT);
+  u8g2.drawStr(13, 9, breadcrumb.c_str());
+  int width = u8g2.getStrWidth(breadcrumb.c_str());
 
   u8g2.setFont(FONT_HEADER);
-  u8g2.drawStr(85, 8, pageNameLabel.c_str());
+  u8g2.drawStr(width + 13, 9, pageName.c_str());
 
-  u8g2.drawHLine(-1, 10, 130);
+  u8g2.drawHLine(-1, 11, 130);
 }
 
 void drawButton(int x, int y, String icon, String label)
 {
-  u8g2.setFont(FONT_SMALL_TEXT);
+  u8g2.setFont(FONT_TINY_TEXT);
   u8g2.drawStr(x - 1, y + 3, icon.c_str());
   u8g2.drawRFrame(x - 4, y - 4, 9, 9, 3);
 
@@ -106,4 +110,81 @@ void drawHexapodFoot(float x, float y, bool onGround)
   u8g2.drawPixel(x + 1, y);
   u8g2.drawPixel(x, y - 1);
   u8g2.drawPixel(x, y + 1);
+}
+
+void drawWrappedStr(const char* text, int x, int y, int maxWidth, bool centerAlign, int lineSpacing) {
+  int lineHeight = u8g2.getMaxCharHeight() + lineSpacing;
+  int cursorY = y;
+  const char* wordStart = text;
+
+  while (*wordStart) {
+    int lineWidth = 0;
+    const char* lineStart = wordStart;
+    const char* wordEnd;
+
+    // Buffer to hold each word temporarily
+    char wordBuffer[50];  // Adjust size if needed
+
+    // Calculate the width of the next line
+    while (*wordStart) {
+      // Find end of the current word
+      wordEnd = wordStart;
+      while (*wordEnd && *wordEnd != ' ') {
+        wordEnd++;
+      }
+
+      // Copy the word into wordBuffer
+      int wordLength = wordEnd - wordStart;
+      strncpy(wordBuffer, wordStart, wordLength);
+      wordBuffer[wordLength] = '\0';  // Null-terminate the string
+
+      // Get word width
+      int wordWidth = u8g2.getStrWidth(wordBuffer);
+
+      // Check if adding this word would exceed the maxWidth
+      if (lineWidth + wordWidth > maxWidth) {
+        break;
+      }
+
+      // Add word width to line width and move to the next word
+      lineWidth += wordWidth;
+      if (*wordEnd == ' ') {
+        lineWidth += u8g2.getStrWidth(" ");
+        wordEnd++;
+      }
+      wordStart = wordEnd;
+    }
+
+    // Set starting X position for center alignment if enabled
+    int cursorX = x;
+    if (centerAlign) {
+      cursorX = x + (maxWidth - lineWidth) / 2;
+    }
+
+    // Draw the line
+    while (lineStart < wordStart) {
+      wordEnd = lineStart;
+      while (*wordEnd && *wordEnd != ' ') {
+        wordEnd++;
+      }
+
+      int wordLength = wordEnd - lineStart;
+      strncpy(wordBuffer, lineStart, wordLength);
+      wordBuffer[wordLength] = '\0';
+
+      // Draw word and move cursor
+      u8g2.setCursor(cursorX, cursorY);
+      u8g2.print(wordBuffer);
+      cursorX += u8g2.getStrWidth(wordBuffer);
+
+      if (*wordEnd == ' ') {
+        cursorX += u8g2.getStrWidth(" ");
+        wordEnd++;
+      }
+      lineStart = wordEnd;
+    }
+
+    // Move to the next line
+    cursorY += lineHeight;
+  }
 }
