@@ -24,7 +24,7 @@ uint32_t nrfAddress = 0x12345678; // Example NRF chip address
 bool dynamicStrideLength = true;  // Boolean for Dynamic Stride Length
 
 Setting settings[] = {
-    {"NRF Address", INTEGER, &nrfAddress, 0x00000000, 0xFFFFFFFF}, // Address range as 32-bit unsigned integer
+    {"NRF Addr", INTEGER, &nrfAddress, 0x00000000, 0xFFFFFFFF}, // Address range as 32-bit unsigned integer
     {"Dyn Stride Length", BOOLEAN, &dynamicStrideLength},
     {"test 1", BOOLEAN, &dynamicStrideLength},
     {"test 2", BOOLEAN, &dynamicStrideLength},
@@ -44,7 +44,6 @@ void SettingsPage::loop()
     /*Back*/
     if (getButtonValue(A) == PRESSED){
         currentPage = mainMenuPage;
-        return;
     }       
     
     /*Scrolling*/
