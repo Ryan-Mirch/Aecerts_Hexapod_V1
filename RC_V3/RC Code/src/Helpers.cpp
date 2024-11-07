@@ -31,7 +31,7 @@ float calculateHypotenuse(float x, float y)
 void drawPageHeader(String breadcrumb, String pageName)
 {
   /*Back Button*/
-  drawButton(5, 5, "A", "");
+  drawStringButton(5, 5, "A", "", FONT_TEXT);
 
   u8g2.setFont(FONT_TINY_TEXT);
   u8g2.drawStr(13, 9, breadcrumb.c_str());
@@ -43,15 +43,26 @@ void drawPageHeader(String breadcrumb, String pageName)
   u8g2.drawHLine(-1, 11, 130);
 }
 
-void drawButton(int x, int y, String icon, String label)
+void drawStringButton(int x, int y, String icon, String label, const uint8_t* font)
 {
   u8g2.setFont(FONT_TINY_TEXT);
   u8g2.drawStr(x - 1, y + 3, icon.c_str());
   u8g2.drawRFrame(x - 4, y - 4, 9, 9, 3);
 
-  u8g2.setFont(FONT_TEXT);
+  u8g2.setFont(font);
   u8g2.drawStr(x + 7, y + 4, label.c_str());
 }
+
+void drawGlyphButton(int x, int y, String icon, const uint8_t* font, int glyph)
+{
+  u8g2.setFont(FONT_TINY_TEXT);
+  u8g2.drawStr(x - 1, y + 3, icon.c_str());
+  u8g2.drawRFrame(x - 4, y - 4, 9, 9, 3);
+
+  u8g2.setFont(font);
+  u8g2.drawGlyph(x + 7, y + 4, glyph);
+}
+
 
 #define hex_20base_width 13
 #define hex_20base_height 15

@@ -17,18 +17,18 @@ struct Setting
     const char *name;        // Name of the setting
     SettingType type;        // Type of the setting
     void *value;             // Pointer to the value
-    uint32_t minVal, maxVal; // For integers, define a range
+    long int minVal, maxVal; // For integers, define a range
 };
 
-uint32_t nrfAddress = 0x12345678; // Example NRF chip address
+uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
 bool dynamicStrideLength = true;  // Boolean for Dynamic Stride Length
+long int sleepDelayTime = 1000;   // int for how many milliseconds to wait before sleeping
 
 Setting settings[] = {
-    {"NRF Addr", INTEGER, &nrfAddress, 0x00000000, 0xFFFFFFFF}, // Address range as 32-bit unsigned integer
+    {"NRF Addr", STRING, &nrfAddress, EEPROM_NRF_ADDRESS_SIZE, EEPROM_NRF_ADDRESS_SIZE}, // Address as string
     {"Dyn Stride Length", BOOLEAN, &dynamicStrideLength},
-    {"test 1", BOOLEAN, &dynamicStrideLength},
-    {"test 2", BOOLEAN, &dynamicStrideLength},
-    {"test 3", BOOLEAN, &dynamicStrideLength}};
+    {"Sleep Delay", INTEGER, &sleepDelayTime, 0, 100000}
+    };
 
 const int numSettings = sizeof(settings) / sizeof(settings[0]);
 
@@ -90,13 +90,18 @@ void SettingsPage::loop()
         // Convert the value based on its type
         if (settings[i].type == INTEGER)
         {
-            // Format as decimal for the NRF address
-            sprintf(buffer, "%s: %u", name, *(uint32_t *)valuePtr);
+            // Format as a normal integer
+            sprintf(buffer, "%s: %ld", name, *(long int*)valuePtr);
         }
         else if (settings[i].type == BOOLEAN)
         {
             // Format as "On" or "Off" for boolean settings
             sprintf(buffer, "%s: %s", name, (*(bool *)valuePtr) ? "On" : "Off");
+        }
+        else if (settings[i].type == STRING)
+        {
+            // Display the string directly
+            sprintf(buffer, "%s: %s", name, (char*)valuePtr);
         }
 
         // Draw the setting string on the display
@@ -128,10 +133,18 @@ void SettingsPage::loop()
         // When a setting is selected, open a popup window to select a new value, then save the value
         if (settings[hovered].type == INTEGER)
         {
-            uint32_t newValue = openPopupNumber(settings[hovered].name, *(uint32_t *)settings[hovered].value, settings[hovered].minVal, settings[hovered].maxVal);
-            *(uint32_t *)settings[hovered].value = newValue;
+            long int newValue = openPopupNumber(settings[hovered].name, *(long int*)settings[hovered].value, settings[hovered].minVal, settings[hovered].maxVal);
+            *(long int*)settings[hovered].value = newValue;
             saveValues();
 
+            rotaryEncoderButtonReady = false;
+        }
+
+        if (settings[hovered].type == STRING)
+        {
+            String newValue = openPopupString(settings[hovered].name, String((char*)nrfAddress), settings[hovered].maxVal);
+            strncpy((char*)nrfAddress, newValue.c_str(), EEPROM_NRF_ADDRESS_SIZE);
+            saveValues();
             rotaryEncoderButtonReady = false;
         }
     }

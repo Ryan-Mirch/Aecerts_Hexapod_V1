@@ -67,12 +67,12 @@ void HomePage::loop()
     
 
     /*Main Menu Button*/
-    drawButton(4, 59, "E", "Menu");
+    drawStringButton(4, 59, "E", "Menu", FONT_TEXT);
     if (getRotaryEncoderSwitchValue() == UNPRESSED) rotaryEncoderButtonReady = true;
     if (getRotaryEncoderSwitchValue() == PRESSED  && rotaryEncoderButtonReady) currentPage = mainMenuPage;
 
     /*Gait Display*/
-    drawButton(4, 25, "B", "Gait");
+    drawStringButton(4, 25, "B", "Gait", FONT_TEXT);
     u8g2.setFont(FONT_BOLD_HEADER);
     u8g2.setFontMode(1);
     u8g2.drawStr(1, 43, gaitStrings[selectedGait].c_str());

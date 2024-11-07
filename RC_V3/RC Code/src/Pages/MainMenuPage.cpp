@@ -21,6 +21,7 @@ void MainMenuPage::loop()
     
     drawPageHeader("< Home < ", "Menu");
     
+    /*Debug Text*/
     u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(115, 63, String(getRotaryEncoderTotalSpins()).c_str());
 

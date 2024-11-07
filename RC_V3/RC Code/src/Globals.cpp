@@ -18,8 +18,6 @@ OffsetsPage *offsetsPage = new OffsetsPage();
 Page *previousPage = nullptr;
 Page *currentPage = homePage;
 
-uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
-
 void loadValues()
 {
     // Load NRF Address
@@ -29,6 +27,9 @@ void loadValues()
 
     // Load Dynamic Stride Length
     dynamicStrideLength = EEPROM.read(EEPROM_DYNAMIC_STRIDE_ADDR);
+
+    // Load Sleep Delay Time
+    EEPROM.get(EEPROM_SLEEP_DELAY_ADDR, sleepDelayTime);
 }
 
 void saveValues(){
@@ -48,4 +49,7 @@ void saveValues(){
     
     // Save Dynamic Stride Length (boolean, 1 byte)
     EEPROM.update(EEPROM_DYNAMIC_STRIDE_ADDR, dynamicStrideLength);
+
+    // Save Sleep Delay Time (long int, 4 bytes)
+    EEPROM.put(EEPROM_SLEEP_DELAY_ADDR, sleepDelayTime);
 }

@@ -64,7 +64,8 @@ float calculateHypotenuse(float x, float y);
 void drawWrappedStr(const char* text, int x, int y, int maxWidth, bool centerAlign, int lineSpacing);
 
 void drawPageHeader(String breadcrumb, String pageName);
-void drawButton(int x, int y, String icon, String label);
+void drawStringButton(int x, int y, String icon, String label, const uint8_t* font);
+void drawGlyphButton(int x, int y, String icon, const uint8_t* font, int glyph);
 
 
 void drawHexapod(Vector2 center, Vector3 leg1, Vector3 leg2, Vector3 leg3, Vector3 leg4, Vector3 leg5, Vector3 leg6);

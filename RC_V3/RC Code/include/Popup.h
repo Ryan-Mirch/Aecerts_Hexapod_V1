@@ -3,7 +3,8 @@
 #include <Arduino.h>
 
 int openPopupMultiChoice(String header, String choices[], int numChoices, int hovered);
-uint32_t openPopupNumber(String header, uint32_t initialValue, uint32_t minValue, uint32_t maxValue);
+long int openPopupNumber(String header, long int initialValue, long int minValue, long int maxValue);
+String openPopupString(String header, String initialValue, int stringLength);
 
-void drawChoice(String s, bool hovered);
-void drawHeader(String s);
+void drawChoice(const String& s, bool hovered);
+void drawHeader(const String& s);
