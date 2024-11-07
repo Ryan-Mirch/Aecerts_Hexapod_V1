@@ -4,7 +4,7 @@
 #include "Inputs.h"
 #include "Globals.h"
 
-int openPopup(String header, String choices[], int numChoices, int hovered)
+int openPopupMultiChoice(String header, String choices[], int numChoices, int hovered)
 {
     getRotaryEncoderSpins(); // calling it here ignores the initial spin value
 
@@ -68,4 +68,51 @@ int openPopup(String header, String choices[], int numChoices, int hovered)
         }
     }
     return selection;
+}
+
+uint32_t openPopupNumber(String header, uint32_t initialValue, uint32_t minValue, uint32_t maxValue)
+{
+    getRotaryEncoderSpins(); // calling it here ignores the initial spin value
+
+    uint32_t value = initialValue;
+
+    header = " " + header + " ";
+    u8g2.setFont(FONT_HEADER);
+    int headerWidth = u8g2.getStrWidth(header.c_str());
+
+    bool rotaryEncoderButtonReady = false;
+
+    while (true)
+    {
+        if (getRotaryEncoderSwitchValue() == UNPRESSED) rotaryEncoderButtonReady = true;
+        u8g2.clearBuffer();
+
+        /*Draw Frame*/
+        u8g2.drawRFrame(1, 1, 126, 62, 4);
+
+        /*Draw Header*/
+        u8g2.setFont(FONT_HEADER);
+        u8g2.drawStr(64 - (headerWidth / 2), 14, header.c_str());
+
+        /*Draw Value*/
+        u8g2.setFont(FONT_TEXT);
+        String valueStr = String(value);
+        int valueWidth = u8g2.getStrWidth(valueStr.c_str());
+        u8g2.drawStr(64 - (valueWidth / 2), 40, valueStr.c_str());
+
+        u8g2.sendBuffer();
+
+        int increment = 0;
+        int spins = getRotaryEncoderSpins();
+        if (spins > 0) increment = 1;
+        if (spins < 0) increment = -1;
+
+        int newValue = value + increment;
+        if (newValue >= minValue && newValue <= maxValue) value = newValue;
+
+        if (getRotaryEncoderSwitchValue() == PRESSED && rotaryEncoderButtonReady)
+        {
+            return value;
+        }
+    }
 }

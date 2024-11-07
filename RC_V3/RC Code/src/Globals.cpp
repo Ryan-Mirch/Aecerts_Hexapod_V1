@@ -18,18 +18,33 @@ OffsetsPage *offsetsPage = new OffsetsPage();
 Page *previousPage = nullptr;
 Page *currentPage = homePage;
 
+uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
+
 void loadValues()
 {
     // Load NRF Address
-    EEPROM.get(EEPROM_NRF_ADDRESS_ADDR, nrfAddress);
+    for (int i = 0; i < EEPROM_NRF_ADDRESS_SIZE; i++) {
+        nrfAddress[i] = EEPROM.read(EEPROM_NRF_ADDRESS_ADDR + i);
+    }
 
     // Load Dynamic Stride Length
     dynamicStrideLength = EEPROM.read(EEPROM_DYNAMIC_STRIDE_ADDR);
 }
 
 void saveValues(){
-    // Save NRF Address (32-bit integer, 4 bytes)
-    EEPROM.put(EEPROM_NRF_ADDRESS_ADDR, nrfAddress);
+    // Save NRF Address (array of bytes)
+    bool addressChanged = false;
+    for (int i = 0; i < EEPROM_NRF_ADDRESS_SIZE; i++) {
+        if (EEPROM.read(EEPROM_NRF_ADDRESS_ADDR + i) != nrfAddress[i]) {
+            addressChanged = true;
+            break;
+        }
+    }
+    if (addressChanged) {
+        for (int i = 0; i < EEPROM_NRF_ADDRESS_SIZE; i++) {
+            EEPROM.update(EEPROM_NRF_ADDRESS_ADDR + i, nrfAddress[i]);
+        }
+    }
     
     // Save Dynamic Stride Length (boolean, 1 byte)
     EEPROM.update(EEPROM_DYNAMIC_STRIDE_ADDR, dynamicStrideLength);

@@ -49,6 +49,7 @@ void RC_Setup(){
   } else {
     Serial.println(F("radio hardware is ready!"));
   }
+  radio.setAddressWidth(uint8_t a_width);
   radio.setPALevel(RF24_PA_LOW);
   radio.setPayloadSize(sizeof(rc_data));
   radio.setChannel(124);

@@ -90,8 +90,8 @@ void SettingsPage::loop()
         // Convert the value based on its type
         if (settings[i].type == INTEGER)
         {
-            // Format as hexadecimal for the NRF address
-            sprintf(buffer, "%s: 0x%08" PRIx32, name, *(uint32_t *)valuePtr);
+            // Format as decimal for the NRF address
+            sprintf(buffer, "%s: %u", name, *(uint32_t *)valuePtr);
         }
         else if (settings[i].type == BOOLEAN)
         {
@@ -117,13 +117,22 @@ void SettingsPage::loop()
         if (settings[hovered].type == BOOLEAN)
         {
             String options[] = {"Off", "On"};
-            bool currentValue = *(bool*)settings[hovered].value;
-            bool newValue = openPopup(settings[hovered].name, options, 2, currentValue);
+            bool newValue = openPopupMultiChoice(settings[hovered].name, options, 2, *(bool*)settings[hovered].value);
 
             *(bool*)settings[hovered].value = newValue;
             saveValues();
 
             rotaryEncoderButtonReady = false;            
+        }
+
+        // When a setting is selected, open a popup window to select a new value, then save the value
+        if (settings[hovered].type == INTEGER)
+        {
+            uint32_t newValue = openPopupNumber(settings[hovered].name, *(uint32_t *)settings[hovered].value, settings[hovered].minVal, settings[hovered].maxVal);
+            *(uint32_t *)settings[hovered].value = newValue;
+            saveValues();
+
+            rotaryEncoderButtonReady = false;
         }
     }
 }

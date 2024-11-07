@@ -154,7 +154,7 @@ void HomePage::loop()
 
     /*Gait Selection Popup*/
     if(getButtonValue(B) == PRESSED){
-        selectedGait = Gaits(openPopup("Select a Gait", gaitStrings, gaitCount, selectedGait));
+        selectedGait = Gaits(openPopupMultiChoice("Select a Gait", gaitStrings, gaitCount, selectedGait));
         rotaryEncoderButtonReady = false;
     }
     
