@@ -18,6 +18,12 @@ OffsetsPage *offsetsPage = new OffsetsPage();
 Page *previousPage = nullptr;
 Page *currentPage = homePage;
 
+void saveOffsets() {
+    for (int i = 0; i < OFFSETS_COUNT; i++) {
+        EEPROM.put(EEPROM_OFFSETS_ADDR + i * sizeof(int), offsets[i]);
+    }
+}
+
 void loadValues()
 {
     // Load NRF Address
@@ -30,6 +36,11 @@ void loadValues()
 
     // Load Sleep Delay Time
     EEPROM.get(EEPROM_SLEEP_DELAY_ADDR, sleepDelayTime);
+
+    // Load Offsets
+    for (int i = 0; i < OFFSETS_COUNT; i++) {
+        EEPROM.get(EEPROM_OFFSETS_ADDR + i * sizeof(int), offsets[i]);
+    }
 }
 
 void saveValues(){
@@ -52,4 +63,6 @@ void saveValues(){
 
     // Save Sleep Delay Time (long int, 4 bytes)
     EEPROM.put(EEPROM_SLEEP_DELAY_ADDR, sleepDelayTime);
+
+    saveOffsets(); // Save offsets to EEPROM
 }

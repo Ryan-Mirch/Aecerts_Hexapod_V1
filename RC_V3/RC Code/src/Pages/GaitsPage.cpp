@@ -20,8 +20,7 @@ void GaitsPage::loop()
         currentPage = mainMenuPage;
     drawPageHeader("< Home < Menu < ", "Gaits");
     u8g2.setFont(FONT_TEXT_MONOSPACE);
-    u8g2.drawStr(115, 63, String(getRotaryEncoderTotalSpins()).c_str());
-    
+    u8g2.drawStr(115, 63, String(getRotaryEncoderTotalSpins()).c_str());     
 
     /*List*/
     int increment = 0;
@@ -47,7 +46,7 @@ void GaitsPage::loop()
 
     int rowSpacing = 14;
     int listYStart = 24;
-    int listLeftSpacing = 12;
+    int listLeftSpacing = 15;
 
     if(hovered >= 2) listYStart = listYStart - rowSpacing*(hovered-2);
 
@@ -57,7 +56,7 @@ void GaitsPage::loop()
         if(hovered >= i+3)continue;
         u8g2.drawStr(listLeftSpacing, listYStart + rowSpacing * i, gaitStrings[i].c_str());
         if (selectedGait == i)
-            u8g2.drawStr(1, listYStart + rowSpacing * i, ">");
+            u8g2.drawStr(4, listYStart + rowSpacing * i, ">");
         if (hovered == i)
             u8g2.drawRFrame(listLeftSpacing - 4, listYStart + rowSpacing * i - 10, u8g2.getStrWidth(gaitStrings[i].c_str()) + 8, 13, 5);
     }
@@ -94,6 +93,9 @@ void GaitsPage::loop()
 
     drawHexapod(Vector2(96, 37), legs[0], legs[1], legs[2], legs[3], legs[4], legs[5]);
     //u8g2.drawRFrame(70, 12, 52, 52, 5);
+
+    /*Draw Scroll Bar*/
+    drawScrollBar(gaitCount, hovered);
 }
 
 void GaitsPage::resetAnimation()

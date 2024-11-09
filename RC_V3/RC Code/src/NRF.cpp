@@ -1,8 +1,8 @@
 #include "NRF.h"
+#include "Globals.h"
 
 // Initialize the radio and addresses
 RF24 radio(49, 4); // CE, CSN
-uint8_t address[][6] = {"1Node", "2Node"};
 bool radioNumber = 0;
 
 unsigned long rc_send_interval = 50;
@@ -18,7 +18,7 @@ void setupNRF() {
     radio.setChannel(124);
     radio.enableAckPayload();
     radio.setRetries(5, 5);
-    radio.openWritingPipe(address[radioNumber]);
+    radio.openWritingPipe(nrfAddress);
 
     rc_data.joy1_X = 127;
     rc_data.joy1_Y = 127;

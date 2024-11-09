@@ -4,6 +4,7 @@
 #include "Inputs.h"
 #include "Globals.h"
 #include "Popup.h"
+#include <EEPROM.h>
 
 enum SettingType
 {
@@ -23,11 +24,13 @@ struct Setting
 uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
 bool dynamicStrideLength = true;  // Boolean for Dynamic Stride Length
 long int sleepDelayTime = 1000;   // int for how many milliseconds to wait before sleeping
+uint8_t stringTest[10] = "test test";
 
 Setting settings[] = {
     {"NRF Addr", STRING, &nrfAddress, EEPROM_NRF_ADDRESS_SIZE, EEPROM_NRF_ADDRESS_SIZE}, // Address as string
     {"Dyn Stride Length", BOOLEAN, &dynamicStrideLength},
-    {"Sleep Delay", INTEGER, &sleepDelayTime, 0, 100000}
+    {"Sleep Delay", INTEGER, &sleepDelayTime, 0, 100000},
+    {"Test", STRING, &stringTest, 10, 10}
     };
 
 const int numSettings = sizeof(settings) / sizeof(settings[0]);
@@ -70,10 +73,12 @@ void SettingsPage::loop()
     u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(115, 63, String(getRotaryEncoderTotalSpins()).c_str());
 
+    
+
     /*Display the list*/
     int rowSpacing = 14;
     int listYStart = 24;
-    int listLeftSpacing = 4;
+    int listLeftSpacing = 7;
 
     if (hovered >= 2)
         listYStart = listYStart - rowSpacing * (hovered - 2);
@@ -142,10 +147,13 @@ void SettingsPage::loop()
 
         if (settings[hovered].type == STRING)
         {
-            String newValue = openPopupString(settings[hovered].name, String((char*)nrfAddress), settings[hovered].maxVal);
-            strncpy((char*)nrfAddress, newValue.c_str(), EEPROM_NRF_ADDRESS_SIZE);
+            String newValue = openPopupString(settings[hovered].name, String((char*)settings[hovered].value), settings[hovered].maxVal);
+            strncpy((char*)settings[hovered].value, newValue.c_str(), settings[hovered].maxVal);
             saveValues();
             rotaryEncoderButtonReady = false;
         }
     }
+
+    /*Draw Scroll Bar*/
+    drawScrollBar(numSettings, hovered);
 }

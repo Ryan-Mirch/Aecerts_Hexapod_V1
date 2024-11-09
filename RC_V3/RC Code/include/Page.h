@@ -79,6 +79,9 @@ class StatsPage : public Page
 public:
     void loop() override;
     void init() override;
+
+private:
+    int hovered = 0;
 };
 
 // Gaits Page
@@ -107,6 +110,9 @@ class OffsetsPage : public Page
 public:
     void loop() override;
     void init() override;
+
+private:
+    int hovered = 0;
 };
 
 #endif // PAGES_H

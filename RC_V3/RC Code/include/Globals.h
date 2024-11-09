@@ -34,6 +34,7 @@
 #define FONT_TEXT u8g2_font_heisans_tr 
 #define FONT_TEXT_MONOSPACE u8g2_font_spleen5x8_mf
 #define FONT_TINY_TEXT u8g2_font_4x6_mf
+#define FONT_TINY_NUMBERS u8g2_font_micro_mn 
 
 
 
@@ -54,10 +55,14 @@ extern OffsetsPage *offsetsPage;
 #define EEPROM_NRF_ADDRESS_SIZE         5 // size of the NRF address in bytes
 #define EEPROM_DYNAMIC_STRIDE_ADDR      5 //requires 1 byte
 #define EEPROM_SLEEP_DELAY_ADDR         6 // requires 4 bytes
+#define EEPROM_OFFSETS_ADDR             10 // Starting address for offsets, requires 18 * 4 bytes
+#define OFFSETS_COUNT 18
 
 extern uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
 extern bool dynamicStrideLength;                    // Boolean for Dynamic Stride Length
 extern long int sleepDelayTime;                     // int for how many milliseconds to wait before sleeping
+extern int offsets[OFFSETS_COUNT]; // Declare offsets array
 
 void loadValues();
 void saveValues();
+void saveOffsets();

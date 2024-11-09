@@ -86,16 +86,16 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
     int headerWidth = u8g2.getStrWidth(header.c_str());
 
     bool rotaryEncoderButtonReady = false;
+    unsigned long lastIncrementTime = 0;
+    unsigned long maxScrollDelay = 200; // Start with a 200ms delay
+    unsigned long currentScrollDelay = maxScrollDelay;
+    unsigned long minScrollDelay = 40;
 
     while (true)
     {
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;
         u8g2.clearBuffer();
-
-        /*Draw Debug String
-        u8g2.setFont(FONT_TEXT_MONOSPACE);
-        u8g2.drawStr(115, 60, String(getRotaryEncoderTotalSpins()).c_str());*/
 
         /*Draw Frame*/
         u8g2.drawRFrame(1, 1, 126, 62, 4);
@@ -111,7 +111,7 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
         String valueStr = String(value);
         int valueWidth = u8g2.getStrWidth(valueStr.c_str());
         int valueX = 64 - (valueWidth / 2) + headerAndValueXOffset;
-        u8g2.drawLine(valueX, 32 + headerAndValueYOffset, valueX + valueWidth, 32 + headerAndValueYOffset);     
+        u8g2.drawLine(valueX, 32 + headerAndValueYOffset, valueX + valueWidth-2, 32 + headerAndValueYOffset);     
         u8g2.drawStr(valueX, 30 + headerAndValueYOffset, valueStr.c_str());
 
         /*Draw Buttons*/
@@ -127,34 +127,44 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
 
         long int newValue = value + increment;
         if (newValue >= minValue && newValue <= maxValue)
-            value = newValue;
+            value = newValue;        
+
+        unsigned long currentTime = millis();
+        if (currentTime - lastIncrementTime >= currentScrollDelay || currentScrollDelay == maxScrollDelay)
+        {
+            if (getButtonValue(A) == PRESSED)
+            {
+                newValue = value + 100;
+                if (newValue <= maxValue)
+                    value = newValue;
+                lastIncrementTime = currentTime;
+                currentScrollDelay = max(minScrollDelay, currentScrollDelay - minScrollDelay); // Decrease delay, minimum 40ms
+            }
+            else if (getButtonValue(B) == PRESSED)
+            {
+                newValue = value - 100;
+                if (newValue >= minValue)
+                    value = newValue;
+            }
+            else if (getButtonValue(C) == PRESSED)
+            {
+                newValue = value + 1000;
+                if (newValue <= maxValue)
+                    value = newValue;
+            }
+            else if (getButtonValue(D) == PRESSED)
+            {
+                newValue = value - 1000;
+                if (newValue >= minValue)
+                    value = newValue;
+            }
+            else
+            {
+                currentScrollDelay = maxScrollDelay; // Reset delay when no button is pressed
+            }
+        }
 
         if (getRotaryEncoderSwitchValue() == PRESSED && rotaryEncoderButtonReady) return value;
-
-        if (getButtonValue(A) == PRESSED)
-        {
-            newValue = value + 100;
-            if (newValue <= maxValue)
-                value = newValue;
-        }
-        else if (getButtonValue(B) == PRESSED)
-        {
-            newValue = value - 100;
-            if (newValue >= minValue)
-                value = newValue;
-        }
-        else if (getButtonValue(C) == PRESSED)
-        {
-            newValue = value + 1000;
-            if (newValue <= maxValue)
-                value = newValue;
-        }
-        else if (getButtonValue(D) == PRESSED)
-        {
-            newValue = value - 1000;
-            if (newValue >= minValue)
-                value = newValue;
-        }
     }
 }
 
@@ -164,7 +174,13 @@ String openPopupString(String header, String initialValue, int stringLength)
 
     // Ensure the initial value is the correct length
     String value = initialValue;
+    if ((int)value.length() < stringLength) {
+        for (int i = (int)value.length(); i < stringLength; i++) {
+            value += ' ';
+        }
+    }
     int hovered = 0;
+    int scrollOffset = 0; // Add scroll offset
 
     header = " " + header + " ";
     u8g2.setFont(FONT_HEADER);
@@ -187,62 +203,45 @@ String openPopupString(String header, String initialValue, int stringLength)
 
         /*Debug Text
         u8g2.setFont(FONT_TEXT_MONOSPACE);
-        u8g2.drawStr(115, 63, String(getRotaryEncoderTotalSpins()).c_str());*/
+        u8g2.drawStr(115, 63, String(hovered).c_str());
+
+        u8g2.drawStr(55, 60, String(value[hovered]).c_str());*/
 
         /*Draw Frame*/
         u8g2.drawRFrame(1, 1, 126, 62, 4);
 
         /*Draw Header*/
+        int headerAndValueXOffset = 25;
+        int headerAndValueYOffset = 10;
         u8g2.setFont(FONT_HEADER);
-        u8g2.drawStr(64 - (headerWidth / 2), 14, header.c_str());
+        u8g2.drawStr(64 - (headerWidth / 2) + headerAndValueXOffset, 14 + headerAndValueYOffset, header.c_str());
 
         /*Draw Value*/
         u8g2.setFont(FONT_TEXT);
         int charSpacing = 10;                                 // Set width for each character
-        int startX = 64 - ((stringLength * charSpacing) / 2); // Center the string
+        int startX = 64 - ((min(stringLength, 6) * charSpacing) / 2) + headerAndValueXOffset; // Center the string for 6 characters
 
-        for (int i = 0; i < stringLength; i++)
+        for (int i = scrollOffset; i < min(stringLength, scrollOffset + 6); i++)
         {
-            int charX = startX + (i * charSpacing);
-            u8g2.drawStr(charX, 32, String(value[i]).c_str());
+            int charX = startX + ((i - scrollOffset) * charSpacing);
+            u8g2.drawStr(charX, 32 + headerAndValueYOffset, String(value[i]).c_str());
 
             // Draw hover frame around the selected character
             if (hovered == i && cursorVisible)
             {
-                u8g2.drawRFrame(charX - 2, 20, charSpacing, 14, 2);
+                u8g2.drawRFrame(charX - 2, 20 + headerAndValueYOffset, charSpacing, 14, 2);
             }
 
             // Draw narrow line under each character
-            u8g2.drawLine(charX, 36, charX + charSpacing - 4, 36);
+            u8g2.drawLine(charX, 36 + headerAndValueYOffset, charX + charSpacing - 4, 36 + headerAndValueYOffset);
         }
 
         /*Draw Buttons*/
-        u8g2.setFont(u8g2_font_twelvedings_t_all);
-        int buttons[] = {0x002a, 0x0055, 0x002f};
-        int buttonY = 56;
-        int buttonSpacing = 17;
-
-        int i = 0;
-        int buttonX = 101 - (buttonSpacing * 1.5) + (i * buttonSpacing);
-        u8g2.drawGlyph(buttonX, buttonY, buttons[i]);
-        if (hovered == stringLength + i)
-            u8g2.drawRFrame(buttonX - 3, buttonY - 13, 16, 16, 5);
-        i++;
-
-        buttonX = 101 - (buttonSpacing * 1.5) + (i * buttonSpacing);
-        u8g2.drawGlyph(buttonX, buttonY, buttons[i]);
-        if (hovered == stringLength + i)
-            u8g2.drawRFrame(buttonX - 2, buttonY - 13, 16, 16, 5);
-        i++;
-
-        buttonX = 101 - (buttonSpacing * 1.5) + (i * buttonSpacing);
-        u8g2.drawGlyph(buttonX, buttonY, buttons[i]);
-        if (hovered == stringLength + i)
-            u8g2.drawRFrame(buttonX - 2, buttonY - 13, 16, 16, 5);
-
-        buttonSpacing = 23;
-        drawStringButton(12, 52, "C", "+", FONT_TEXT);
-        drawStringButton(12 + buttonSpacing, 52, "D", "-", FONT_TEXT);
+        int buttonSpacing = 14;
+        drawStringButton(10, 10, "A", "+", FONT_TEXT);
+        drawStringButton(10, 10 + buttonSpacing, "B", "-", FONT_TEXT);
+        drawStringButton(10, 10 + buttonSpacing*2, "C", "Cancel", FONT_TEXT);
+        drawStringButton(10, 10 + buttonSpacing*3, "D", "Reset", FONT_TEXT);
 
         u8g2.sendBuffer();
 
@@ -255,10 +254,16 @@ String openPopupString(String header, String initialValue, int stringLength)
 
         int previousHovered = hovered;
         hovered += increment;
-        if (hovered >= stringLength + 3)
-            hovered = stringLength + 2;
+        if (hovered >= stringLength)
+            hovered = stringLength - 1;
         else if (hovered < 0)
             hovered = 0;
+
+        // Adjust scroll offset
+        if (hovered < scrollOffset)
+            scrollOffset = hovered;
+        else if (hovered >= scrollOffset + 6)
+            scrollOffset = hovered - 5;
 
         // Reset cursor visibility when scrolling to a new character
         if (hovered != previousHovered)
@@ -272,28 +277,18 @@ String openPopupString(String header, String initialValue, int stringLength)
             unsigned long currentTime = millis();
             if (currentTime - lastIncrementTime >= currentScrollDelay || currentScrollDelay == maxScrollDelay)
             {
-                if (getButtonValue(C) == PRESSED) // Increase character value
-                {
-                    if (value[hovered] < 126) // Prevent going beyond printable ASCII characters
-                    {
-                        value[hovered]++;
-                    }
+                if (value[hovered] < 32)value[hovered] = 32;
+                if (value[hovered] > 126)value[hovered] = 126;
+                if (getButtonValue(A) == PRESSED || getButtonValue(B) == PRESSED){
                     lastIncrementTime = currentTime;
                     currentScrollDelay = max(minScrollDelay, currentScrollDelay - minScrollDelay); // Decrease delay, minimum 50ms
                 }
-                else if (getButtonValue(D) == PRESSED) // Decrease character value
-                {
-                    if (value[hovered] > 32) // Prevent going below printable ASCII characters
-                    {
-                        value[hovered]--;
-                    }
-                    lastIncrementTime = currentTime;
-                    currentScrollDelay = max(minScrollDelay, currentScrollDelay - minScrollDelay); // Decrease delay, minimum 50ms
-                }
-                else
-                {
-                    currentScrollDelay = maxScrollDelay; // Reset delay when no button is pressed
-                }
+
+                if (getButtonValue(A) == PRESSED && value[hovered] < 126)value[hovered]++; // Increase
+
+                else if (getButtonValue(B) == PRESSED && value[hovered] > 32)value[hovered]--; // Decrease
+
+                else currentScrollDelay = maxScrollDelay; // Reset delay when no button is pressed
             }
 
             // Handle cursor blinking
@@ -303,26 +298,22 @@ String openPopupString(String header, String initialValue, int stringLength)
                 lastCursorBlinkTime = currentTime;
             }
         }
-        else
+
+        if (getRotaryEncoderSwitchValue() == PRESSED && rotaryEncoderButtonReady)
         {
-            if (getRotaryEncoderSwitchValue() == PRESSED && rotaryEncoderButtonReady)
+            return value.substring(0, stringLength);
+        }
+
+        if (getButtonValue(C) == PRESSED) // Cancel
+        {
+            return initialValue;
+        }
+        else if (getButtonValue(D) == PRESSED) // Reset
+        {
+            value = "";
+            for (int i = 0; i < stringLength; i++)
             {
-                if (hovered == stringLength) // Cancel
-                {
-                    return initialValue;
-                }
-                else if (hovered == stringLength + 1) // Reset
-                {
-                    value = "";
-                    for (int i = 0; i < stringLength; i++)
-                    {
-                        value += "~";
-                    }
-                }
-                else if (hovered == stringLength + 2) // Confirm
-                {
-                    return value.substring(0, stringLength);
-                }
+                value += "~";
             }
         }
     }

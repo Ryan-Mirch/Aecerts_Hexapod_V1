@@ -63,6 +63,17 @@ void drawGlyphButton(int x, int y, String icon, const uint8_t* font, int glyph)
   u8g2.drawGlyph(x + 7, y + 4, glyph);
 }
 
+void drawGrid() {
+    for (int x = 0; x < 128; x += 10) {
+        for (int y = 0; y < 64; y += 10) {
+            if (x % 50 == 0 && y % 50 == 0) {
+                u8g2.drawBox(x - 1, y - 1, 3, 3); // Draw thicker dots at every 50 pixels
+            } else {
+                u8g2.drawPixel(x, y);
+            }
+        }
+    }
+}
 
 #define hex_20base_width 13
 #define hex_20base_height 15
@@ -71,11 +82,15 @@ static unsigned char hex_20base_bits[] = {
     0x0b, 0x1a, 0x0b, 0x1a, 0x0b, 0x1a, 0x12, 0x09, 0xa2, 0x08, 0x44, 0x04,
     0x0c, 0x06, 0x1c, 0x07, 0xe0, 0x00};
 
+void drawHexapodBody(Vector2 center){
+  u8g2.setBitmapMode(1);
+  u8g2.drawXBM(center.x - 6, center.y - 7, hex_20base_width, hex_20base_height, hex_20base_bits);
+}
+
 void drawHexapod(Vector2 center, Vector3 leg1, Vector3 leg2, Vector3 leg3, Vector3 leg4, Vector3 leg5, Vector3 leg6)
 {
 
-  u8g2.setBitmapMode(1);
-  u8g2.drawXBM(center.x - 6, center.y - 7, hex_20base_width, hex_20base_height, hex_20base_bits);
+  drawHexapodBody(center);
 
   Vector2 leg1Base = center + Vector2(-4, -6);
   Vector2 leg2Base = center + Vector2(-6, 0);
@@ -199,4 +214,13 @@ void drawWrappedStr(const char* text, int x, int y, int maxWidth, bool centerAli
     // Move to the next line
     cursorY += lineHeight;
   }
+}
+
+void drawScrollBar(int totalItems, int hoveredIndex) {
+    int minHeight = 4;
+    int maxHeight = 40;
+    int scrollBarHeight = map(totalItems, 4, 20, maxHeight, minHeight);
+    scrollBarHeight = constrain(scrollBarHeight, minHeight, maxHeight);
+    int scrollBarY = map(hoveredIndex, 0, totalItems - 1, 13, 64 - scrollBarHeight);
+    u8g2.drawBox(0, scrollBarY, 2, scrollBarHeight);
 }
