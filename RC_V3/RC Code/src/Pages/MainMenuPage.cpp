@@ -3,6 +3,7 @@
 #include "Screen.h"
 #include "Inputs.h"
 #include "Globals.h"
+#include "NRF.h"
 
 
 void MainMenuPage::init()

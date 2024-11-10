@@ -1,8 +1,6 @@
 #pragma once
 
 #include <Arduino.h>
-#include "Helpers.h"
-#include "Page.h"
 
 #define BUMPER_A_DESCRIPTION "Not in use."
 #define BUMPER_B_DESCRIPTION "Not in use."
@@ -37,12 +35,74 @@
 #define FONT_TINY_NUMBERS u8g2_font_micro_mn 
 
 
+#define OFF 0x1
+#define ON  0x0
+
+#define UNPRESSED 0x1
+#define PRESSED  0x0
+
+enum IOLabels {
+  A, //0
+  B, //1
+  C, //2
+  D  //3
+};
+
+enum Gaits {
+  TRI,      //0
+  RIPPLE,   //1
+  WAVE,     //2
+  QUAD,     //3
+  BI,       //4
+  HOP       //5
+};
+
+enum PackageType {
+    CONTROL_DATA = 1,
+    SETTINGS_DATA = 2
+};
+
+const int gaitCount = 6;
+extern String gaitStrings[gaitCount];
+
+
+struct Vector2 {
+  float x;
+  float y;
+
+  Vector2(float xVal, float yVal) : x(xVal), y(yVal) {}
+  Vector2() : x(0), y(0) {}
+  Vector2 operator+(const Vector2& other) const {
+    return Vector2(x + other.x, y + other.y);
+  }
+};
+
+struct Vector3 {
+  float x;
+  float y;
+  float z;
+
+  Vector3(float xVal, float yVal, float zVal) : x(xVal), y(yVal), z(zVal) {}
+  Vector3() : x(0), y(0), z(0) {}
+  Vector3 operator+(const Vector3& other) const {
+    return Vector3(x + other.x, y + other.y, z + other.z);
+  }
+};
+
+// Forward declarations
+class Page;
+class HomePage;
+class MainMenuPage;
+class ControlsPage;
+class SettingsPage;
+class StatsPage;
+class GaitsPage;
+class OffsetsPage;
 
 extern Gaits selectedGait;
 extern Page *currentPage;
 extern Page *previousPage;
 
-extern DemoControlsPage *demoPage;
 extern HomePage *homePage;
 extern MainMenuPage *mainMenuPage;
 extern ControlsPage *controlsPage;
@@ -51,18 +111,19 @@ extern StatsPage *statsPage;
 extern GaitsPage *gaitsPage;
 extern OffsetsPage *offsetsPage;
 
-#define EEPROM_NRF_ADDRESS_ADDR         0 //requires 5 bytes
-#define EEPROM_NRF_ADDRESS_SIZE         5 // size of the NRF address in bytes
-#define EEPROM_DYNAMIC_STRIDE_ADDR      5 //requires 1 byte
-#define EEPROM_SLEEP_DELAY_ADDR         6 // requires 4 bytes
-#define EEPROM_OFFSETS_ADDR             10 // Starting address for offsets, requires 18 * 4 bytes
+#define EEPROM_NRF_ADDRESS_ADDR         0 //requires 6 bytes
+#define EEPROM_NRF_ADDRESS_ARRAY_SIZE    6 // size of the NRF address in bytes
+
+#define EEPROM_DYNAMIC_STRIDE_ADDR      6 //requires 1 byte
+#define EEPROM_SLEEP_DELAY_ADDR         7 // requires 4 bytes
+
+
 #define OFFSETS_COUNT 18
 
-extern uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
+extern uint8_t nrfAddress[EEPROM_NRF_ADDRESS_ARRAY_SIZE]; // NRF chip address as an array of bytes
 extern bool dynamicStrideLength;                    // Boolean for Dynamic Stride Length
 extern long int sleepDelayTime;                     // int for how many milliseconds to wait before sleeping
-extern int offsets[OFFSETS_COUNT]; // Declare offsets array
+extern int8_t offsets[OFFSETS_COUNT]; // Declare offsets array
 
 void loadValues();
 void saveValues();
-void saveOffsets();

@@ -4,6 +4,7 @@
 #include "Inputs.h"
 #include "Popup.h"
 #include "Globals.h"
+#include "NRF.h"
 
 
 
@@ -31,12 +32,29 @@ void HomePage::init()
     legsCenter[5] = Vector2(9, -5);
 
     for (int i = 0; i < 6; i++)
-        legs[i] = Vector3(legsCenter[i].x, legsCenter[i].y, 1);
+        legs[i] = Vector3(legsCenter[i].x, legsCenter[i].y, 1);   
+    
 }
 
 void HomePage::loop()
-{
-    startTime = millis();    
+{    
+    rc_control_data.joy1_X = getJoyValue(A).x;
+    rc_control_data.joy1_Y = getJoyValue(A).y;
+    rc_control_data.joy1_Button = getJoyButtonValue(A);
+    rc_control_data.joy2_X = getJoyValue(B).x;
+    rc_control_data.joy2_Y = getJoyValue(B).y;
+    rc_control_data.joy2_Button = getJoyButtonValue(B);
+    rc_control_data.slider1 = getPotValue(A);
+    rc_control_data.slider2 = getPotValue(B);
+    rc_control_data.pushButton1 = getBumperValue(A);
+    rc_control_data.pushButton2 = getBumperValue(C); 
+       
+    rc_control_data.gait = selectedGait;
+    rc_control_data.idle = 0;  
+
+    startTime = millis(); 
+
+         
 
     int offset = 35;
     int textY = 6;
@@ -86,7 +104,7 @@ void HomePage::loop()
 
     u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(textX, textY, "100%");
-    u8g2.drawStr(textX, textY + offset, "99A");
+    u8g2.drawStr(textX, textY + offset, String(hex_data.current_sensor_value).c_str());
     u8g2.drawStr(textX, textY + offset * 2, (String(getPotValue(A)) + "%").c_str());
     u8g2.drawStr(textX, textY + offset * 3, (String(getPotValue(B)) + "%").c_str());
 
@@ -153,9 +171,12 @@ void HomePage::loop()
 
 
     /*Gait Selection Popup*/
-    if(getButtonValue(B) == PRESSED){
+    if(getButtonValue(B) == PRESSED){        
         selectedGait = Gaits(openPopupMultiChoice("Select a Gait", gaitStrings, gaitCount, selectedGait));
         rotaryEncoderButtonReady = false;
     }
+
+    
+    
     
 }

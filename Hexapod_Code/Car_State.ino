@@ -16,9 +16,11 @@ float globalSpeedMultiplier = 0.55;
 float globalRotationMultiplier = 0.55;
 
 void carState() {
-  leftSlider = (int)rc_data.slider2;
+  if(currentState != Car)Serial.println("Car State."); 
+
+  leftSlider = (int)rc_control_data.slider1;
   globalSpeedMultiplier = (leftSlider + 10.0)*0.01;
-  globalRotationMultiplier = map(rc_data.slider2,0,100,40,130) * 0.01;
+  globalRotationMultiplier = map(rc_control_data.slider1,0,100,40,130) * 0.01;
 
   if (currentState != Car || previousGait != currentGait) {
     currentState = Car;
@@ -29,7 +31,7 @@ void carState() {
     }   
 
     switch (currentGait) {
-      case Tri:
+      case TRI:
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 2);
         cycleProgress[2] = 0;
@@ -45,7 +47,7 @@ void carState() {
         maxSpeed = 200;
         break;
 
-      case Wave:
+      case WAVE:
         //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 6);
@@ -64,7 +66,7 @@ void carState() {
         maxSpeed = 160;
         break;
 
-      case Ripple:
+      case RIPPLE:
         //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 6)*4;
@@ -84,7 +86,7 @@ void carState() {
         maxSpeed = 200;
         break;
 
-      case Bi:
+      case BI:
         //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 3);
@@ -104,7 +106,7 @@ void carState() {
         maxSpeed = 130;
         break;
 
-      case Quad:
+      case QUAD:
         //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = (points / 3);
@@ -124,7 +126,7 @@ void carState() {
         maxSpeed = 200;
         break;
 
-      case Hop:
+      case HOP:
         //Offsets
         cycleProgress[0] = 0;
         cycleProgress[1] = 0;

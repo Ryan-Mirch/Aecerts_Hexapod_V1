@@ -20,8 +20,8 @@ void setup()
   setupScreen();
   setupInputs();
   Wire.begin();
+  loadValues();
   setupNRF();
-  loadValues(); 
 }
 
 void loop()
@@ -37,14 +37,23 @@ void loop()
       previousPage = currentPage;
     }
 
-    
+    if (currentPage == offsetsPage)
+      rc_settings_data.calibrating = 1;
+    else
+      rc_settings_data.calibrating = 0;
+
     u8g2.clearBuffer();
-    currentPage->loop();    
+    currentPage->loop();
     u8g2.sendBuffer();
-    
+
     drewScreen = true;
   }
 
   if (!drewScreen)
-    sendNRFData();
+  {
+    if (currentPage == homePage)
+      sendNRFData(CONTROL_DATA);
+    else
+      sendNRFData(SETTINGS_DATA);
+  }
 }

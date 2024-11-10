@@ -7,33 +7,55 @@
 
 // Define the radio and addresses
 extern RF24 radio;
-extern uint8_t address[][6];
-extern bool radioNumber;
 
 extern unsigned long rc_send_interval;
 
+
+
 // Define the data packages
-struct RC_Data_Package {
-    byte joy1_X;
-    byte joy1_Y;
-    byte joy1_Button;
-    byte joy2_X;
-    byte joy2_Y;
-    byte joy2_Button;
-    byte slider1;
-    byte slider2;
-    byte pushButton1;
-    byte pushButton2;
+struct RC_Control_Data_Package {
+    byte type; // 1 byte
+    
+    byte joy1_X; // 1 byte
+    byte joy1_Y; // 1 byte
+    
+    byte joy2_X; // 1 byte
+    byte joy2_Y; // 1 byte  
+    byte slider1; // 1 byte
+    byte slider2; // 1 byte
+
+    byte joy1_Button:1; // 1 bit
+    byte joy2_Button:1; // 1 bit
+    byte pushButton1:1; // 1 bit
+    byte pushButton2:1; // 1 bit
+    byte idle:1;        // 1 bit
+    byte reserved : 3;  // 3 bits padding, 1 byte total
+
+    byte gait;  // 1 byte
+};
+
+struct RC_Settings_Data_Package {
+    byte type;
+    
+    byte dynamic_stride_length:1; //1 bit
+    byte calibrating:1; //1 bit
+    byte reserved:6;              //6 bits padding, 1 byte total
+
+    long int sleep_delay;         //4 bytes
+
+    int8_t offsets[18];             //18 bytes
 };
 
 struct Hexapod_Data_Package {
     float current_sensor_value;
+    int8_t offsets[18];
 };
 
 // Declare the data package variables
-extern RC_Data_Package rc_data;
+extern RC_Control_Data_Package rc_control_data;
+extern RC_Settings_Data_Package rc_settings_data;
 extern Hexapod_Data_Package hex_data;
 
 // Function declarations
 void setupNRF();
-void sendNRFData();
+void sendNRFData(PackageType type);

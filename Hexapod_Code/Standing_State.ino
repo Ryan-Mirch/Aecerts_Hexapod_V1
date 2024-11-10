@@ -9,6 +9,8 @@ int currentLegs[3] = { -1, -1, -1 };
 int standLoops = 0;
 
 void standingState() {
+  if(currentState != Stand)Serial.println("Standing State.");
+
   bool moveAllAtOnce = false;
   bool highLift = false;
   setCycleStartPoints();

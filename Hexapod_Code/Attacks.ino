@@ -5,7 +5,7 @@ void slamAttack(){
   currentState = SlamAttack;
   slamstarted = false;
 
-  int attackSpeed = map(rc_data.slider2,0,100,20,100);
+  int attackSpeed = map(rc_control_data.slider1,0,100,20,100);
   attackSpeed = 25;
 
   float frames = attackSpeed*0.4;

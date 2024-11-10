@@ -3,6 +3,7 @@
 
 #include <Arduino.h>
 #include "Helpers.h"
+#include "Globals.h"
 
 // Base class
 class Page
@@ -30,15 +31,6 @@ private:
 
     Vector3 legs[6];
     Vector2 legsCenter[6];
-};
-
-// Demo Controls Page
-class DemoControlsPage : public Page
-{
-public:
-    String string11;
-    void loop() override;
-    void init() override;
 };
 
 // Menu Page

@@ -3,9 +3,11 @@
 #include "Screen.h"
 #include "Inputs.h"
 #include "Globals.h"
+#include "NRF.h"
 
 int openPopupMultiChoice(String header, String choices[], int numChoices, int hovered)
-{
+{    
+
     getRotaryEncoderSpins(); // calling it here ignores the initial spin value
 
     int selection = -1;
@@ -18,6 +20,8 @@ int openPopupMultiChoice(String header, String choices[], int numChoices, int ho
 
     while (selection == -1)
     {
+        sendNRFData(SETTINGS_DATA);
+
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;
         u8g2.clearBuffer();
@@ -76,7 +80,8 @@ int openPopupMultiChoice(String header, String choices[], int numChoices, int ho
 }
 
 long int openPopupNumber(String header, long int initialValue, long int minValue, long int maxValue)
-{
+{    
+    
     getRotaryEncoderSpins(); // calling it here ignores the initial spin value
 
     long int value = initialValue;
@@ -89,10 +94,12 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
     unsigned long lastIncrementTime = 0;
     unsigned long maxScrollDelay = 200; // Start with a 200ms delay
     unsigned long currentScrollDelay = maxScrollDelay;
-    unsigned long minScrollDelay = 40;
+    unsigned long minScrollDelay = 30;
 
     while (true)
     {
+        sendNRFData(SETTINGS_DATA);
+
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;
         u8g2.clearBuffer();
@@ -132,13 +139,17 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
         unsigned long currentTime = millis();
         if (currentTime - lastIncrementTime >= currentScrollDelay || currentScrollDelay == maxScrollDelay)
         {
+            if (getButtonValue(A) == PRESSED || getButtonValue(B) == PRESSED ||
+                getButtonValue(C) == PRESSED || getButtonValue(D) == PRESSED){
+                    currentScrollDelay = max(minScrollDelay, currentScrollDelay - minScrollDelay); // Decrease delay, minimum 40ms
+                    lastIncrementTime = currentTime;
+                };                 
+
             if (getButtonValue(A) == PRESSED)
             {
                 newValue = value + 100;
                 if (newValue <= maxValue)
                     value = newValue;
-                lastIncrementTime = currentTime;
-                currentScrollDelay = max(minScrollDelay, currentScrollDelay - minScrollDelay); // Decrease delay, minimum 40ms
             }
             else if (getButtonValue(B) == PRESSED)
             {
@@ -169,7 +180,8 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
 }
 
 String openPopupString(String header, String initialValue, int stringLength)
-{
+{   
+
     getRotaryEncoderSpins(); // calling it here ignores the initial spin value
 
     // Ensure the initial value is the correct length
@@ -190,13 +202,15 @@ String openPopupString(String header, String initialValue, int stringLength)
     unsigned long lastIncrementTime = 0;
     unsigned long maxScrollDelay = 200; // Start with a 500ms delay
     unsigned long currentScrollDelay = maxScrollDelay;
-    unsigned long minScrollDelay = 40;
+    unsigned long minScrollDelay = 30;
     bool cursorVisible = true;
     unsigned long lastCursorBlinkTime = 0;
     const unsigned long cursorBlinkInterval = 500; // 500ms interval for cursor blink
 
     while (true)
     {
+        sendNRFData(SETTINGS_DATA);
+
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;
         u8g2.clearBuffer();

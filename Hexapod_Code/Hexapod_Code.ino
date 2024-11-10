@@ -1,13 +1,15 @@
 #include <Arduino.h>
 #include <Servo.h>
 #include <math.h>
+#include <EEPROM.h>
 
 #include "vectors.h"
 #include "Helpers.h"
 #include "RC.h"
 #include "Initializations.h"
 
-
+#define UNPRESSED 0x1
+#define PRESSED 0x0
 
 enum State {
   Initialize,
@@ -26,17 +28,21 @@ enum LegState {
 };
 
 enum Gait {
-  Tri,
-  Wave,
-  Ripple,
-  Bi,
-  Quad,
-  Hop  
+  TRI,     //0
+  RIPPLE,  //1
+  WAVE,    //2
+  QUAD,    //3
+  BI,      //4
+  HOP      //5
 };
 
-int totalGaits = 6;
-Gait gaits[6] = {Tri,Wave,Ripple,Bi,Quad,Hop};
+bool connected = false;
 
+int totalGaits = 6;
+Gait gaits[6] = { TRI, RIPPLE, WAVE, QUAD, BI, HOP };
+
+int8_t rawOffsets[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Coxa+90, Femur+80, Tibia-20
+Vector3 offsets[6];
 
 float points = 1000;
 int cycleProgress[6];
@@ -44,14 +50,14 @@ LegState legStates[6];
 int standProgress = 0;
 
 State currentState = Initialize;
-Gait currentGait = Tri;
-Gait previousGait = Tri;
+Gait currentGait = TRI;
+Gait previousGait = TRI;
 int currentGaitID = 0;
 
 float standingDistanceAdjustment = 0;
 
 float distanceFromGroundBase = -60;
-float distanceFromGround = 0; 
+float distanceFromGround = 0;
 float previousDistanceFromGround = 0;
 
 float liftHeight = 130;
@@ -62,16 +68,16 @@ float distanceFromCenter = 190;
 float crabTargetForwardAmount = 0;
 float crabForwardAmount = 0;
 
-Vector2 joy1TargetVector = Vector2(0,0);
+Vector2 joy1TargetVector = Vector2(0, 0);
 float joy1TargetMagnitude = 0;
 
-Vector2 joy1CurrentVector = Vector2(0,0);
+Vector2 joy1CurrentVector = Vector2(0, 0);
 float joy1CurrentMagnitude = 0;
 
-Vector2 joy2TargetVector = Vector2(0,0);
+Vector2 joy2TargetVector = Vector2(0, 0);
 float joy2TargetMagnitude = 0;
 
-Vector2 joy2CurrentVector = Vector2(0,0);
+Vector2 joy2CurrentVector = Vector2(0, 0);
 float joy2CurrentMagnitude = 0;
 
 unsigned long timeSinceLastInput = 0;
@@ -87,106 +93,113 @@ long loopStartTime = 0;
 void setup() {
   // Initialize serial communication
   Serial.begin(9600);
-  attachServos(); 
+  attachServos();
   RC_Setup();
+  loadRawOffsetsFromEEPROM();
   stateInitialize();
 }
 
 void loop() {
-
   elapsedTime = millis() - loopStartTime;
   loopStartTime = millis();
 
-  bool connected = GetData();
-  //RC_DisplayData();
-  if(connected){
+  connected = GetData();
 
-    double joy1x = map(rc_data.joy1_X,0,254,-100,100);
-    double joy1y = map(rc_data.joy1_Y,0,254,-100,100);
-
-    double joy2x = map(rc_data.joy2_X,0,254,-100,100);
-    double joy2y = map(rc_data.joy2_Y,0,254,-100,100);
-    
-    joy1TargetVector = Vector2(joy1x,joy1y);
-    joy1TargetMagnitude = constrain(calculateHypotenuse(abs(joy1x),abs(joy1y)),0,100);   
-
-    joy2TargetVector = Vector2(joy2x,joy2y);
-    joy2TargetMagnitude = constrain(calculateHypotenuse(abs(joy2x),abs(joy2y)),0,100);  
-
-    previousDistanceFromGround = distanceFromGround;
-    distanceFromGround = distanceFromGroundBase + rc_data.slider1 * -1.7;
-    distanceFromCenter = 170;
-
-    
-
-    
-  }
-  else{
+  if (!connected) {
     calibrationState();
-    //Serial.println("State: Disconnected");
     return;
   }
+}
+
+void processControlData(const RC_Control_Data_Package& data) {
+  double joy1x = map(data.joy1_X, 0, 254, -100, 100);
+  double joy1y = map(data.joy1_Y, 0, 254, -100, 100);
+
+  double joy2x = map(data.joy2_X, 0, 254, -100, 100);
+  double joy2y = map(data.joy2_Y, 0, 254, -100, 100);
+
+  joy1TargetVector = Vector2(joy1x, joy1y);
+  joy1TargetMagnitude = constrain(calculateHypotenuse(abs(joy1x), abs(joy1y)), 0, 100);
+
+  joy2TargetVector = Vector2(joy2x, joy2y);
+  joy2TargetMagnitude = constrain(calculateHypotenuse(abs(joy2x), abs(joy2y)), 0, 100);
+
+  previousDistanceFromGround = distanceFromGround;
+  distanceFromGround = distanceFromGroundBase + data.slider2 * -1.7;
+  distanceFromCenter = 170;
 
   joy1CurrentVector = lerp(joy1CurrentVector, joy1TargetVector, 0.08);
   joy1CurrentMagnitude = lerp(joy1CurrentMagnitude, joy1TargetMagnitude, 0.08);
 
   joy2CurrentVector = lerp(joy2CurrentVector, joy2TargetVector, 0.12);
-  joy2CurrentMagnitude = lerp(joy2CurrentMagnitude, joy2TargetMagnitude, 0.12);  
+  joy2CurrentMagnitude = lerp(joy2CurrentMagnitude, joy2TargetMagnitude, 0.12);
 
   previousGait = currentGait;
-  if(rc_data.pushButton2 == 1  && rc_data_previous.pushButton2 == 0){
-    currentGaitID += 1;
-    if(currentGaitID == totalGaits){
-      currentGaitID = 0;
-    }    
-    
-    currentGait = gaits[currentGaitID];
-  }
+  currentGait = gaits[data.gait];
 
-  
-  
-  if(rc_data.joy1_Button == 1 && attackCooldown == 0){
-    Serial.println("slam attack");
-    resetMovementVectors();
-    slamAttack();
+  /*idle from controller*/
+  if (data.idle == 1) {
     standingState();
-    attackCooldown = 50;    
-    loopStartTime = millis();
     return;
   }
-  
-  else{
-    attackCooldown = max(attackCooldown - elapsedTime, 0);
-  }
 
-  if(abs(joy1CurrentMagnitude) >= 10 || abs(joy2CurrentMagnitude) >= 10){
+  /*Drive*/
+  if (abs(joy1CurrentMagnitude) >= 10 || abs(joy2CurrentMagnitude) >= 10) {
     carState();
     timeSinceLastInput = millis();
     return;
   }
 
-  if(abs(timeSinceLastInput - millis()) > 5) {
+  /*idle from hexapod*/
+  if (abs(timeSinceLastInput - millis()) > 5) {
     standingState();
     return;
-  }  
+  }
+
+
+  /*Attack*/
+  if (data.joy1_Button == PRESSED && attackCooldown == 0) {
+    Serial.println("slam attack");
+    resetMovementVectors();
+    slamAttack();
+    standingState();
+    attackCooldown = 50;
+    loopStartTime = millis();
+    return;
+  } else {
+    attackCooldown = max(attackCooldown - elapsedTime, 0);
+  }
 }
 
-void resetMovementVectors(){
-  joy1CurrentVector = Vector2(0,0);
+void processSettingsData(const RC_Settings_Data_Package& data) {
+  if (data.calibrating == 1) {
+    calibrationState();
+    return;
+  }
+
+  //finished calibrating, save offsets.
+  if (currentState == Calibrate) {
+    saveOffsets();
+  }
+  standingState();
+}
+
+void resetMovementVectors() {
+  joy1CurrentVector = Vector2(0, 0);
   joy1CurrentMagnitude = 0;
 
-  joy2CurrentVector = Vector2(0,0);
+  joy2CurrentVector = Vector2(0, 0);
   joy2CurrentMagnitude = 0;
 }
 
-void setCycleStartPoints(int leg){
-  cycleStartPoints[leg] = currentPoints[leg];    
+void setCycleStartPoints(int leg) {
+  cycleStartPoints[leg] = currentPoints[leg];
 }
 
-void setCycleStartPoints(){
-  for(int i = 0; i < 6; i++){
-    cycleStartPoints[i] = currentPoints[i]; 
-  }     
+void setCycleStartPoints() {
+  for (int i = 0; i < 6; i++) {
+    cycleStartPoints[i] = currentPoints[i];
+  }
 }
 
 int angleToMicroseconds(double angle) {
@@ -194,13 +207,13 @@ int angleToMicroseconds(double angle) {
   return (int)val;
 }
 
-void moveToPos(int leg, Vector3 pos){
+void moveToPos(int leg, Vector3 pos) {
   currentPoints[leg] = pos;
-  
-  float dis = Vector3(0,0,0).distanceTo(pos);
-  if(dis > legLength){
+
+  float dis = Vector3(0, 0, 0).distanceTo(pos);
+  if (dis > legLength) {
     print_value("Point impossible to reach", pos, false);
-    print_value("Distance",dis, true);
+    print_value("Distance", dis, true);
     return;
   }
 
@@ -212,24 +225,24 @@ void moveToPos(int leg, Vector3 pos){
   float o2 = offsets[leg].y;
   float o3 = offsets[leg].z;
 
-  float theta1 = atan2(y,x) * (180 / PI) + o1; // base angle
-  float l = sqrt(x*x + y*y); // x and y extension 
+  float theta1 = atan2(y, x) * (180 / PI) + o1;  // base angle
+  float l = sqrt(x * x + y * y);                 // x and y extension
   float l1 = l - a1;
-  float h = sqrt(l1*l1 + z*z);
+  float h = sqrt(l1 * l1 + z * z);
 
-  float phi1 = acos(constrain((pow(h,2) + pow(a2,2) - pow(a3,2)) / (2*h*a2),-1,1));
+  float phi1 = acos(constrain((pow(h, 2) + pow(a2, 2) - pow(a3, 2)) / (2 * h * a2), -1, 1));
   float phi2 = atan2(z, l1);
   float theta2 = (phi1 + phi2) * 180 / PI + o2;
-  float phi3 = acos(constrain((pow(a2,2) + pow(a3,2) - pow(h,2)) / (2*a2*a3),-1,1));
+  float phi3 = acos(constrain((pow(a2, 2) + pow(a3, 2) - pow(h, 2)) / (2 * a2 * a3), -1, 1));
   float theta3 = 180 - (phi3 * 180 / PI) + o3;
 
-  targetRot = Vector3(theta1,theta2,theta3);
-  
+  targetRot = Vector3(theta1, theta2, theta3);
+
   int coxaMicroseconds = angleToMicroseconds(targetRot.x);
   int femurMicroseconds = angleToMicroseconds(targetRot.y);
   int tibiaMicroseconds = angleToMicroseconds(targetRot.z);
 
-  switch(leg){
+  switch (leg) {
     case 0:
       coxa1.writeMicroseconds(coxaMicroseconds);
       femur1.writeMicroseconds(femurMicroseconds);
@@ -269,11 +282,96 @@ void moveToPos(int leg, Vector3 pos){
     default:
       break;
   }
-  return; 
+  return;
 }
 
+#define EEPROM_OFFSETS_ADDR 0  // 18 bytes
 
+void saveOffsets() {  
+  Serial.print("Saving rawOffsets to EEPROM. ");
+  for (int i = 0; i < 18; i++) {
+    EEPROM.put(EEPROM_OFFSETS_ADDR + i * sizeof(int8_t), rawOffsets[i]);
+  }
+  Serial.println("Done");
+}
 
+void loadRawOffsetsFromEEPROM() {
+  Serial.println("Filling rawOffsets from EEPROM.");
+  for (int i = 0; i < 18; i++) {
+    int8_t val;
+    EEPROM.get(EEPROM_OFFSETS_ADDR + i * sizeof(int8_t), val);
+    rawOffsets[i] = val;
+  }
+  updateOffsetVariables();
+}
 
+void updateOffsetVariables() {  
+  //updating Vector3 offsets[]
+  //Serial.println("Filling offsets from rawOffsets.");
+  for (int i = 0; i < 6; ++i) {
+    offsets[i] = Vector3(rawOffsets[i * 3] + 90, rawOffsets[i * 3 + 1] + 80, rawOffsets[i * 3 + 2] - 20);
+  }
 
+  //updating hex_data.offsets[18]
+  //Serial.println("Filling hex_data.offsets from rawOffsets.");  
+  for (int i = 0; i < 18; i++) {
+    hex_data.offsets[i] = rawOffsets[i];
+  }
+}
 
+void setOffsetsFromControllerData() {    
+  
+  //dont set offsets data if the controller isnt connected
+  if(rc_settings_data.offsets[0] == -128 || !connected){
+    return;
+  }
+
+  //Serial.print("Filling rawOffsets from rc_settings_data.offsets. ");
+  printRawOffsets();
+  for (int i = 0; i < 18; i++) {
+    rawOffsets[i] = rc_settings_data.offsets[i];
+  }
+
+  updateOffsetVariables();
+  
+  //Serial.println("Done");
+}
+
+void printConnectedStatus(){
+  Serial.print("Connected: ");
+  if(connected)Serial.println("TRUE");
+  else Serial.println("FALSE");
+}
+
+void printRawOffsets() {
+  return;
+  Serial.print("Raw Offsets: ");
+  for (int i = 0; i < 18; i++) {
+
+    Serial.print(rawOffsets[i]);
+    if (i < 17) {
+      Serial.print(" ");
+    }
+  }
+  Serial.println();
+
+  Serial.print("Offsets: ");
+    for (int i = 0; i < 6; i++) {
+      Serial.print(offsets[i].toString());
+      if (i < 5) {
+        Serial.print(" ");
+      }
+    }
+    Serial.println();
+
+    Serial.print("EEPROM: ");
+    for (int i = 0; i < 18; i++) {
+      int8_t val;
+      EEPROM.get(i * sizeof(int8_t), val);
+      Serial.print(val);
+      if (i < 17) {
+        Serial.print(" ");
+      }
+    }
+    Serial.println();
+}

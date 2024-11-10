@@ -3,9 +3,10 @@
 #include "Screen.h"
 #include "Inputs.h"
 #include "Globals.h"
+#include "NRF.h"
 
 int hovered = 0;
-int offsets[OFFSETS_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int8_t offsets[OFFSETS_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 Vector2 offsetLocations[OFFSETS_COUNT] = {
     Vector2(66,30), 
@@ -48,17 +49,12 @@ void OffsetsPage::init()
 {
     lastCursorBlinkTime = millis(); // Initialize the cursor blink timer
     offsetsModified = false; // Reset the modified flag
+    memcpy(offsets, hex_data.offsets, sizeof(offsets)); // Load the offsets from the hex_data struct
 }
 
 void OffsetsPage::loop()
-{
-
-    if (getButtonValue(A) == PRESSED) {
-        if (offsetsModified) {
-            saveOffsets();
-        }
-        currentPage = mainMenuPage;
-    }
+{       
+    if (getButtonValue(A) == PRESSED) currentPage = mainMenuPage;
     drawPageHeader("< Home < Menu < ", "Offsets");
 
     /*Debug Text
@@ -122,6 +118,9 @@ void OffsetsPage::loop()
             currentScrollDelay = maxScrollDelay; // Reset delay when no button is pressed
         }
     }
+
+    // set the settings_data offsets to the modified offsets
+    memcpy(rc_settings_data.offsets, offsets, sizeof(rc_settings_data.offsets)); 
 
     // Handle cursor blinking
     if (currentTime - lastCursorBlinkTime >= cursorBlinkInterval)

@@ -4,7 +4,7 @@
 #include "Inputs.h"
 #include "Globals.h"
 #include "Popup.h"
-#include <EEPROM.h>
+#include "NRF.h"
 
 enum SettingType
 {
@@ -21,13 +21,13 @@ struct Setting
     long int minVal, maxVal; // For integers, define a range
 };
 
-uint8_t nrfAddress[EEPROM_NRF_ADDRESS_SIZE]; // NRF chip address as an array of bytes
+uint8_t nrfAddress[EEPROM_NRF_ADDRESS_ARRAY_SIZE]; // NRF chip address as an array of bytes
 bool dynamicStrideLength = true;  // Boolean for Dynamic Stride Length
 long int sleepDelayTime = 1000;   // int for how many milliseconds to wait before sleeping
 uint8_t stringTest[10] = "test test";
 
 Setting settings[] = {
-    {"NRF Addr", STRING, &nrfAddress, EEPROM_NRF_ADDRESS_SIZE, EEPROM_NRF_ADDRESS_SIZE}, // Address as string
+    {"NRF Addr", STRING, &nrfAddress, EEPROM_NRF_ADDRESS_ARRAY_SIZE-1, EEPROM_NRF_ADDRESS_ARRAY_SIZE-1}, // Address as string
     {"Dyn Stride Length", BOOLEAN, &dynamicStrideLength},
     {"Sleep Delay", INTEGER, &sleepDelayTime, 0, 100000},
     {"Test", STRING, &stringTest, 10, 10}
@@ -104,10 +104,15 @@ void SettingsPage::loop()
             sprintf(buffer, "%s: %s", name, (*(bool *)valuePtr) ? "On" : "Off");
         }
         else if (settings[i].type == STRING)
-        {
-            // Display the string directly
-            sprintf(buffer, "%s: %s", name, (char*)valuePtr);
-        }
+    {
+        // Ensure the string is null-terminated
+        char strBuffer[EEPROM_NRF_ADDRESS_ARRAY_SIZE]; // 5 characters + 1 for null terminator
+        strncpy(strBuffer, (char*)valuePtr, EEPROM_NRF_ADDRESS_ARRAY_SIZE-1);
+        strBuffer[EEPROM_NRF_ADDRESS_ARRAY_SIZE-1] = '\0'; // Null-terminate the string
+
+        // Display the string directly
+        sprintf(buffer, "%s: %s", name, strBuffer);
+    }
 
         // Draw the setting string on the display
         if (hovered < i + 3)
@@ -138,7 +143,11 @@ void SettingsPage::loop()
         // When a setting is selected, open a popup window to select a new value, then save the value
         if (settings[hovered].type == INTEGER)
         {
-            long int newValue = openPopupNumber(settings[hovered].name, *(long int*)settings[hovered].value, settings[hovered].minVal, settings[hovered].maxVal);
+            long min = settings[hovered].minVal;
+            long max = settings[hovered].maxVal;
+            long val = *(long int*)settings[hovered].value;
+
+            long int newValue = openPopupNumber(settings[hovered].name, constrain(val, min, max), min, max);
             *(long int*)settings[hovered].value = newValue;
             saveValues();
 

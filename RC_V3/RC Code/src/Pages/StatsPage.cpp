@@ -3,7 +3,8 @@
 #include "Screen.h"
 #include "Inputs.h"
 #include "Globals.h"
-#include "Helpers.h" // Include Helpers.h
+#include "Helpers.h"
+#include "NRF.h"
 
 const int totalStats = 10;
 

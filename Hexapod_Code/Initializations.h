@@ -46,15 +46,6 @@ const int coxa6Pin = 37;
 const int femur6Pin = 38;
 const int tibia6Pin = 39;
 
-const Vector3 offsets1 = {90,75,-18};
-const Vector3 offsets2 = {93,75,-15};
-const Vector3 offsets3 = {93,75,-18}; 
-const Vector3 offsets4 = {87,80,-26};
-const Vector3 offsets5 = {85,89,-16};
-const Vector3 offsets6 = {93,85,-24};
-const Vector3 offsets[6] = {offsets1, offsets2, offsets3, offsets4, offsets5, offsets6};
-
-
 const float a1 = 41;  //Coxa Length
 const float a2 = 116; //Femur Length
 const float a3 = 183; //Tibia Length   
@@ -73,7 +64,6 @@ Vector3 ControlPoints[10];
 Vector3 RotateControlPoints[10];
 
 Vector3 AttackControlPoints[10];
-
 
 void attachServos(){
   coxa1.attach(coxa1Pin,500,2500);

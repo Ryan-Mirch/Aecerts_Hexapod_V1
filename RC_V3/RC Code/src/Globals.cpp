@@ -3,10 +3,18 @@
 #include "Helpers.h"
 #include "Page.h"
 #include <EEPROM.h>
+#include "NRF.h"
 
 Gaits selectedGait = TRI;
 
-DemoControlsPage *demoPage = new DemoControlsPage();
+String gaitStrings[gaitCount] = {
+    "Tri",
+    "Ripple",
+    "Wave",
+    "Quad",
+    "Bi",
+    "Hop"};
+
 HomePage *homePage = new HomePage();
 MainMenuPage *mainMenuPage = new MainMenuPage();
 ControlsPage *controlsPage = new ControlsPage();
@@ -18,16 +26,10 @@ OffsetsPage *offsetsPage = new OffsetsPage();
 Page *previousPage = nullptr;
 Page *currentPage = homePage;
 
-void saveOffsets() {
-    for (int i = 0; i < OFFSETS_COUNT; i++) {
-        EEPROM.put(EEPROM_OFFSETS_ADDR + i * sizeof(int), offsets[i]);
-    }
-}
-
 void loadValues()
 {
     // Load NRF Address
-    for (int i = 0; i < EEPROM_NRF_ADDRESS_SIZE; i++) {
+    for (int i = 0; i < EEPROM_NRF_ADDRESS_ARRAY_SIZE; i++) {
         nrfAddress[i] = EEPROM.read(EEPROM_NRF_ADDRESS_ADDR + i);
     }
 
@@ -36,26 +38,22 @@ void loadValues()
 
     // Load Sleep Delay Time
     EEPROM.get(EEPROM_SLEEP_DELAY_ADDR, sleepDelayTime);
-
-    // Load Offsets
-    for (int i = 0; i < OFFSETS_COUNT; i++) {
-        EEPROM.get(EEPROM_OFFSETS_ADDR + i * sizeof(int), offsets[i]);
-    }
 }
 
 void saveValues(){
     // Save NRF Address (array of bytes)
     bool addressChanged = false;
-    for (int i = 0; i < EEPROM_NRF_ADDRESS_SIZE; i++) {
+    for (int i = 0; i < EEPROM_NRF_ADDRESS_ARRAY_SIZE; i++) {
         if (EEPROM.read(EEPROM_NRF_ADDRESS_ADDR + i) != nrfAddress[i]) {
             addressChanged = true;
             break;
         }
     }
     if (addressChanged) {
-        for (int i = 0; i < EEPROM_NRF_ADDRESS_SIZE; i++) {
+        for (int i = 0; i < EEPROM_NRF_ADDRESS_ARRAY_SIZE; i++) {
             EEPROM.update(EEPROM_NRF_ADDRESS_ADDR + i, nrfAddress[i]);
         }
+        setupNRF();
     }
     
     // Save Dynamic Stride Length (boolean, 1 byte)
@@ -63,6 +61,4 @@ void saveValues(){
 
     // Save Sleep Delay Time (long int, 4 bytes)
     EEPROM.put(EEPROM_SLEEP_DELAY_ADDR, sleepDelayTime);
-
-    saveOffsets(); // Save offsets to EEPROM
 }
