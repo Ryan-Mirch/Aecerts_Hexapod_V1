@@ -37,10 +37,11 @@ void setupNRF() {
     rc_control_data.pushButton1 = UNPRESSED;
     rc_control_data.pushButton2 = UNPRESSED;
 
+    rc_control_data.dynamic_stride_length = dynamicStrideLength;
+
 
     rc_settings_data.type = SETTINGS_DATA;
-    rc_settings_data.dynamic_stride_length = 1;
-    rc_settings_data.sleep_delay = 1000;
+    
 
     for (int i = 0; i < 18; i++) {
         rc_settings_data.offsets[i] = 0;

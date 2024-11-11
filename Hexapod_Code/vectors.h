@@ -21,6 +21,19 @@ public:
     return ret;
   }
 
+  float magnitude() const {
+      return sqrt(x * x + y * y);
+  }
+
+  // Function to normalize the vector
+  void normalize() {
+      float mag = magnitude();
+      if (mag > 0) {
+          x /= mag;
+          y /= mag;
+      }
+  }
+
   Vector2 operator+(Vector2 val) {
     // Implement the multiply operator
     Vector2 result;

@@ -21,7 +21,7 @@ void carState() {
   leftSlider = (int)rc_control_data.slider1;
   globalSpeedMultiplier = (leftSlider + 10.0)*0.01;
   globalRotationMultiplier = map(rc_control_data.slider1,0,100,40,130) * 0.01;
-
+  
   if (currentState != Car || previousGait != currentGait) {
     currentState = Car;
 
@@ -184,10 +184,22 @@ void carState() {
 Vector3 getGaitPoint(int leg, float pushFraction){  
  
 
-  float rotateStrideLength = joy2CurrentVector.x * globalRotationMultiplier;
-  Vector2 v = joy1CurrentVector * Vector2(1,strideLengthMultiplier);
+  float rotateStrideLength = joy2CurrentVector.x * globalRotationMultiplier;  
+  Vector2 v = joy1CurrentVector;
+
+  if(!dynamicStrideLength){
+    v.normalize();
+    v = v*70;
+  }
+
+  v = v * Vector2(1,strideLengthMultiplier);
   v.y = constrain(v.y,-maxStrideLength/2, maxStrideLength/2);
   v = v * globalSpeedMultiplier;
+
+  if(!dynamicStrideLength){
+    if(rotateStrideLength < 0) rotateStrideLength = -70;
+    else rotateStrideLength = 70;
+  }
 
   float weightSum = abs(forwardAmount) + abs(turnAmount);
 

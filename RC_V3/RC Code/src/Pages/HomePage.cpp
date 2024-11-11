@@ -6,13 +6,6 @@
 #include "Globals.h"
 #include "NRF.h"
 
-
-
-int testX = 0;
-int testY = 0;
-int testZ = 0;
-
-
 void HomePage::init()
 {
     rotaryEncoderButtonReady = false;
@@ -49,8 +42,10 @@ void HomePage::loop()
     rc_control_data.pushButton1 = getBumperValue(A);
     rc_control_data.pushButton2 = getBumperValue(C); 
        
+    rc_control_data.dynamic_stride_length = dynamicStrideLength;
     rc_control_data.gait = selectedGait;
-    rc_control_data.idle = 0;  
+    rc_control_data.idle = 0; 
+    rc_control_data.sleep = (long int)getTimeSinceLastInput() > sleepDelayTime ? 1 : 0; 
 
     startTime = millis(); 
 
@@ -147,26 +142,6 @@ void HomePage::loop()
 
     drawHexapod(Vector2(64, 37), legs[0], legs[1], legs[2], legs[3], legs[4], legs[5]);
     u8g2.drawRFrame(38, 12, 52, 52, 5);
-
-    /*Value Testing
-    if (getBumperValue(A) == PRESSED)
-        testX += 1;
-    if (getBumperValue(B) == PRESSED)
-        testX -= 1;
-    if (getBumperValue(C) == PRESSED)
-        testY += 1;
-    if (getBumperValue(D) == PRESSED)
-        testY -= 1;
-
-    testZ = getRotaryEncoderTotalSpins();
-
-
-
-    u8g2.setFont(u8g2_font_4x6_mf);
-    u8g2.drawStr(0, 53, String(testX).c_str());
-    u8g2.drawStr(10, 53, String(testY).c_str());
-    u8g2.drawStr(20, 53, String(testZ).c_str());
-    */
     totalDrawTime = millis() - startTime;
 
 
@@ -174,9 +149,6 @@ void HomePage::loop()
     if(getButtonValue(B) == PRESSED){        
         selectedGait = Gaits(openPopupMultiChoice("Select a Gait", gaitStrings, gaitCount, selectedGait));
         rotaryEncoderButtonReady = false;
-    }
-
-    
-    
+    }   
     
 }

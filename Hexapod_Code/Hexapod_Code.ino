@@ -17,7 +17,8 @@ enum State {
   Car,
   Crab,
   Calibrate,
-  SlamAttack
+  SlamAttack,
+  Sleep
 };
 
 enum LegState {
@@ -37,11 +38,12 @@ enum Gait {
 };
 
 bool connected = false;
+bool dynamicStrideLength = true;
 
 int totalGaits = 6;
 Gait gaits[6] = { TRI, RIPPLE, WAVE, QUAD, BI, HOP };
 
-int8_t rawOffsets[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Coxa+90, Femur+80, Tibia-20
+int8_t rawOffsets[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Coxa+90, Femur+90, Tibia-20
 Vector3 offsets[6];
 
 float points = 1000;
@@ -58,7 +60,7 @@ float standingDistanceAdjustment = 0;
 
 float distanceFromGroundBase = -60;
 float distanceFromGround = 0;
-float previousDistanceFromGround = 0;
+float targetDistanceFromGround = 0;
 
 float liftHeight = 130;
 float landHeight = 70;
@@ -103,15 +105,32 @@ void loop() {
   elapsedTime = millis() - loopStartTime;
   loopStartTime = millis();
 
-  connected = GetData();
+  connected = GetData(); 
 
   if (!connected) {
-    calibrationState();
+    sleepState();
     return;
   }
+
+  if(currentType == CONTROL_DATA) processControlData(rc_control_data);
+  if(currentType == SETTINGS_DATA) processSettingsData(rc_settings_data);
 }
 
 void processControlData(const RC_Control_Data_Package& data) {
+  dynamicStrideLength = data.dynamic_stride_length;
+
+  /*sleep from controller*/
+  if (data.sleep == 1) {
+    sleepState();
+    return;
+  }
+
+  /*idle from controller*/
+  if (data.idle == 1) {
+    standingState();
+    return;
+  }
+
   double joy1x = map(data.joy1_X, 0, 254, -100, 100);
   double joy1y = map(data.joy1_Y, 0, 254, -100, 100);
 
@@ -124,8 +143,10 @@ void processControlData(const RC_Control_Data_Package& data) {
   joy2TargetVector = Vector2(joy2x, joy2y);
   joy2TargetMagnitude = constrain(calculateHypotenuse(abs(joy2x), abs(joy2y)), 0, 100);
 
-  previousDistanceFromGround = distanceFromGround;
-  distanceFromGround = distanceFromGroundBase + data.slider2 * -1.7;
+  targetDistanceFromGround = distanceFromGroundBase + (data.slider2 * -1.7);
+  distanceFromGround = lerp(distanceFromGround, targetDistanceFromGround, 0.04);
+  if(distanceFromGround >= 0) distanceFromGround = targetDistanceFromGround;
+
   distanceFromCenter = 170;
 
   joy1CurrentVector = lerp(joy1CurrentVector, joy1TargetVector, 0.08);
@@ -135,13 +156,7 @@ void processControlData(const RC_Control_Data_Package& data) {
   joy2CurrentMagnitude = lerp(joy2CurrentMagnitude, joy2TargetMagnitude, 0.12);
 
   previousGait = currentGait;
-  currentGait = gaits[data.gait];
-
-  /*idle from controller*/
-  if (data.idle == 1) {
-    standingState();
-    return;
-  }
+  currentGait = gaits[data.gait]; 
 
   /*Drive*/
   if (abs(joy1CurrentMagnitude) >= 10 || abs(joy2CurrentMagnitude) >= 10) {
@@ -155,7 +170,6 @@ void processControlData(const RC_Control_Data_Package& data) {
     standingState();
     return;
   }
-
 
   /*Attack*/
   if (data.joy1_Button == PRESSED && attackCooldown == 0) {
@@ -175,13 +189,13 @@ void processSettingsData(const RC_Settings_Data_Package& data) {
   if (data.calibrating == 1) {
     calibrationState();
     return;
-  }
+  }  
 
   //finished calibrating, save offsets.
   if (currentState == Calibrate) {
     saveOffsets();
   }
-  standingState();
+  sleepState();
 }
 
 void resetMovementVectors() {
@@ -208,6 +222,8 @@ int angleToMicroseconds(double angle) {
 }
 
 void moveToPos(int leg, Vector3 pos) {
+  if(!servosAttached) attachServos();
+
   currentPoints[leg] = pos;
 
   float dis = Vector3(0, 0, 0).distanceTo(pos);
@@ -303,13 +319,14 @@ void loadRawOffsetsFromEEPROM() {
     rawOffsets[i] = val;
   }
   updateOffsetVariables();
+  printRawOffsets();
 }
 
 void updateOffsetVariables() {  
   //updating Vector3 offsets[]
   //Serial.println("Filling offsets from rawOffsets.");
   for (int i = 0; i < 6; ++i) {
-    offsets[i] = Vector3(rawOffsets[i * 3] + 90, rawOffsets[i * 3 + 1] + 80, rawOffsets[i * 3 + 2] - 20);
+    offsets[i] = Vector3(rawOffsets[i * 3] + 90, rawOffsets[i * 3 + 1] + 90, rawOffsets[i * 3 + 2] - 20);
   }
 
   //updating hex_data.offsets[18]

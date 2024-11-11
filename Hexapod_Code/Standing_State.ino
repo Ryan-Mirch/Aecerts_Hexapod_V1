@@ -17,7 +17,7 @@ void standingState() {
   standingEndPoint = Vector3(distanceFromCenter, 0, distanceFromGround + standingDistanceAdjustment);
   standLoops = 2;
   // We only set the starting, inbetween, and ending points one time, which is when we enter the standing state.
-  if (currentState == Calibrate || currentState == Initialize || currentState == SlamAttack) moveAllAtOnce = true;
+  if (currentState == Calibrate || currentState == Initialize || currentState == SlamAttack || currentState == Sleep) moveAllAtOnce = true;
   if (currentState == SlamAttack) highLift = true;
   if (currentState != Stand) {
     

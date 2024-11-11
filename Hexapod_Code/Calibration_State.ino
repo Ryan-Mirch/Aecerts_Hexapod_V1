@@ -13,7 +13,7 @@ void calibrationState() {
   for (int i = 0; i < 6; i++) {
     if (currentPoints[i].z < inBetweenZ) {
       legsUp = false;
-      float nextZ = lerp(currentPoints[i].z, inBetweenZ + 2, 0.08);
+      float nextZ = lerp(currentPoints[i].z, inBetweenZ + 2, 0.03);
       moveToPos(i, Vector3(currentPoints[i].x, currentPoints[i].y, nextZ));
     }
   }

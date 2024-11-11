@@ -21,5 +21,5 @@ void stateInitialize(){
   moveToPos(5, Vector3(225,0,115));
   //return;
 
-  delay(500);
+  delay(50);
 }

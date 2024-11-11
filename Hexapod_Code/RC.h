@@ -16,35 +16,35 @@ enum PackageType {
     SETTINGS_DATA = 2
 };
 
+// Define the data packages
 struct RC_Control_Data_Package {
-    byte type;
+    byte type; // 1 byte
     
-    byte joy1_X;
-    byte joy1_Y;
+    byte joy1_X; // 1 byte
+    byte joy1_Y; // 1 byte
     
-    byte joy2_X;
-    byte joy2_Y;    
-    byte slider1;
-    byte slider2;
+    byte joy2_X; // 1 byte
+    byte joy2_Y; // 1 byte  
+    byte slider1; // 1 byte
+    byte slider2; // 1 byte
 
     byte joy1_Button:1; // 1 bit
     byte joy2_Button:1; // 1 bit
     byte pushButton1:1; // 1 bit
     byte pushButton2:1; // 1 bit
     byte idle:1;        // 1 bit
-    byte reserved : 3;  // 3 bits padding, 1 byte total
+    byte sleep:1;        // 1 bit
+    byte dynamic_stride_length:1; // 1 bit
+    byte reserved : 1;  // 1 bits padding, 1 byte total
 
-    byte gait;
+    byte gait;  // 1 byte
 };
 
 struct RC_Settings_Data_Package {
     byte type;
     
-    byte dynamic_stride_length:1; //1 bit
     byte calibrating:1; //1 bit
-    byte reserved:6;              //6 bits padding, 1 byte total
-
-    long int sleep_delay;         //4 bytes
+    byte reserved:7;              //7 bits padding, 1 byte total
 
     int8_t offsets[18];             //18 bytes
 };
@@ -110,27 +110,29 @@ void initializeControllerPayload(){
   rc_control_data.joy2_Button = UNPRESSED;
 
   rc_control_data.slider1 = 40;
-  rc_control_data.slider2 = 25;
+  rc_control_data.slider2 = 0;
 
   rc_control_data.pushButton1 = UNPRESSED;
   rc_control_data.pushButton2 = UNPRESSED;
 
   rc_control_data.idle = 1;
+  rc_control_data.sleep = 1;
 
   rc_control_data.gait = 0;
+
+  rc_control_data.dynamic_stride_length = 1;
 
 
   //settings package
   rc_settings_data.calibrating = 0;
-  rc_settings_data.dynamic_stride_length = 0;
-  rc_settings_data.sleep_delay = -1;
+  
 
   for (int i = 0; i < 18; i++) {
       rc_settings_data.offsets[i] = -128;
   }
 
 }
-
+byte currentType;
 bool GetData(){  
   // This device is a RX node
   uint8_t pipe;
@@ -138,13 +140,12 @@ bool GetData(){
     uint8_t bytes = radio.getPayloadSize(); // get the size of the payload    
     byte incomingType;
     radio.read(&incomingType, sizeof(incomingType));
+    if(currentType != incomingType && incomingType != NULL)currentType = incomingType;
 
     if (incomingType == CONTROL_DATA) {
         radio.read(&rc_control_data, sizeof(rc_control_data));
-        processControlData(rc_control_data);
     } else if (incomingType == SETTINGS_DATA) {
         radio.read(&rc_settings_data, sizeof(rc_settings_data));
-        processSettingsData(rc_settings_data);
     }   
 
     hex_data.current_sensor_value = mapFloat(analogRead(Current_Sensor_Pin), 0, 1024, 0, 50);      

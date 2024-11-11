@@ -29,7 +29,9 @@ struct RC_Control_Data_Package {
     byte pushButton1:1; // 1 bit
     byte pushButton2:1; // 1 bit
     byte idle:1;        // 1 bit
-    byte reserved : 3;  // 3 bits padding, 1 byte total
+    byte sleep:1;        // 1 bit
+    byte dynamic_stride_length:1; // 1 bit
+    byte reserved : 1;  // 1 bits padding, 1 byte total
 
     byte gait;  // 1 byte
 };
@@ -37,11 +39,8 @@ struct RC_Control_Data_Package {
 struct RC_Settings_Data_Package {
     byte type;
     
-    byte dynamic_stride_length:1; //1 bit
     byte calibrating:1; //1 bit
-    byte reserved:6;              //6 bits padding, 1 byte total
-
-    long int sleep_delay;         //4 bytes
+    byte reserved:7;              //7 bits padding, 1 byte total
 
     int8_t offsets[18];             //18 bytes
 };

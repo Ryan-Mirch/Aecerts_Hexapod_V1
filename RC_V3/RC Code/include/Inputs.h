@@ -32,6 +32,8 @@
 // External variable declarations
 extern Vector3 gad;
 extern MPU6050 mpu;
+extern unsigned long timeSinceLastInput; // Add this line
+extern String lastInputName; // Add this line
 
 // Function declarations
 int getPotValue(IOLabels label);
@@ -54,4 +56,12 @@ int getRotaryEncoderTotalSpins();
 int getRotaryEncoderSwitchValue();
 String getRotaryEncoderSwitchString();
 void setupInputs();
+
+unsigned long getTimeSinceButtonPressed(IOLabels label);
+unsigned long getTimeSinceBumperPressed(IOLabels label);
+unsigned long getTimeSinceSwitchChanged(IOLabels label);
+unsigned long getTimeSinceJoyButtonPressed(IOLabels label);
+unsigned long getTimeSincePotChanged(IOLabels label);
+unsigned long getTimeSinceLastInput(); // Add this line
+String getLastInputName(); // Add this line
 

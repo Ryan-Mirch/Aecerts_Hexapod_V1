@@ -65,6 +65,8 @@ Vector3 RotateControlPoints[10];
 
 Vector3 AttackControlPoints[10];
 
+bool servosAttached = false;
+
 void attachServos(){
   coxa1.attach(coxa1Pin,500,2500);
   femur1.attach(femur1Pin,500,2500);
@@ -88,5 +90,38 @@ void attachServos(){
 
   coxa6.attach(coxa6Pin,500,2500);
   femur6.attach(femur6Pin,500,2500);
-  tibia6.attach(tibia6Pin,500,2500);  
+  tibia6.attach(tibia6Pin,500,2500);
+
+  servosAttached = true;  
+  Serial.println("Servos Attached");
 }
+
+void detachServos() {
+  coxa1.detach();
+  femur1.detach();
+  tibia1.detach();
+
+  coxa2.detach();
+  femur2.detach();
+  tibia2.detach();
+
+  coxa3.detach();
+  femur3.detach();
+  tibia3.detach();
+
+  coxa4.detach();
+  femur4.detach();
+  tibia4.detach();
+
+  coxa5.detach();
+  femur5.detach();
+  tibia5.detach();
+
+  coxa6.detach();
+  femur6.detach();
+  tibia6.detach();
+
+  servosAttached = false;
+  Serial.println("Servos Detached");
+}
+

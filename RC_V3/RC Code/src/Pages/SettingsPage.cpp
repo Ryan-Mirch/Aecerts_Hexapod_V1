@@ -23,13 +23,13 @@ struct Setting
 
 uint8_t nrfAddress[EEPROM_NRF_ADDRESS_ARRAY_SIZE]; // NRF chip address as an array of bytes
 bool dynamicStrideLength = true;  // Boolean for Dynamic Stride Length
-long int sleepDelayTime = 1000;   // int for how many milliseconds to wait before sleeping
+long int sleepDelayTime = 5000;   // int for how many milliseconds to wait before sleeping
 uint8_t stringTest[10] = "test test";
 
 Setting settings[] = {
     {"NRF Addr", STRING, &nrfAddress, EEPROM_NRF_ADDRESS_ARRAY_SIZE-1, EEPROM_NRF_ADDRESS_ARRAY_SIZE-1}, // Address as string
     {"Dyn Stride Length", BOOLEAN, &dynamicStrideLength},
-    {"Sleep Delay", INTEGER, &sleepDelayTime, 0, 100000},
+    {"Sleep Delay", INTEGER, &sleepDelayTime, 1000, 100000},
     {"Test", STRING, &stringTest, 10, 10}
     };
 
