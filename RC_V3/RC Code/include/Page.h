@@ -107,4 +107,12 @@ private:
     int hovered = 0;
 };
 
+// LegTestPage Page
+class LegTestPage : public Page
+{
+public:
+    void loop() override;
+    void init() override;
+};
+
 #endif // PAGES_H

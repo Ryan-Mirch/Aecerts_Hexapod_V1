@@ -1,17 +1,18 @@
-Vector3 targetSleepPosition = Vector3(170, 0, 0);
+Vector3 targetSleepPosition = Vector3(130, 0, -46);
 
-int sleepStateState = 0;
+int sleepStateState = 1;
 
 void sleepState() {
   if(currentState != Sleep)
   {
     Serial.println("Sleep State."); 
-    sleepStateState = 0;
+    sleepStateState = 1;
   }
   
   currentState = Sleep;
   if(!servosAttached)return;
 
+/*
   if(sleepStateState == 0){
     bool legsUp = true;
     //lifting legs up so the hex is sitting on the ground.
@@ -24,6 +25,7 @@ void sleepState() {
     }
     if(legsUp)sleepStateState = 1;
   }
+  */
   
 
   if(sleepStateState == 1){

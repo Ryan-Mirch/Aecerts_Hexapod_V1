@@ -18,7 +18,8 @@ enum State {
   Crab,
   Calibrate,
   SlamAttack,
-  Sleep
+  Sleep,
+  Attach
 };
 
 enum LegState {
@@ -43,7 +44,8 @@ bool dynamicStrideLength = true;
 int totalGaits = 6;
 Gait gaits[6] = { TRI, RIPPLE, WAVE, QUAD, BI, HOP };
 
-int8_t rawOffsets[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };  //Coxa+90, Femur+90, Tibia-20
+int8_t rawOffsets[18] = { 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+Vector3 baseOffset = {90,50,-10};
 Vector3 offsets[6];
 
 float points = 1000;
@@ -65,7 +67,7 @@ float targetDistanceFromGround = 0;
 float liftHeight = 130;
 float landHeight = 70;
 float strideOvershoot = 10;
-float distanceFromCenter = 190;
+float distanceFromCenter = 173;
 
 float crabTargetForwardAmount = 0;
 float crabForwardAmount = 0;
@@ -108,6 +110,7 @@ void loop() {
   connected = GetData(); 
 
   if (!connected) {
+    //attachServoState();
     sleepState();
     return;
   }
@@ -221,6 +224,56 @@ int angleToMicroseconds(double angle) {
   return (int)val;
 }
 
+void rotateToAngle(int leg, Vector3 targetRot) {
+  if(!servosAttached) attachServos();
+  
+  int coxaMicroseconds = angleToMicroseconds(targetRot.x);
+  int femurMicroseconds = angleToMicroseconds(targetRot.y);
+  int tibiaMicroseconds = angleToMicroseconds(targetRot.z);
+
+  switch (leg) {
+    case 0:
+      coxa1.writeMicroseconds(coxaMicroseconds);
+      femur1.writeMicroseconds(femurMicroseconds);
+      tibia1.writeMicroseconds(tibiaMicroseconds);
+      break;
+
+    case 1:
+      coxa2.writeMicroseconds(coxaMicroseconds);
+      femur2.writeMicroseconds(femurMicroseconds);
+      tibia2.writeMicroseconds(tibiaMicroseconds);
+      break;
+
+    case 2:
+      coxa3.writeMicroseconds(coxaMicroseconds);
+      femur3.writeMicroseconds(femurMicroseconds);
+      tibia3.writeMicroseconds(tibiaMicroseconds);
+      break;
+
+    case 3:
+      coxa4.writeMicroseconds(coxaMicroseconds);
+      femur4.writeMicroseconds(femurMicroseconds);
+      tibia4.writeMicroseconds(tibiaMicroseconds);
+      break;
+
+    case 4:
+      coxa5.writeMicroseconds(coxaMicroseconds);
+      femur5.writeMicroseconds(femurMicroseconds);
+      tibia5.writeMicroseconds(tibiaMicroseconds);
+      break;
+
+    case 5:
+      coxa6.writeMicroseconds(coxaMicroseconds);
+      femur6.writeMicroseconds(femurMicroseconds);
+      tibia6.writeMicroseconds(tibiaMicroseconds);
+      break;
+
+    default:
+      break;
+  }
+  return;
+}
+
 void moveToPos(int leg, Vector3 pos) {
   if(!servosAttached) attachServos();
 
@@ -326,7 +379,7 @@ void updateOffsetVariables() {
   //updating Vector3 offsets[]
   //Serial.println("Filling offsets from rawOffsets.");
   for (int i = 0; i < 6; ++i) {
-    offsets[i] = Vector3(rawOffsets[i * 3] + 90, rawOffsets[i * 3 + 1] + 90, rawOffsets[i * 3 + 2] - 20);
+    offsets[i] = Vector3(rawOffsets[i * 3] + baseOffset.x, rawOffsets[i * 3 + 1] + baseOffset.y, rawOffsets[i * 3 + 2] + baseOffset.z);
   }
 
   //updating hex_data.offsets[18]

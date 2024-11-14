@@ -46,9 +46,9 @@ const int coxa6Pin = 37;
 const int femur6Pin = 38;
 const int tibia6Pin = 39;
 
-const float a1 = 41;  //Coxa Length
-const float a2 = 116; //Femur Length
-const float a3 = 183; //Tibia Length   
+const float a1 = 46;  //Coxa Length
+const float a2 = 108; //Femur Length
+const float a3 = 200; //Tibia Length   
 float legLength = a1+a2+a3;
 
 Vector3 currentPoints[6];

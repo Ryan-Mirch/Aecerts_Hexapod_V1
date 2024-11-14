@@ -1,4 +1,5 @@
-Vector3 targetCalibration = Vector3(224, 0, 116);
+Vector3 targetCalibration = Vector3(a1 + 43, 0, a2 + 185);
+//Vector3 targetCalibration = Vector3(a1+a3, 0, a2);
 int inBetweenZ = -20;
 int8_t previousOffsets[18];
 

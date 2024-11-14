@@ -17,8 +17,8 @@ void standingState() {
   standingEndPoint = Vector3(distanceFromCenter, 0, distanceFromGround + standingDistanceAdjustment);
   standLoops = 2;
   // We only set the starting, inbetween, and ending points one time, which is when we enter the standing state.
-  if (currentState == Calibrate || currentState == Initialize || currentState == SlamAttack || currentState == Sleep) moveAllAtOnce = true;
-  if (currentState == SlamAttack) highLift = true;
+  if (currentState == Calibrate || currentState == Initialize || currentState == SlamAttack || currentState == Sleep || currentState == Attach) moveAllAtOnce = true;
+  if (currentState == SlamAttack || currentState == Sleep) highLift = true;
   if (currentState != Stand) {
     
     set3HighestLeg();
@@ -30,12 +30,12 @@ void standingState() {
     // Calculate the inbetween and ending points
     for (int i = 0; i < 6; i++) {
       Vector3 inBetweenPoint = standingStartPoints[i];
-      inBetweenPoint.x = (inBetweenPoint.x + standingEndPoint.x) / 2;
-      inBetweenPoint.y = (inBetweenPoint.y + standingEndPoint.y) / 2;
+      inBetweenPoint.x = (inBetweenPoint.x + standingEndPoint.x) / 1.5;
+      inBetweenPoint.y = (inBetweenPoint.y + standingEndPoint.y) / 1.5;
 
       inBetweenPoint.z = ((inBetweenPoint.z + standingEndPoint.z) / 2);
-      if(abs(inBetweenPoint.z - standingEndPoint.z) < 50 )inBetweenPoint.z += 50;
-      if(highLift)inBetweenPoint.z += 150;
+      if(abs(inBetweenPoint.z - standingEndPoint.z) < 50 )inBetweenPoint.z += 70;
+      if(highLift)inBetweenPoint.z += 80;
 
       standingInBetweenPoints[i] = inBetweenPoint;
 
@@ -56,11 +56,12 @@ void standingState() {
 
   //readjusting. This takes about a second
   while(standLoops < 2){
-    standProgress += 25;
+    standProgress += 20;
+    /*
     if(highLift){
       standProgress += 40 - 50 * ((float)standProgress / points);
     }
-
+  */
     float t = (float)standProgress / points;
     if (t > 1) {
       t = 1;
@@ -86,7 +87,7 @@ void standingState() {
 
       if (standProgress > points) {
         standProgress = 0;
-        standLoops ++;
+        standLoops++;
         set3HighestLeg();
       }
     }

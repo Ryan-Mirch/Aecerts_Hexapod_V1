@@ -57,11 +57,11 @@ void carState() {
         cycleProgress[5] = (points / 6)*3;
 
         //Percentage Time On Ground
-        pushFraction = 5.0/6.0; 
+        pushFraction = 4.9/6.0; 
 
         speedMultiplier = 0.40;
         strideLengthMultiplier = 2;
-        liftHeightMultiplier = 1.3;
+        liftHeightMultiplier = 1.2;
         maxStrideLength = 150;
         maxSpeed = 160;
         break;
@@ -81,7 +81,7 @@ void carState() {
 
         speedMultiplier = 1;
         strideLengthMultiplier = 1.3;
-        liftHeightMultiplier = 1;
+        liftHeightMultiplier = 1.1;
         maxStrideLength = 220;
         maxSpeed = 200;
         break;
@@ -121,7 +121,7 @@ void carState() {
         
         speedMultiplier = 1;        
         strideLengthMultiplier = 1.2;
-        liftHeightMultiplier = 1.8;
+        liftHeightMultiplier = 1.1;
         maxStrideLength = 220;
         maxSpeed = 200;
         break;
