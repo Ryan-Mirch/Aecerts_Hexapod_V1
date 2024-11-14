@@ -10,8 +10,6 @@ extern RF24 radio;
 
 extern unsigned long rc_send_interval;
 
-
-
 // Define the data packages
 struct RC_Control_Data_Package {
     byte type; // 1 byte
@@ -37,7 +35,7 @@ struct RC_Control_Data_Package {
 };
 
 struct RC_Settings_Data_Package {
-    byte type;
+    byte type; // 1 byte
     
     byte calibrating:1; //1 bit
     byte reserved:7;              //7 bits padding, 1 byte total
@@ -45,15 +43,22 @@ struct RC_Settings_Data_Package {
     int8_t offsets[18];             //18 bytes
 };
 
-struct Hexapod_Data_Package {
-    float current_sensor_value;
-    int8_t offsets[18];
+struct Hexapod_Settings_Data_Package {
+    byte type; // 1 byte
+    int8_t offsets[18]; // 18 bytes
+};
+
+struct Hexapod_Sensor_Data_Package {
+    byte type; // 1 byte
+    float current_sensor_value; // 4 bytes
+    Vector2int foot_positions[6]; // 6 * 2 * 2 bytes = 24 bytes
 };
 
 // Declare the data package variables
 extern RC_Control_Data_Package rc_control_data;
 extern RC_Settings_Data_Package rc_settings_data;
-extern Hexapod_Data_Package hex_data;
+extern Hexapod_Settings_Data_Package hex_settings_data;
+extern Hexapod_Sensor_Data_Package hex_sensor_data;
 
 // Function declarations
 void setupNRF();

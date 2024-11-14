@@ -52,8 +52,8 @@ void loop()
   if (!drewScreen)
   {
     if (currentPage == homePage)
-      sendNRFData(CONTROL_DATA);
+      sendNRFData(RC_CONTROL_DATA);
     else
-      sendNRFData(SETTINGS_DATA);
+      sendNRFData(RC_SETTINGS_DATA);
   }
 }

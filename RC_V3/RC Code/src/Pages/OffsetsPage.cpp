@@ -7,6 +7,7 @@
 
 int hovered = 0;
 int8_t offsets[OFFSETS_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
+int8_t hexSavedOffsets[OFFSETS_COUNT] = {0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 
 Vector2 offsetLocations[OFFSETS_COUNT] = {
     Vector2(66,30), 
@@ -49,7 +50,7 @@ void OffsetsPage::init()
 {
     lastCursorBlinkTime = millis(); // Initialize the cursor blink timer
     offsetsModified = false; // Reset the modified flag
-    memcpy(offsets, hex_data.offsets, sizeof(offsets)); // Load the offsets from the hex_data struct
+    memcpy(offsets, hexSavedOffsets, sizeof(offsets)); // Load the offsets from the hex_data struct
 }
 
 void OffsetsPage::loop()

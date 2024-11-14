@@ -6,27 +6,33 @@
 #include "Globals.h"
 #include "NRF.h"
 
+float current_sensor_value = 0;
+Vector2int foot_positions[6] = {Vector2int(0,0), Vector2int(0,0), Vector2int(0,0), Vector2int(0,0), Vector2int(0,0), Vector2int(0,0)};
+int legsXMultiplier[6] = {-1, -1, -1, 1, 1, 1};
+int legsYMultiplier[6] = {-1, -1, -1, 1, 1, 1};
+int rotationMultiplier[6] = {1, 0, -1, 1, 0 , -1};
+
+
+void rotateLeg(int angle, Vector3 &leg, Vector2 pivot) {
+    // Translate line so pivot point is at the origin
+    if(angle == 0) return;
+
+    leg.x -= pivot.x;
+    leg.y -= pivot.y;
+    float angleRad = radians(angle);
+
+    // Rotate point by angle
+    int x_rotated = leg.x * cos(angleRad) - leg.y * sin(angleRad);
+    int y_rotated = leg.x * sin(angleRad) + leg.y * cos(angleRad);
+
+    // Translate point back to original position
+    leg.x = x_rotated + pivot.x;
+    leg.y = y_rotated + pivot.y;
+}
+
 void HomePage::init()
 {
     rotaryEncoderButtonReady = false;
-
-    legAnimProgress[0] = 0;
-    legAnimProgress[1] = points / 2;
-    legAnimProgress[2] = 0;
-    legAnimProgress[3] = points / 2;
-    legAnimProgress[4] = 0;
-    legAnimProgress[5] = points / 2;
-
-    legsCenter[0] = Vector2(-9, -5);
-    legsCenter[1] = Vector2(-12, 0);
-    legsCenter[2] = Vector2(-9, 5);
-    legsCenter[3] = Vector2(9, 5);
-    legsCenter[4] = Vector2(12, 0);
-    legsCenter[5] = Vector2(9, -5);
-
-    for (int i = 0; i < 6; i++)
-        legs[i] = Vector3(legsCenter[i].x, legsCenter[i].y, 1);   
-    
 }
 
 void HomePage::loop()
@@ -99,7 +105,7 @@ void HomePage::loop()
 
     u8g2.setFont(FONT_TEXT_MONOSPACE);
     u8g2.drawStr(textX, textY, "100%");
-    u8g2.drawStr(textX, textY + offset, String(hex_data.current_sensor_value).c_str());
+    u8g2.drawStr(textX, textY + offset, String(current_sensor_value).c_str());
     u8g2.drawStr(textX, textY + offset * 2, (String(getPotValue(A)) + "%").c_str());
     u8g2.drawStr(textX, textY + offset * 3, (String(getPotValue(B)) + "%").c_str());
 
@@ -109,40 +115,41 @@ void HomePage::loop()
     u8g2.drawGlyph(iconX, textY + offset * 2, 0xe206);
     u8g2.drawGlyph(iconX, textY + offset * 3, 0xe10f);
 
-    /*Hexapod Visualizer*/
-    int joyValue = map(abs(getJoyValue(A).x - 128) + abs(getJoyValue(A).y - 128), 0, 256, 0, 40);
-
-    for (int i = 0; i < 6; i++)
-    {
-        legAnimProgress[i] += joyValue;
-
-        if (legAnimProgress[i] >= points)
-        {
-            legAnimProgress[i] = legAnimProgress[i] - points;
-        }
-    }
 
     // For the legs:
     // x,y = leg coordinates
     // z = is leg touching ground (0 is raised, 1 is on ground)
 
-    for (int i = 0; i < 6; i++)
-    {
-        if (legAnimProgress[i] <= points / 2)
-        {
-            legs[i].y = legsCenter[i].y + lerp(-strideLength / 2, strideLength / 2, legAnimProgress[i] / (points / 2));
-            legs[i].z = 1;
-        }
-        else
-        {
-            legs[i].y = legsCenter[i].y + lerp(strideLength / 2, -strideLength / 2, (legAnimProgress[i] - (points / 2)) / (points / 2));
-            legs[i].z = 0;
-        }
+
+    for (int i = 0; i < 6; i++) {
+        legs[i].x = foot_positions[i].x/13;
+        legs[i].y = foot_positions[i].y/13;
+        legs[i].z = 0;
+        rotateLeg(56*rotationMultiplier[i], legs[i], Vector2(2,0));
+        legs[i].x *= legsXMultiplier[i];
+        legs[i].y *= legsYMultiplier[i];
     }
+
+    Serial.print("raw pos ");
+    Serial.print(foot_positions[0].x);
+    Serial.print(", ");
+    Serial.print(foot_positions[0].y);
+
+    Serial.print(" fixed pos ");
+    Serial.print(legs[0].x);
+    Serial.print(", ");
+    Serial.println(legs[0].y);
+    
+    
 
     drawHexapod(Vector2(64, 37), legs[0], legs[1], legs[2], legs[3], legs[4], legs[5]);
     u8g2.drawRFrame(38, 12, 52, 52, 5);
+    
+
     totalDrawTime = millis() - startTime;
+
+    //u8g2.setFont(FONT_TEXT_MONOSPACE);
+    //u8g2.drawStr(61, 60, String(getRotaryEncoderTotalSpins()).c_str());
 
 
     /*Gait Selection Popup*/

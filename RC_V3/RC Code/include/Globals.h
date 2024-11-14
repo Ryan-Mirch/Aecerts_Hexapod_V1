@@ -58,13 +58,23 @@ enum Gaits {
 };
 
 enum PackageType {
-    CONTROL_DATA = 1,
-    SETTINGS_DATA = 2
+    RC_CONTROL_DATA = 1,
+    RC_SETTINGS_DATA = 2,
+    HEXAPOD_SETTINGS_DATA = 3,
+    HEXAPOD_SENSOR_DATA = 4
 };
 
 const int gaitCount = 6;
 extern String gaitStrings[gaitCount];
 
+
+struct Vector2int{
+    int x;
+    int y;
+
+    Vector2int(int xVal, int yVal) : x(xVal), y(yVal) {}
+    Vector2int() : x(0), y(0) {}
+};
 
 struct Vector2 {
   float x;
@@ -123,7 +133,10 @@ extern OffsetsPage *offsetsPage;
 extern uint8_t nrfAddress[EEPROM_NRF_ADDRESS_ARRAY_SIZE]; // NRF chip address as an array of bytes
 extern bool dynamicStrideLength;                    // Boolean for Dynamic Stride Length
 extern long int sleepDelayTime;                     // int for how many milliseconds to wait before sleeping
+extern int8_t hexSavedOffsets[OFFSETS_COUNT]; // Declare offsets array
 extern int8_t offsets[OFFSETS_COUNT]; // Declare offsets array
+extern float current_sensor_value; // Declare current sensor value
+extern Vector2int foot_positions[6]; // Declare foot positions array
 
 void loadValues();
 void saveValues();

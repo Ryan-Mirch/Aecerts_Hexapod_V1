@@ -20,7 +20,7 @@ int openPopupMultiChoice(String header, String choices[], int numChoices, int ho
 
     while (selection == -1)
     {
-        sendNRFData(SETTINGS_DATA);
+        sendNRFData(RC_SETTINGS_DATA);
 
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;
@@ -98,7 +98,7 @@ long int openPopupNumber(String header, long int initialValue, long int minValue
 
     while (true)
     {
-        sendNRFData(SETTINGS_DATA);
+        sendNRFData(RC_SETTINGS_DATA);
 
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;
@@ -209,7 +209,7 @@ String openPopupString(String header, String initialValue, int stringLength)
 
     while (true)
     {
-        sendNRFData(SETTINGS_DATA);
+        sendNRFData(RC_SETTINGS_DATA);
 
         if (getRotaryEncoderSwitchValue() == UNPRESSED)
             rotaryEncoderButtonReady = true;

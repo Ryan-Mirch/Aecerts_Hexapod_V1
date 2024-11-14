@@ -107,7 +107,7 @@ void loop() {
   elapsedTime = millis() - loopStartTime;
   loopStartTime = millis();
 
-  connected = GetData(); 
+  connected = GetSendNRFData(); 
 
   if (!connected) {
     //attachServoState();
@@ -115,15 +115,18 @@ void loop() {
     return;
   }
 
-  if(currentType == CONTROL_DATA) processControlData(rc_control_data);
-  if(currentType == SETTINGS_DATA) processSettingsData(rc_settings_data);
+  if(currentType == RC_CONTROL_DATA) processControlData(rc_control_data);
+  if(currentType == RC_SETTINGS_DATA) processSettingsData(rc_settings_data);
 }
 
 void processControlData(const RC_Control_Data_Package& data) {
+  sendType = HEXAPOD_SENSOR_DATA; //when control data is being process, always send sensor data back.
+
   dynamicStrideLength = data.dynamic_stride_length;
 
   /*sleep from controller*/
   if (data.sleep == 1) {
+    
     sleepState();
     return;
   }
@@ -189,6 +192,7 @@ void processControlData(const RC_Control_Data_Package& data) {
 }
 
 void processSettingsData(const RC_Settings_Data_Package& data) {
+  sendType = HEXAPOD_SETTINGS_DATA; //when settings data is being process, always send settings data back.
   if (data.calibrating == 1) {
     calibrationState();
     return;
@@ -275,6 +279,9 @@ void rotateToAngle(int leg, Vector3 targetRot) {
 }
 
 void moveToPos(int leg, Vector3 pos) {
+  hex_sensor_data.foot_positions[leg].x = (int)pos.x;
+  hex_sensor_data.foot_positions[leg].y = (int)pos.y;
+
   if(!servosAttached) attachServos();
 
   currentPoints[leg] = pos;
@@ -385,7 +392,7 @@ void updateOffsetVariables() {
   //updating hex_data.offsets[18]
   //Serial.println("Filling hex_data.offsets from rawOffsets.");  
   for (int i = 0; i < 18; i++) {
-    hex_data.offsets[i] = rawOffsets[i];
+    hex_settings_data.offsets[i] = rawOffsets[i];
   }
 }
 

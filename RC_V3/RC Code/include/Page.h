@@ -30,7 +30,6 @@ private:
     int strideLength = 8;
 
     Vector3 legs[6];
-    Vector2 legsCenter[6];
 };
 
 // Menu Page

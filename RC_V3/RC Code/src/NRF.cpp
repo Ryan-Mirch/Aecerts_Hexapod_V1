@@ -10,7 +10,8 @@ unsigned long rc_send_interval = 50;
 // Initialize the data packages
 RC_Control_Data_Package rc_control_data;
 RC_Settings_Data_Package rc_settings_data;
-Hexapod_Data_Package hex_data;
+Hexapod_Settings_Data_Package hex_settings_data;
+Hexapod_Sensor_Data_Package hex_sensor_data;
 
 void setupNRF() {
     radio.begin();
@@ -21,7 +22,7 @@ void setupNRF() {
     radio.setRetries(5, 5);
     radio.openWritingPipe(nrfAddress);
 
-    rc_control_data.type = CONTROL_DATA;
+    rc_control_data.type = RC_CONTROL_DATA;
 
     rc_control_data.joy1_X = 127;
     rc_control_data.joy1_Y = 127;
@@ -40,7 +41,7 @@ void setupNRF() {
     rc_control_data.dynamic_stride_length = dynamicStrideLength;
 
 
-    rc_settings_data.type = SETTINGS_DATA;
+    rc_settings_data.type = RC_SETTINGS_DATA;
     
 
     for (int i = 0; i < 18; i++) {
@@ -52,16 +53,41 @@ void sendNRFData(PackageType type) {
     every(rc_send_interval) {
         bool report = false;
 
-        if (type == CONTROL_DATA) {
+        if (type == RC_CONTROL_DATA) {
             report = radio.write(&rc_control_data, sizeof(rc_control_data)); // Send control data
-        } else if (type == SETTINGS_DATA) {
+        } else if (type == RC_SETTINGS_DATA) {
             report = radio.write(&rc_settings_data, sizeof(rc_settings_data)); // Send settings data
         }
 
         if (report) {
             if (radio.isAckPayloadAvailable()) {
-                radio.read(&hex_data, sizeof(hex_data));
-                // Process received data
+                byte ackType;
+                radio.read(&ackType, sizeof(ackType));
+
+                if (ackType == HEXAPOD_SETTINGS_DATA) {
+                    radio.read(&hex_settings_data, sizeof(hex_settings_data));
+                    
+                    for (int i = 0; i < 18; i++) {
+                        hexSavedOffsets[i] = hex_settings_data.offsets[i];
+                    }
+                    
+                } else if (ackType == HEXAPOD_SENSOR_DATA) {
+                    radio.read(&hex_sensor_data, sizeof(hex_sensor_data));
+
+
+                    current_sensor_value = hex_sensor_data.current_sensor_value;
+                    for (int i = 0; i < 6; i++) {
+                        foot_positions[i] = hex_sensor_data.foot_positions[i];
+                    }
+                }
+
+                //no data is being received
+                else{
+                    current_sensor_value = 0;
+                    for (int i = 0; i < 6; i++) {
+                        foot_positions[i] = Vector2int(0,0);
+                    }
+                }
             }
         }
     }
