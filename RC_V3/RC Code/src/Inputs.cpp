@@ -8,7 +8,7 @@ unsigned long potInterval = 50;
 unsigned long potLastChanged[2] = {0, 0};
 
 const int POT_THRESHOLD = 2; // Define a threshold for potentiometer value changes
-const int JOY_THRESHOLD = 2; // Define a threshold for joystick value changes
+const int JOY_THRESHOLD = 4; // Define a threshold for joystick value changes
 
 unsigned long gyroTimer = 0;
 Vector3 gad;
