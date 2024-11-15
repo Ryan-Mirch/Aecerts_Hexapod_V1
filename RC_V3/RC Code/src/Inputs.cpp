@@ -263,7 +263,7 @@ Vector2 getJoyValue(IOLabels label)
     {
     case A:
         joyValue = Vector2(map(analogRead(A6), 0, 1023, 254, 0), map(analogRead(A7), 0, 1023, 0, 254));
-        if (abs(joyValue.x - previousJoyValueA.x) > JOY_THRESHOLD || abs(joyValue.y - previousJoyValueA.y) > JOY_THRESHOLD)
+        if (abs(joyValue.x) > JOY_THRESHOLD || abs(joyValue.y) > JOY_THRESHOLD)
         {
             previousJoyValueA = joyValue;
             timeSinceLastInput = millis();
@@ -272,7 +272,7 @@ Vector2 getJoyValue(IOLabels label)
         break;
     case B:
         joyValue = Vector2(map(analogRead(A2), 0, 1023, 0, 254), map(analogRead(A3), 0, 1023, 0, 254));
-        if (abs(joyValue.x - previousJoyValueB.x) > JOY_THRESHOLD || abs(joyValue.y - previousJoyValueB.y) > JOY_THRESHOLD)
+        if (abs(joyValue.x) > JOY_THRESHOLD || abs(joyValue.y) > JOY_THRESHOLD)
         {
             previousJoyValueB = joyValue;
             timeSinceLastInput = millis();
